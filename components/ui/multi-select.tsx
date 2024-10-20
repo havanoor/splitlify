@@ -2,19 +2,15 @@ import { cn } from "~/lib/utils";
 
 import { CommandList } from "cmdk";
 import { Check, X } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Button } from "components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "~/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
+} from "components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { Badge } from "./badge";
 import { useState } from "react";
 

@@ -6,11 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
+} from "components/ui/dialog";
+import { Button } from "components/ui/button";
+import { Label } from "components/ui/label";
 import { Share2 } from "lucide-react";
-import { Input } from "~/components/ui/input";
+import { Input } from "components/ui/input";
 
 type ShareBookProps = {
   typeOfBook: string;

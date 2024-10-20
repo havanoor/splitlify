@@ -13,15 +13,11 @@ import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import AddNewTransactionDialog from "~/components/AddNewTransactionDialog";
-import BookStatsBox from "~/components/BookStatsBox";
-import BookTransactions from "~/components/BookTransactions";
-import TransactionSplit from "~/components/BookTransSplit";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
+import AddNewTransactionDialog from "components/AddNewTransactionDialog";
+import BookStatsBox from "components/BookStatsBox";
+import BookTransactions from "components/BookTransactions";
+import TransactionSplit from "components/BookTransSplit";
+import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import getData, { postData } from "~/lib/ApiRequests";
 
 export async function action({ request }: ActionFunctionArgs) {

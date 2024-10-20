@@ -1,7 +1,7 @@
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Form, useFetcher } from "@remix-run/react";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Calendar } from "~/components/ui/calendar";
+import { Calendar } from "components/ui/calendar";
 import { cn } from "~/lib/utils";
 import AddNewPerson from "./AddNewPerson";
 import { Button } from "./ui/button";

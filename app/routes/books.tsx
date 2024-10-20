@@ -19,8 +19,8 @@ import {
 } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { twMerge } from "tailwind-merge";
-import AddNewBookDialog from "~/components/AddNewBookDialog";
-import ShareBookPanel from "~/components/ShareBookPanel";
+import AddNewBookDialog from "components/AddNewBookDialog";
+import ShareBookPanel from "components/ShareBookPanel";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,18 +31,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+} from "components/ui/alert-dialog";
+import { Button } from "components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "~/components/ui/collapsible";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
+} from "components/ui/collapsible";
+import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import getData, { deleteData, postData } from "~/lib/ApiRequests";
 
 export async function loader() {

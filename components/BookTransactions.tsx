@@ -22,12 +22,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
+} from "components/ui/alert-dialog";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "~/components/ui/collapsible";
+} from "components/ui/collapsible";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import { Button } from "./ui/button";
 
