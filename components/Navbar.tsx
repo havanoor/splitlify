@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { RxCross2, RxHamburgerMenu } from "react-icons/rx";
 import NavBarUserDropDown from "./NavBarUserDropDown";
-import { useState } from "react";
 
-export default function NavBar() {
+export default function NavBar({ username }: { username: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,7 +24,7 @@ export default function NavBar() {
               Explore
             </li>
             <li className="py-2 px-3 ">
-              <NavBarUserDropDown username={"session?.user?.username"} />
+              <NavBarUserDropDown username={username} />
             </li>
           </ul>
         </div>
@@ -51,7 +51,7 @@ export default function NavBar() {
               Home
             </li>
             <li>
-              <NavBarUserDropDown username={"session?.user?.username"} />
+              <NavBarUserDropDown username={username} />
             </li>
           </ul>
         </div>

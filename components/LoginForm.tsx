@@ -15,6 +15,8 @@ import { Button } from "./ui/button";
 import { IoWarningOutline } from "react-icons/io5";
 import LoaderIcon from "./LoaderIcon";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { login } from "~/routes/login/login";
 
 export const LoginForm = () => {
   const [formError, setFormError] = useState("");
@@ -44,7 +46,7 @@ export const LoginForm = () => {
       cardWidth={450}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <form method="POST" className="space-y-4">
           <FormField
             control={form.control}
             name="username"

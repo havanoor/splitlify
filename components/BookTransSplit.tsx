@@ -11,7 +11,7 @@ type TransSplit = {
 export default function TransactionSplit({ split }: TransSplit) {
   const [viewDues, setViewDues] = useState(false);
   return (
-    <div className="m-2">
+    <div>
       <div className="w-full md:hidden p-1.5  border-2 border-b-0 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
         <div
           className="text-xl font-bold flex items-center"

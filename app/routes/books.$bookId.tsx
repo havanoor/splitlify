@@ -4,21 +4,20 @@ import {
   useFetcher,
   useLoaderData,
   useMatches,
-  useOutletContext,
   useParams,
 } from "@remix-run/react";
+import AddNewTransactionDialog from "components/AddNewTransactionDialog";
+import BookTransactions from "components/BookTransactions";
+import TransactionSplit from "components/BookTransSplit";
+import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import AddNewTransactionDialog from "components/AddNewTransactionDialog";
-import BookStatsBox from "components/BookStatsBox";
-import BookTransactions from "components/BookTransactions";
-import TransactionSplit from "components/BookTransSplit";
-import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import getData, { postData } from "~/lib/ApiRequests";
+import { getSession } from "~/lib/helperFunctions";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -33,7 +32,8 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ params, request }: LoaderFunctionArgs) {
+  const user = await getSession(request);
   const transactions = await getData(
     `book/get_book_transactions/${params.bookId}/?offset=0&limit=5`
   );
@@ -75,8 +75,8 @@ export default function IndividualBook() {
   return (
     <div>
       {bookTransactions.length > 0 ? (
-        <div className="m-2">
-          <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between">
+        <div>
+          <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
             <div
               className="text-xl font-bold flex items-center"
               onClick={handleClick}

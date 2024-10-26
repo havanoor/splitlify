@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
   json,
@@ -40,9 +40,11 @@ import {
 } from "components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import getData, { deleteData, postData } from "~/lib/ApiRequests";
+import { getSession } from "~/lib/helperFunctions";
 
-export async function loader() {
-  const data = await getData(`book/?user_id=8&limit=5&offset=0`);
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getSession(request);
+  const data = await getData(`book/?user_id=${user.user_id}&limit=5&offset=0`);
   return json(data);
 }
 
@@ -87,10 +89,10 @@ export default function Books() {
   };
 
   return (
-    <div>
+    <div className="m-2 md:m-16">
       <div>
-        <div className="m-2 md:m-16 ">
-          <div className="w-full md:hidden p-1.5  border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
+        <div>
+          <div className="w-full  md:hidden p-1.5  border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
             <div
               className="text-xl font-bold flex items-center"
               //   onClick={handleClick}
