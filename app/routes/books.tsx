@@ -43,14 +43,12 @@ import getData, { deleteData, postData } from "~/lib/ApiRequests";
 
 export async function loader() {
   const data = await getData(`book/?user_id=8&limit=5&offset=0`);
-  //   console.log(data);
   return json(data);
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const { _action, ...data } = Object.fromEntries(formData);
-  // console.log("=================>", data);
   switch (_action) {
     case "AddNewBook":
       await postData("books/new", { ...data, user_id: "8" });
@@ -82,7 +80,6 @@ export default function Books() {
   );
   const [viewTransactions, setViewTransactions] = useState(false);
   const [bookOffset, setBookOffset] = useState(0);
-  console.log();
   const handleClick = () => {
     const bookCount = userBooks != null && userBooks.length > 0;
     setViewTransactions(true);

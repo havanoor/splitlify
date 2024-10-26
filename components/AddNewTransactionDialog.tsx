@@ -37,7 +37,6 @@ export default function AddNewTransactionDialog({
     if (!category.data) {
       category.load(`/query-category`);
     }
-    console.log("Category is", category);
   }, []);
 
   const [selected, setSelected] = useState<User[]>(
@@ -63,7 +62,6 @@ export default function AddNewTransactionDialog({
     transaction.date =
       date?.toISOString().slice(0, 10) ?? new Date().toISOString().slice(0, 10);
 
-    console.log(transaction);
     // addNewTransaction(transaction);
   };
 

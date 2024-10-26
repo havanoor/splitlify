@@ -58,7 +58,7 @@ export default function BookTransactions({
   const bookTransactions = transactions ? transactions : null;
   return (
     <>
-      <div className="m-2 md:m-16 hidden md:block">
+      <div className="hidden md:table w-full border-2 border-[#c4d1eb] m-2 md:m-4">
         <table className="w-full border-2 border-[#c4d1eb]">
           <thead className="bg-[#79AC78]">
             <tr>

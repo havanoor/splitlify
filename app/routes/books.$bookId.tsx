@@ -34,7 +34,6 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  console.log("Book Id is", params.bookId);
   const transactions = await getData(
     `book/get_book_transactions/${params.bookId}/?offset=0&limit=5`
   );
@@ -56,7 +55,6 @@ export default function IndividualBook() {
     if (spliTrans.state === "idle" && !spliTrans.data) {
       spliTrans.load(`/split-fetcher/${bookId}`);
     }
-    console.log(spliTrans.data, spliTrans);
   }, [spliTrans.state, spliTrans.data]);
 
   function addNewUser(newUser: NewUser): void {
@@ -74,10 +72,9 @@ export default function IndividualBook() {
         : false
     );
   };
-
   return (
     <div>
-      {bookTransactions.length > 0 && book ? (
+      {bookTransactions.length > 0 ? (
         <div className="m-2">
           <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between">
             <div
@@ -121,7 +118,7 @@ export default function IndividualBook() {
               </Popover>
             </div>
           </div>
-          {book ? (
+          {/* {book ? (
             <BookStatsBox
               amount={book.amount}
               currency={book?.book_currency}
@@ -131,7 +128,7 @@ export default function IndividualBook() {
               }
               bookName={book?.name}
             />
-          ) : null}
+          ) : null} */}
           <BookTransactions
             transactions={bookTransactions}
             addNewUser={addNewUser}
