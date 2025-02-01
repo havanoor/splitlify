@@ -37,7 +37,7 @@ export default function AddNewTransactionDialog({
     if (!category.data) {
       category.load(`/query-category`);
     }
-  }, []);
+  }, [category]);
 
   const [selected, setSelected] = useState<User[]>(
     currentTransaction?.payee || []
@@ -73,7 +73,7 @@ export default function AddNewTransactionDialog({
           {title} details for the transaction
         </p>
       </div>
-      <Form method="POST" className="grid grid-cols-1 items-center gap-4 ">
+      <Form className="grid grid-cols-1 items-center gap-4">
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="name">Transaction Name</Label>
           <Input
@@ -102,7 +102,8 @@ export default function AddNewTransactionDialog({
           <div className="flex items-center gap-2 ">
             <div className="flex-grow">
               <Select
-                name="category"
+                name="category_id"
+                defaultValue={currentTransaction?.category?.category}
                 onValueChange={(v) => {
                   setTransaction({ ...transaction, category_id: v });
                 }}
@@ -140,7 +141,7 @@ export default function AddNewTransactionDialog({
                       <Label htmlFor="newcategory" className="mr-4">
                         Category:
                       </Label>
-                      <Input name="category" className="h-8 text-black" />
+                      <Input name="category_id" className="h-8 text-black" />
                       <Button
                         type="submit"
                         variant="default"
@@ -157,7 +158,7 @@ export default function AddNewTransactionDialog({
           </div>
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="amount">Date</Label>
+          <Label htmlFor="date">Date</Label>
           {/* <Input
             defaultValue={currentTransaction?.date}
             id="amount"
@@ -170,7 +171,11 @@ export default function AddNewTransactionDialog({
           <Popover>
             <PopoverTrigger asChild>
               <Button
+                name="date"
+                id="date"
+                // defaultValue={currentTransaction?.date}
                 variant={"outline"}
+                value={date ? date.toDateString() : "Pick a date"}
                 className={cn(
                   "col-span-2 h-8 text-black justify-start text-left font-normal",
                   !date && "text-muted-foreground"
@@ -193,11 +198,25 @@ export default function AddNewTransactionDialog({
               </PopoverClose>
             </PopoverContent>
           </Popover>
+          <input
+            type="hidden"
+            name="date"
+            defaultValue={currentTransaction?.date}
+            value={
+              date?.toISOString().slice(0, 10) ??
+              new Date().toISOString().slice(0, 10)
+            }
+          />
+
+          {currentTransaction?.id ? (
+            <input type="hidden" name="id" value={currentTransaction.id} />
+          ) : null}
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="payer">Paid By</Label>
+          <Label htmlFor="payer_id">Paid By</Label>
           <Select
-            name="payer"
+            name="payer_id"
+            defaultValue={currentTransaction?.payer.username}
             onValueChange={(v) => {
               setTransaction({ ...transaction, payer_id: v });
             }}
@@ -229,11 +248,11 @@ export default function AddNewTransactionDialog({
             selected={selected}
             onChange={setSelected}
             className="w-80"
-            name="payee"
+            name="payee_ids"
           />
           <input
             type="hidden"
-            name="payees"
+            name="payee_ids"
             value={selected.map((e: User) => e.id.toString())}
           />
         </div>
@@ -241,7 +260,8 @@ export default function AddNewTransactionDialog({
           <PopoverClose asChild>
             <Button
               className="mr-2"
-              onClick={addNewTrans}
+              // onClick={addNewTrans}
+
               type="submit"
               name="_action"
               value="AddNewTransaction"

@@ -7,7 +7,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
-import { Link } from "lucide-react";
 import { FiUser } from "react-icons/fi";
 
 export default function NavBarUserDropDown({
@@ -28,20 +27,20 @@ export default function NavBarUserDropDown({
             <DropdownMenuLabel>{username}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem
-              // onClick={() => signOut({ callbackUrl: "/", redirect: true })}
-              >
-                Sign Out
+              <DropdownMenuItem>
+                <form method="POST" action="/logout">
+                  <button>Sign Out</button>
+                </form>
               </DropdownMenuItem>
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <Link href="/singleBook">
+              <a href="/singleBook">
                 <DropdownMenuItem>My Books</DropdownMenuItem>
-              </Link>
+              </a>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Link href="/authentication/login">Login </Link>
+        <a href="/login">Login </a>
       )}
     </>
   );

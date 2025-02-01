@@ -18,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { login } from "~/routes/login/login";
 
-export const LoginForm = () => {
+export const LoginForm = ({ url }: { url: string }) => {
   const [formError, setFormError] = useState("");
   const [loading, isLoading] = useState(false);
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -43,6 +43,7 @@ export const LoginForm = () => {
       header="Login"
       footerLabel="Don't have an account? Register"
       footerHref="/authentication/register"
+      googleLogin={url}
       cardWidth={450}
     >
       <Form {...form}>

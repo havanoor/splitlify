@@ -1,7 +1,9 @@
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "@remix-run/react";
+import { Form, json, Link, useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { generateAuthUrl } from "~/lib/googleLogin";
 
 type CardProps = {
   children: React.ReactNode;
@@ -9,6 +11,7 @@ type CardProps = {
   footerLabel: string;
   footerHref: string;
   cardWidth: number;
+  googleLogin?: string;
 };
 
 export default function CardWrapper({
@@ -16,6 +19,7 @@ export default function CardWrapper({
   header = "HIIi",
   footerHref,
   footerLabel,
+  googleLogin,
   cardWidth = 550,
 }: CardProps) {
   return (
@@ -26,18 +30,19 @@ export default function CardWrapper({
       <CardContent>
         <div className="flex flex-col gap-y-4">
           {children}
-
-          <Button
-            onClick={() =>
-              signIn("google", { callbackUrl: "/singleBook", redirect: true })
-            }
-            variant="outline"
-            size="lg"
-            className="w-full"
-          >
-            <FcGoogle className="h-6 w-6 mr-2" />
-            Sign in With Google
-          </Button>
+          <a href={googleLogin}>
+            <Button
+              // onClick={() =>
+              //   signIn("google", { callbackUrl: "/singleBook", redirect: true })
+              // }
+              variant="outline"
+              size="lg"
+              className="w-full"
+            >
+              <FcGoogle className="h-6 w-6 mr-2" />
+              Sign in With Google
+            </Button>
+          </a>
         </div>
       </CardContent>
       <CardFooter>

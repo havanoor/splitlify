@@ -1,4 +1,5 @@
 import {
+  json,
   Links,
   Meta,
   Outlet,
@@ -9,19 +10,20 @@ import {
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  let user_id = await getSession(request);
-
-  return { user_id };
+  let user = await getSession(request);
+  // console.log(user);
+  if (!user) {
+    return json({ user_id: null, username: null });
+  }
+  return json(user);
 }
 
 import "./tailwind.css";
 import NavBar from "../components/Navbar";
-import { cookie } from "./routes/login/login";
 import { getSession } from "./lib/helperFunctions";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user_id } = useLoaderData<typeof loader>();
-  console.log(user_id);
+  const { username } = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -31,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <NavBar username={user_id.username} />
+        <NavBar username={username} />
         {children}
         <ScrollRestoration />
         <Scripts />

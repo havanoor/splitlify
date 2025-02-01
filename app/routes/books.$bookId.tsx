@@ -7,6 +7,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import AddNewTransactionDialog from "components/AddNewTransactionDialog";
+import BookStatsBox from "components/BookStatsBox";
 import BookTransactions from "components/BookTransactions";
 import TransactionSplit from "components/BookTransSplit";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
@@ -16,16 +17,38 @@ import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import getData, { postData } from "~/lib/ApiRequests";
+import { getData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
+  const user = await getSession(request);
   const { _action, ...data } = Object.fromEntries(formData);
-
+  console.log("data", data);
   switch (_action) {
     case "AddNewCategory":
       await postData("category/add", { ...data, user_id: "8" });
+      return json({
+        ok: "Suceess",
+      });
+    case "AddNewTransaction":
+      const dataToSend = {
+        ...data,
+        user_id: user.user_id,
+        book_id: params.bookId,
+        payee_ids: (data.payee_ids as string).split(","),
+      };
+
+      if ("id" in data) {
+        const response = await postData(`/transactions/update/${data.id}`, {
+          ...dataToSend,
+          id: data.id,
+        });
+      } else {
+        const response = await postData("transactions/new", dataToSend);
+      }
+
+      // console.log("response", response);
       return json({
         ok: "Suceess",
       });
@@ -33,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const user = await getSession(request);
+  // const user = await getSession(request);
   const transactions = await getData(
     `book/get_book_transactions/${params.bookId}/?offset=0&limit=5`
   );
@@ -44,10 +67,16 @@ export default function IndividualBook() {
   const [viewTransactions, setViewTransactions] = useState(false);
   const { bookId } = useParams();
   const matches = useMatches();
+
   const books = matches.find((match) => match.id === "routes/books")?.data;
   const book: Book = books.find((b) => b.id == bookId);
 
   const bookTransactions: Transaction[] = useLoaderData<typeof loader>();
+  const totalAmount = bookTransactions.reduce(
+    (total, transaction) => total + transaction.amount,
+    0
+  );
+
   const [offset, setOffset] = useState(0);
 
   const spliTrans = useFetcher();
@@ -118,9 +147,9 @@ export default function IndividualBook() {
               </Popover>
             </div>
           </div>
-          {/* {book ? (
+          {book ? (
             <BookStatsBox
-              amount={book.amount}
+              amount={totalAmount}
               currency={book?.book_currency}
               numberFriends={book?.splitters.length}
               numberTransactions={
@@ -128,7 +157,7 @@ export default function IndividualBook() {
               }
               bookName={book?.name}
             />
-          ) : null} */}
+          ) : null}
           <BookTransactions
             transactions={bookTransactions}
             addNewUser={addNewUser}

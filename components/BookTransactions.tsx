@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowLeft,
@@ -30,6 +30,10 @@ import {
 } from "components/ui/collapsible";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import { PencilIcon, TrashIcon } from "lucide-react";
+import { Badge } from "./ui/badge";
+import TestForm from "./TestForm";
 
 type BookTransactionsProps = {
   transactions: Transaction[];
@@ -56,6 +60,7 @@ export default function BookTransactions({
     setOpen(!open && transactions ? transactions.length > 0 : false);
   };
   const bookTransactions = transactions ? transactions : null;
+  const [openEdit, setOpenEdit] = useState(false);
   return (
     <>
       <div className="hidden md:table w-full mt-4 ">
@@ -136,10 +141,8 @@ export default function BookTransactions({
                 <td>
                   <div className="flex gap-8 justify-center align-middle">
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <span>
-                          <MdOutlineModeEdit className="w-4 h-4" />
-                        </span>
+                      <PopoverTrigger>
+                        <MdOutlineModeEdit className="w-4 h-4" />
                       </PopoverTrigger>
                       <PopoverContent className="z-50 grid gap-4 p-10 w-450 bg-white  rounded-md shadow-lg ">
                         <AddNewTransactionDialog
@@ -229,97 +232,182 @@ export default function BookTransactions({
           </div>
           <CollapsibleContent className="space-y-2">
             {bookTransactions?.map((transaction, index) => (
-              <div
-                key={index}
-                className={`${
-                  open ? "relative" : "absolute  top-4 group-hover:top-4 "
-                }  w-full p-4 bg-white  border border-green-600 rounded-lg shadow `}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="w-26 uppercase text-xs  font-medium border-2 green text-[#18513F] bg-[#D0E7D2] bg-opacity-50 rounded-md p-0.5 text-center">
-                      {transaction.category?.category}
-                    </div>
-
-                    <div className="flex items-center space-x-3">
-                      <div className="text-gray-500 text-xs">
-                        {transaction.date}
-                      </div>
-                      <div className="text-lg font-bold">
+              <Card className="w-full max-w-md" key={index}>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1">
                         {transaction.desc}
-                      </div>
+                      </h3>
+                      <Badge
+                        variant="outline"
+                        className="mb-2 text-sm font-medium"
+                      >
+                        {transaction.category?.category}
+                      </Badge>
+                      <p className="text-sm text-gray-500">
+                        {transaction.date}
+                      </p>
                     </div>
-                    {/* <div className="flex items-center space-x-3"> */}
-                    {/* <div className="text-gray-500 text-sm">
-                          {transaction.date}
-                        </div> */}
-                    {/* </div> */}
+                    <p className="text-xl font-bold text-gray-900">
+                      ${transaction.amount}
+                    </p>
                   </div>
+                  <div className="flex justify-end space-x-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="shadow"
+                          onClick={() => setOpenEdit(!openEdit)}
+                          size="sm"
+                          className="flex items-center rounded-full"
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
+                        style={{
+                          maxHeight:
+                            "calc(var(--radix-popper-available-height) - 20px)",
+                        }}
+                      >
+                        <AddNewTransactionDialog
+                          books={book}
+                          addNewUser={addNewUser}
+                          currentTransaction={transaction}
+                          title="Update"
+                        />
 
-                  <div>
-                    <div className="flex items-center  justify-between space-x-1">
-                      <div className="text-xl">{transaction.amount}:</div>
-                      <div className="font-bold text-sm">
-                        {book.book_currency}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-1 w-full flex justify-center ">
-                  <div>
-                    <div className="mt-2">
-                      <div className="flex items-center space-x-7 justify-center text-xs">
-                        <Popover>
-                          <PopoverTrigger>
-                            <span className="bg-green-800 ">
-                              <MdOutlineModeEdit className="w-5 h-5 rounded " />
-                            </span>
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
-                            style={{
-                              maxHeight:
-                                "calc(var(--radix-popper-available-height) - 20px)",
+                        {/* <TestForm /> */}
+                      </PopoverContent>
+                    </Popover>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="shadow"
+                          size="sm"
+                          className="flex items-center text-red-600 hover:text-red-700 rounded-full"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete the Transaction
+                            {transaction.desc}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => {
+                              deleteTransactions(transaction.id);
                             }}
                           >
-                            <AddNewTransactionDialog
-                              books={book}
-                              addNewUser={addNewUser}
-                              currentTransaction={transaction}
-                              title="Update"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <RiDeleteBinLine className="w-5 h-5" />
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will
-                                permanently delete the Transaction
-                                {transaction.desc}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => {
-                                  deleteTransactions(transaction.id);
-                                }}
-                              >
-                                Continue
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </div>
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
+
+              // <div
+              //   key={index}
+              //   className={`${
+              //     open ? "relative" : "absolute  top-4 group-hover:top-4 "
+              //   }  w-full p-4 bg-white  border border-green-600 rounded-lg shadow `}
+              // >
+              //   <div className="flex items-center justify-between">
+              //     <div>
+              //       <div className="w-26 uppercase text-xs  font-medium border-2 green text-[#18513F] bg-[#D0E7D2] bg-opacity-50 rounded-md p-0.5 text-center">
+              //         {transaction.category?.category}
+              //       </div>
+
+              //       <div className="flex items-center space-x-3">
+              //         <div className="text-gray-500 text-xs">
+              //           {transaction.date}
+              //         </div>
+              //         <div className="text-lg font-bold">
+              //           {transaction.desc}
+              //         </div>
+              //       </div>
+              //       {/* <div className="flex items-center space-x-3"> */}
+              //       {/* <div className="text-gray-500 text-sm">
+              //             {transaction.date}
+              //           </div> */}
+              //       {/* </div> */}
+              //     </div>
+
+              //     <div>
+              //       <div className="flex items-center  justify-between space-x-1">
+              //         <div className="text-xl">{transaction.amount}:</div>
+              //         <div className="font-bold text-sm">
+              //           {book.book_currency}
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+              //   <div className="mt-1 w-full flex justify-center ">
+              //     <div>
+              //       <div className="mt-2">
+              //         <div className="flex items-center space-x-7 justify-center text-xs">
+              //           <Popover>
+              //             <PopoverTrigger>
+              //               <span className="bg-green-800 ">
+              //                 <MdOutlineModeEdit className="w-5 h-5 rounded " />
+              //               </span>
+              //             </PopoverTrigger>
+              //             <PopoverContent
+              //               className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
+              //               style={{
+              //                 maxHeight:
+              //                   "calc(var(--radix-popper-available-height) - 20px)",
+              //               }}
+              //             >
+              //               <AddNewTransactionDialog
+              //                 books={book}
+              //                 addNewUser={addNewUser}
+              //                 currentTransaction={transaction}
+              //                 title="Update"
+              //               />
+              //             </PopoverContent>
+              //           </Popover>
+              //           <AlertDialog>
+              //             <AlertDialogTrigger asChild>
+              //               <RiDeleteBinLine className="w-5 h-5" />
+              //             </AlertDialogTrigger>
+              //             <AlertDialogContent>
+              //               <AlertDialogHeader>
+              //                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              //                 <AlertDialogDescription>
+              //                   This action cannot be undone. This will
+              //                   permanently delete the Transaction
+              //                   {transaction.desc}
+              //                 </AlertDialogDescription>
+              //               </AlertDialogHeader>
+              //               <AlertDialogFooter>
+              //                 <AlertDialogCancel>Cancel</AlertDialogCancel>
+              //                 <AlertDialogAction
+              //                   onClick={() => {
+              //                     deleteTransactions(transaction.id);
+              //                   }}
+              //                 >
+              //                   Continue
+              //                 </AlertDialogAction>
+              //               </AlertDialogFooter>
+              //             </AlertDialogContent>
+              //           </AlertDialog>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </div>
             ))}
           </CollapsibleContent>
         </Collapsible>

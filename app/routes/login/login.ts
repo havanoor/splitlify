@@ -1,6 +1,6 @@
 import { createCookie, redirect } from "@remix-run/node";
 import { z } from "zod";
-import { LoginSchema } from "~/schemas";
+import { LoginSchema, SignUpSchema } from "~/schemas";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -63,3 +63,35 @@ export let cookie = createCookie("__session", {
   secure: process.env.NODE_ENV === "production",
   maxAge: 60 * 60 * 24 * 30,
 });
+
+export const register = async (values: z.infer<typeof SignUpSchema>) => {
+  const validatedFields = SignUpSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: "Invalid Fields!" };
+  }
+
+  const { firstName, lastName, email, password, userName } =
+    validatedFields.data;
+
+  const data = {
+    first_name: firstName,
+    last_name: lastName,
+    email: email,
+    auth_method: "Credentials",
+    hashed_password: password,
+    username: userName,
+    is_registered: "true",
+  };
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/auth/users/new_user`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  ).then((data) => data.json());
+
+  return loginUsingCredentials(userName, password);
+};

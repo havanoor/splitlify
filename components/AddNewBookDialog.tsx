@@ -452,7 +452,6 @@ export default function AddNewBookDialog({
             <Button
               className="mr-2"
               type="submit"
-              onClick={() => addNewBook(newBook)}
               disabled={!available}
               name="_action"
               value="AddNewBook"

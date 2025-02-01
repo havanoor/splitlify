@@ -1,6 +1,19 @@
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  json,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
 import { LoginForm } from "components/LoginForm";
 import { cookie, login } from "./login";
+import { generateAuthUrl } from "~/lib/googleLogin";
+import { useLoaderData } from "@remix-run/react";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  // Put "register" in the state so we know where the user is
+  // coming from when they are sent back to us from Google.
+  return json({ googleAuthUrl: generateAuthUrl("sign-in") });
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -20,5 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Login() {
-  return <LoginForm />;
+  const { googleAuthUrl } = useLoaderData<typeof loader>();
+
+  return <LoginForm url={googleAuthUrl} />;
 }

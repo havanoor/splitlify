@@ -39,34 +39,34 @@ import {
   CollapsibleTrigger,
 } from "components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
-import getData, { deleteData, postData } from "~/lib/ApiRequests";
+import { getData, deleteData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getSession(request);
   const data = await getData(`book/?user_id=${user.user_id}&limit=5&offset=0`);
+
   return json(data);
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
+  const user = await getSession(request);
   const { _action, ...data } = Object.fromEntries(formData);
   switch (_action) {
     case "AddNewBook":
-      await postData("books/new", { ...data, user_id: "8" });
+      await postData("books/new", { ...data, user_id: user.user_id });
       return json({
         ok: "Suceess",
       });
-    case "AddNewTransaction":
-      await postData("books/new", { ...data, user_id: "8" });
-      break;
+
     case "DeleteBook":
       await deleteData(`books/delete/${data.book_id}`);
       return json({
         ok: "Suceess",
       });
     case "AddNewCategory":
-      await postData("category/add", { ...data, user_id: "8" });
+      await postData("category/add", { ...data, user_id: user.user_id });
       return json({
         ok: "Suceess",
       });
@@ -115,7 +115,11 @@ export default function Books() {
                     />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="z-10 " side="bottom" align="start">
+                <PopoverContent
+                  className="z-10 p-0"
+                  side="bottom"
+                  align="start"
+                >
                   <AddNewBookDialog
                     //   TODO: Fix here
                     existing_books={
@@ -212,9 +216,6 @@ export default function Books() {
                         className="w-48"
                         onClick={() => {
                           setSelected(book);
-                          //   fetchData(book.id);
-                          //   fetchPaymentSplit(book.id);
-
                           handleClick();
                         }}
                       >
@@ -330,7 +331,7 @@ export default function Books() {
                         </Button>
                       </div>
                     </PopoverTrigger>
-                    <PopoverContent>
+                    <PopoverContent className="p-0">
                       <AddNewBookDialog
                         existing_books={
                           userBooks
@@ -365,13 +366,6 @@ export default function Books() {
                   key={index}
                   onClick={() => {
                     setSelected(book);
-                    // router.push(`?book_id=${book.id}`);
-                    // fetchData(book.id);
-                    // fetchPaymentSplit(book.id);
-                    // setNewUser((prevState) => ({
-                    //   ...prevState,
-                    //   book_id: book.id.toString(),
-                    // }));
                   }}
                   className={twMerge(
                     "hover:bg-gray-300 cursor-pointer",
