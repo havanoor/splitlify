@@ -3,15 +3,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { Dispatch, SetStateAction, useState } from "react";
-import {
-  MdKeyboardDoubleArrowDown,
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
-  MdKeyboardDoubleArrowUp,
-  MdOutlineModeEdit,
-} from "react-icons/md";
-import { RiDeleteBinLine } from "react-icons/ri";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,20 +19,28 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "components/ui/collapsible";
+import { TrashIcon } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
+import {
+  MdKeyboardDoubleArrowDown,
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+  MdKeyboardDoubleArrowUp,
+  MdOutlineModeEdit,
+} from "react-icons/md";
+import { RiDeleteBinLine } from "react-icons/ri";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
+import EditTransactionView from "./EditTransactionView";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { PencilIcon, TrashIcon } from "lucide-react";
-import { Badge } from "./ui/badge";
-import TestForm from "./TestForm";
+import { Form } from "@remix-run/react";
 
 type BookTransactionsProps = {
   transactions: Transaction[];
-  addNewUser: (newUser: NewUser) => void;
-  deleteTransactions: (transaction_id: number) => void;
   book: Book;
   offset: number;
-  setOffset: Dispatch<SetStateAction<number>>;
+  setOffset: (offset: string) => void;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
@@ -51,16 +50,12 @@ export default function BookTransactions({
   transactions,
   offset,
   setOffset,
-  deleteTransactions,
-  addNewUser,
   open,
   setOpen,
 }: BookTransactionsProps) {
   const handleClick = () => {
     setOpen(!open && transactions ? transactions.length > 0 : false);
   };
-  const bookTransactions = transactions ? transactions : null;
-  const [openEdit, setOpenEdit] = useState(false);
   return (
     <>
       <div className="hidden md:table w-full mt-4 ">
@@ -82,11 +77,7 @@ export default function BookTransactions({
                     side="bottom"
                     align="start"
                   >
-                    <AddNewTransactionDialog
-                      books={book}
-                      addNewUser={addNewUser}
-                      title="Add"
-                    />
+                    <AddNewTransactionDialog books={book} title="Add" />
                   </PopoverContent>
                 </Popover>
               </th>
@@ -118,7 +109,7 @@ export default function BookTransactions({
             </tr>
           </thead>
           <tbody className="text-center">
-            {bookTransactions?.map((transaction, index) => (
+            {transactions?.map((transaction, index) => (
               <tr key={index}>
                 <td className="hidden px-6 py-1 sm:table-cell">
                   {transaction.date}
@@ -147,7 +138,6 @@ export default function BookTransactions({
                       <PopoverContent className="z-50 grid gap-4 p-10 w-450 bg-white  rounded-md shadow-lg ">
                         <AddNewTransactionDialog
                           books={book}
-                          addNewUser={addNewUser}
                           currentTransaction={transaction}
                           title="Update"
                         />
@@ -190,8 +180,10 @@ export default function BookTransactions({
               <Button
                 variant="ghost"
                 size="sm"
-                disabled={!open || bookTransactions?.length == 0 || offset <= 0}
-                onClick={() => setOffset(offset <= 5 ? 0 : offset - 5)}
+                disabled={!open || transactions?.length == 0 || offset <= 0}
+                onClick={() =>
+                  setOffset(offset <= 5 ? "0" : (offset - 5).toString())
+                }
               >
                 <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
               </Button>
@@ -211,8 +203,8 @@ export default function BookTransactions({
               <Button
                 variant="ghost"
                 size="sm"
-                disabled={!open || bookTransactions?.length == 0}
-                onClick={() => setOffset(offset == 5 ? 0 : offset + 5)}
+                disabled={!open || transactions?.length == 0}
+                onClick={() => setOffset((offset + 5).toString())}
               >
                 <MdKeyboardDoubleArrowRight className="w-5 h-5" />
               </Button>
@@ -220,18 +212,16 @@ export default function BookTransactions({
           </div>
           <div
             className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${
-              open && bookTransactions?.length && bookTransactions?.length > 0
-                ? "hidden"
-                : "block"
+              open && transactions?.length > 0 ? "hidden" : "block"
             }`}
             onClick={handleClick}
           >
-            {bookTransactions?.length && bookTransactions?.length > 0
+            {transactions?.length > 0
               ? "Click to expand transactions"
               : "No transactions for selected book"}
           </div>
           <CollapsibleContent className="space-y-2">
-            {bookTransactions?.map((transaction, index) => (
+            {transactions?.map((transaction, index) => (
               <Card className="w-full max-w-md" key={index}>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-4">
@@ -254,34 +244,11 @@ export default function BookTransactions({
                     </p>
                   </div>
                   <div className="flex justify-end space-x-2">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="shadow"
-                          onClick={() => setOpenEdit(!openEdit)}
-                          size="sm"
-                          className="flex items-center rounded-full"
-                        >
-                          <PencilIcon className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
-                        style={{
-                          maxHeight:
-                            "calc(var(--radix-popper-available-height) - 20px)",
-                        }}
-                      >
-                        <AddNewTransactionDialog
-                          books={book}
-                          addNewUser={addNewUser}
-                          currentTransaction={transaction}
-                          title="Update"
-                        />
+                    <EditTransactionView
+                      book={book}
+                      transaction={transaction}
+                    />
 
-                        {/* <TestForm /> */}
-                      </PopoverContent>
-                    </Popover>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
@@ -297,18 +264,27 @@ export default function BookTransactions({
                           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                           <AlertDialogDescription>
                             This action cannot be undone. This will permanently
-                            delete the Transaction
+                            delete the Transaction :-
                             {transaction.desc}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => {
-                              deleteTransactions(transaction.id);
-                            }}
-                          >
-                            Continue
+                          <AlertDialogAction>
+                            <Form method="POST">
+                              <Button
+                                type="submit"
+                                name="_action"
+                                value="DeleteTransaction"
+                              >
+                                Continue
+                              </Button>
+                              <input
+                                type="hidden"
+                                name="transaction_id"
+                                value={transaction.id}
+                              />
+                            </Form>
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>

@@ -21,13 +21,11 @@ import {
 type AddNewTransactionProps = {
   books: Book;
   currentTransaction?: Transaction | null;
-  addNewUser: (newUser: NewUser) => void;
   title: string;
 };
 
 export default function AddNewTransactionDialog({
   books,
-  addNewUser,
   currentTransaction,
   title,
 }: AddNewTransactionProps) {
@@ -55,25 +53,15 @@ export default function AddNewTransactionDialog({
     });
   };
 
-  const addNewTrans = () => {
-    const v = selected.map((e: User) => e.id.toString());
-    transaction.payee_ids = v;
-    transaction.book_id = books.id.toString();
-    transaction.date =
-      date?.toISOString().slice(0, 10) ?? new Date().toISOString().slice(0, 10);
-
-    // addNewTransaction(transaction);
-  };
-
   return (
     <>
-      <div className="space-y-2">
-        <h4 className="font-medium leading-none">{title} Transaction</h4>
-        <p className="text-sm text-muted-foreground">
-          {title} details for the transaction
-        </p>
-      </div>
-      <Form className="grid grid-cols-1 items-center gap-4">
+      <Form className="grid grid-cols-1 items-center gap-4" method="POST">
+        <div className="space-y-2">
+          <h4 className="font-medium leading-none">{title} Transaction</h4>
+          <p className="text-sm text-muted-foreground">
+            {title} details for the transaction
+          </p>
+        </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="name">Transaction Name</Label>
           <Input
@@ -103,7 +91,7 @@ export default function AddNewTransactionDialog({
             <div className="flex-grow">
               <Select
                 name="category_id"
-                defaultValue={currentTransaction?.category?.category}
+                defaultValue={currentTransaction?.category?.id.toString()}
                 onValueChange={(v) => {
                   setTransaction({ ...transaction, category_id: v });
                 }}
@@ -114,7 +102,6 @@ export default function AddNewTransactionDialog({
                       currentTransaction?.category?.category ||
                       "Select a Category"
                     }
-                    className=""
                   />
                 </SelectTrigger>
                 <SelectContent>
@@ -201,10 +188,12 @@ export default function AddNewTransactionDialog({
           <input
             type="hidden"
             name="date"
-            defaultValue={currentTransaction?.date}
+            // defaultValue={currentTransaction?.date}
             value={
-              date?.toISOString().slice(0, 10) ??
-              new Date().toISOString().slice(0, 10)
+              currentTransaction?.date
+                ? currentTransaction?.date
+                : date?.toISOString().slice(0, 10) ??
+                  new Date().toISOString().slice(0, 10)
             }
           />
 
@@ -216,7 +205,7 @@ export default function AddNewTransactionDialog({
           <Label htmlFor="payer_id">Paid By</Label>
           <Select
             name="payer_id"
-            defaultValue={currentTransaction?.payer.username}
+            defaultValue={currentTransaction?.payer.id.toString()}
             onValueChange={(v) => {
               setTransaction({ ...transaction, payer_id: v });
             }}
@@ -260,8 +249,6 @@ export default function AddNewTransactionDialog({
           <PopoverClose asChild>
             <Button
               className="mr-2"
-              // onClick={addNewTrans}
-
               type="submit"
               name="_action"
               value="AddNewTransaction"
@@ -269,7 +256,7 @@ export default function AddNewTransactionDialog({
               {title}
             </Button>
           </PopoverClose>
-          <AddNewPerson bookId={books.id.toString()} addNewUser={addNewUser} />
+          <AddNewPerson bookId={books.id.toString()} />
         </div>
       </Form>
     </>

@@ -72,7 +72,6 @@ export const deleteData = async (url: string) => {
 
 export const postData = async (url: string, data: any) => {
   try {
-    console.log("data", data);
     const response = await fetch(process.env.BACKEND_URL + "/" + url, {
       method: "POST",
       headers: {
@@ -89,6 +88,47 @@ export const postData = async (url: string, data: any) => {
     return await response.json();
   } catch (error) {
     console.error("POST error:", error);
+    throw error;
+  }
+};
+
+export const patchData = async (url: string, data: any) => {
+  try {
+    const response = await fetch(process.env.BACKEND_URL + "/" + url, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("PATCH error:", error);
+    throw error;
+  }
+};
+
+export const putData = async (url: string, data: any) => {
+  try {
+    const response = await fetch(process.env.BACKEND_URL + "/" + url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("PUT error:", error);
     throw error;
   }
 };

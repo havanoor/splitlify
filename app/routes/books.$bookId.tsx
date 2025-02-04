@@ -5,6 +5,7 @@ import {
   useLoaderData,
   useMatches,
   useParams,
+  useSearchParams,
 } from "@remix-run/react";
 import AddNewTransactionDialog from "components/AddNewTransactionDialog";
 import BookStatsBox from "components/BookStatsBox";
@@ -17,17 +18,22 @@ import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import { getData, postData } from "~/lib/ApiRequests";
+import {
+  deleteData,
+  getData,
+  patchData,
+  postData,
+  putData,
+} from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
   const user = await getSession(request);
   const { _action, ...data } = Object.fromEntries(formData);
-  console.log("data", data);
   switch (_action) {
     case "AddNewCategory":
-      await postData("category/add", { ...data, user_id: "8" });
+      await postData("category/add", { ...data, user_id: user.user_id });
       return json({
         ok: "Suceess",
       });
@@ -40,15 +46,26 @@ export async function action({ request, params }: ActionFunctionArgs) {
       };
 
       if ("id" in data) {
-        const response = await postData(`/transactions/update/${data.id}`, {
+        const response = await patchData(`transactions/update/${data.id}`, {
           ...dataToSend,
-          id: data.id,
         });
       } else {
         const response = await postData("transactions/new", dataToSend);
       }
+      return json({
+        ok: "Suceess",
+      });
 
-      // console.log("response", response);
+    case "AddNewUser":
+      await postData("books/add_new_user/", {
+        ...data,
+        book_id: params.bookId,
+      });
+      return json({
+        ok: "Suceess",
+      });
+    case "DeleteTransaction":
+      await deleteData(`transactions/delete/${data.id}`);
       return json({
         ok: "Suceess",
       });
@@ -56,20 +73,33 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  // const user = await getSession(request);
+  const url = new URL(request.url);
+  if (!url.searchParams.get("transaction_offset")) {
+    url.searchParams.set("transaction_offset", "0");
+  }
+  const offset = url.searchParams.get("transaction_offset");
   const transactions = await getData(
-    `book/get_book_transactions/${params.bookId}/?offset=0&limit=5`
+    `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`
   );
   return json(transactions);
 }
 
 export default function IndividualBook() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const updateOffset = (newOffset: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("transaction_offset", newOffset);
+    setSearchParams(params);
+  };
+
   const [viewTransactions, setViewTransactions] = useState(false);
   const { bookId } = useParams();
   const matches = useMatches();
 
-  const books = matches.find((match) => match.id === "routes/books")?.data;
-  const book: Book = books.find((b) => b.id == bookId);
+  const books = matches.find((match) => match.id === "routes/books")
+    ?.data as Book[];
+  const book: Book | undefined = books.find((b) => b.id === Number(bookId));
 
   const bookTransactions: Transaction[] = useLoaderData<typeof loader>();
   const totalAmount = bookTransactions.reduce(
@@ -77,22 +107,12 @@ export default function IndividualBook() {
     0
   );
 
-  const [offset, setOffset] = useState(0);
-
   const spliTrans = useFetcher();
   useEffect(() => {
     if (spliTrans.state === "idle" && !spliTrans.data) {
       spliTrans.load(`/split-fetcher/${bookId}`);
     }
   }, [spliTrans.state, spliTrans.data]);
-
-  function addNewUser(newUser: NewUser): void {
-    throw new Error("Function not implemented.");
-  }
-
-  function deleteTransactions(transaction_id: number): void {
-    throw new Error("Function not implemented.");
-  }
 
   const handleClick = () => {
     setViewTransactions(
@@ -138,11 +158,7 @@ export default function IndividualBook() {
                   }}
                   align="end"
                 >
-                  <AddNewTransactionDialog
-                    books={book}
-                    addNewUser={addNewUser}
-                    title="Add"
-                  />
+                  <AddNewTransactionDialog books={book} title="Add" />
                 </PopoverContent>
               </Popover>
             </div>
@@ -160,11 +176,9 @@ export default function IndividualBook() {
           ) : null}
           <BookTransactions
             transactions={bookTransactions}
-            addNewUser={addNewUser}
             book={book}
-            offset={offset}
-            setOffset={setOffset}
-            deleteTransactions={deleteTransactions}
+            offset={Number(searchParams.get("transaction_offset") || 0)}
+            setOffset={updateOffset}
             open={viewTransactions}
             setOpen={setViewTransactions}
           />

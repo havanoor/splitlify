@@ -6,6 +6,7 @@ import {
   Outlet,
   useLoaderData,
   useParams,
+  useSearchParams,
 } from "@remix-run/react";
 import { useState } from "react";
 import { GrCheckmark } from "react-icons/gr";
@@ -43,8 +44,15 @@ import { getData, deleteData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  if (!url.searchParams.get("offset")) {
+    url.searchParams.set("offset", "0");
+  }
+  const offset = url.searchParams.get("offset") || "0";
   const user = await getSession(request);
-  const data = await getData(`book/?user_id=${user.user_id}&limit=5&offset=0`);
+  const data = await getData(
+    `book/?user_id=${user.user_id}&limit=5&offset=${offset}`
+  );
 
   return json(data);
 }
@@ -75,10 +83,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Books() {
   const { bookId } = useParams();
-  const userBooks = useLoaderData<typeof loader>();
+  const userBooks: Book[] = useLoaderData<typeof loader>();
   const [isFlex, setIsFlex] = useState(false);
   const [selectedBook, setSelected] = useState<Book | undefined>(
-    userBooks.find((book) => book.id == bookId)
+    userBooks.find((book) => book.id === Number(bookId))
   );
   const [viewTransactions, setViewTransactions] = useState(false);
   const [bookOffset, setBookOffset] = useState(0);
@@ -88,15 +96,20 @@ export default function Books() {
     setIsFlex(!isFlex && bookCount);
   };
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const updateOffset = (newOffset: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("offset", newOffset);
+    setSearchParams(params);
+  };
+
   return (
     <div className="m-2 md:m-16">
       <div>
         <div>
           <div className="w-full  md:hidden p-1.5  border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
-            <div
-              className="text-xl font-bold flex items-center"
-              //   onClick={handleClick}
-            >
+            <div className="text-xl font-bold flex items-center">
               {isFlex && userBooks != null && userBooks?.length > 0 ? (
                 <MdKeyboardDoubleArrowUp className="w-6 h-6" />
               ) : (
@@ -152,9 +165,10 @@ export default function Books() {
                     variant="ghost"
                     size="sm"
                     disabled={!isFlex}
-                    onClick={() =>
-                      setBookOffset(bookOffset == 5 ? 0 : bookOffset - 5)
-                    }
+                    onClick={() => {
+                      let number = parseInt(searchParams.get("offset") || "5");
+                      updateOffset(number <= 5 ? "0" : (number - 5).toString());
+                    }}
                   >
                     <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
                   </Button>
@@ -175,7 +189,10 @@ export default function Books() {
                     variant="ghost"
                     size="sm"
                     disabled={!isFlex}
-                    onClick={() => setBookOffset(bookOffset + 5)}
+                    onClick={() => {
+                      let number = parseInt(searchParams.get("offset") || "0");
+                      updateOffset((number + 5).toString());
+                    }}
                   >
                     <MdKeyboardDoubleArrowRight className="w-5 h-5" />
                   </Button>
