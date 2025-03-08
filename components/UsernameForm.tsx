@@ -34,23 +34,28 @@ export const UsernameForm = () => {
 
     const isValidUsername = async () => {
       validUsername.load(`/valid-username/${debounceUsername}`);
-      console.log("Valid Username", validUsername.data);
-      if (validUsername.data === false) {
-        setUsername("");
-        setError("username", {
-          type: "manual",
-          message: `Username: ${debounceUsername} is already taken`,
-        });
-      } else {
-        clearErrors("username");
-        setUsername(`Username: ${debounceUsername} is valid`);
-      }
     };
 
     if (debounceUsername != "") {
       isValidUsername();
     }
   }, [debounceUsername]);
+
+  useEffect(() => {
+    if (validUsername.state === "loading") {
+      setUsername(`Checking Username: ${debounceUsername}`);
+      clearErrors("username");
+    } else if (validUsername.data === false) {
+      setUsername("");
+      setError("username", {
+        type: "manual",
+        message: `Username: ${debounceUsername} is already taken`,
+      });
+    } else if (validUsername.data == true) {
+      setUsername(`Username: ${debounceUsername} is valid`);
+      clearErrors("username");
+    }
+  }, [validUsername.data, validUsername.state]);
 
   return (
     <FormProvider {...(form as any)}>

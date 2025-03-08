@@ -45,23 +45,28 @@ export const RegisterForm = ({ url }: { url: string }) => {
 
     const isValidUsername = async () => {
       validUsername.load(`/valid-username/${debounceUsername}`);
-      console.log("Valid Username", validUsername.data);
-      if (validUsername.data === false) {
-        setUsername("");
-        setError("userName", {
-          type: "manual",
-          message: `Username: ${debounceUsername} is already taken`,
-        });
-      } else {
-        clearErrors("userName");
-        setUsername(`Username: ${debounceUsername} is valid`);
-      }
     };
 
     if (debounceUsername != "") {
       isValidUsername();
     }
   }, [debounceUsername]);
+
+  useEffect(() => {
+    if (validUsername.state === "loading") {
+      setUsername(`Checking Username: ${debounceUsername}`);
+      clearErrors("userName");
+    } else if (validUsername.data === false) {
+      setUsername("");
+      setError("userName", {
+        type: "manual",
+        message: `Username: ${debounceUsername} is already taken`,
+      });
+    } else if (validUsername.data == true) {
+      setUsername(`Username: ${debounceUsername} is valid`);
+      clearErrors("userName");
+    }
+  }, [validUsername.data, validUsername.state]);
 
   return (
     <CardWrapper
