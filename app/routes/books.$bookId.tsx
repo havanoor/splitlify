@@ -18,6 +18,7 @@ import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import {
   deleteData,
   getData,
@@ -148,25 +149,25 @@ export default function IndividualBook() {
         </div>
 
         <div>
-          <Popover>
-            <PopoverTrigger>
+          <Sheet>
+            <SheetTrigger asChild>
               <IoMdAdd
                 color="white"
                 fill="white"
                 className="w-6 h-6 border-2 rounded"
               />
-            </PopoverTrigger>
-            <PopoverContent
-              className=" z-50 grid gap-4 p-10  mt-10 mr-2 w-80 bg-white border-2 border-green-800   rounded-md shadow-lg overflow-y-auto"
+            </SheetTrigger>
+            <SheetContent
+              className="p-10  mt-10 mr-2 w-80 bg-white "
               side="left"
-              style={{
-                maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
-              }}
-              align="end"
+              // style={{
+              //   maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
+              // }}
+              // align="end"
             >
               <AddNewTransactionDialog books={book} title="Add" />
-            </PopoverContent>
-          </Popover>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
       {/* {bookTransactions.length > 0 ? ( */}

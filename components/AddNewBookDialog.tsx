@@ -1,9 +1,9 @@
-import { PopoverClose } from "@radix-ui/react-popover";
-import { Form } from "@remix-run/react";
 import { ChangeEvent, useEffect, useState } from "react";
-import { IoIosArrowDown } from "react-icons/io";
-import { useDebounce } from "~/customHooks/Debounce";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
+import { IoIosArrowDown } from "react-icons/io";
 import {
   Command,
   CommandEmpty,
@@ -12,9 +12,6 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/command";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Select,
   SelectContent,
@@ -23,6 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { useDebounce } from "~/customHooks/Debounce";
+import { Form } from "@remix-run/react";
+import { SheetClose } from "~/components/ui/sheet";
 
 const currencies = [
   "AFN",
@@ -324,7 +325,7 @@ export default function AddNewBookDialog({
   };
 
   return (
-    <div className="grid gap-2 p-5 m-0 bg-white shadow-md rounded-md border-2 border-green-800">
+    <div className="grid gap-2 p-5  bg-white ">
       <h2 className="text-lg underline">Book Detail</h2>
       <Form method="POST" className="grid grid-cols-1 items-center gap-4">
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
@@ -354,7 +355,7 @@ export default function AddNewBookDialog({
               <Button
                 variant="outline"
                 role="combobox"
-                className={` w-full p-2 h-full justify-start`}
+                className="col-span-2 p-2 h-full justify-start"
                 onClick={() => setOpen(!open)}
               >
                 <div className="text-muted-foreground">
@@ -378,7 +379,7 @@ export default function AddNewBookDialog({
                 maxHeight: "calc(var(--radix-popper-available-height) - 50px)",
               }}
             >
-              <div className="bg-white shadow-md border-2 rounded-md">
+              <div className="bg-white  rounded-md">
                 <Command>
                   <CommandInput
                     name="currency"
@@ -448,7 +449,7 @@ export default function AddNewBookDialog({
           />
         </div>
         <div>
-          <PopoverClose asChild>
+          <SheetClose asChild>
             <Button
               className="mr-2"
               type="submit"
@@ -458,7 +459,7 @@ export default function AddNewBookDialog({
             >
               Add Book
             </Button>
-          </PopoverClose>
+          </SheetClose>
         </div>
       </Form>
     </div>

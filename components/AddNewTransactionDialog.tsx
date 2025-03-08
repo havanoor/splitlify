@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { SheetClose } from "~/components/ui/sheet";
 
 type AddNewTransactionProps = {
   books: Book;
@@ -35,7 +36,7 @@ export default function AddNewTransactionDialog({
     if (!category.data) {
       category.load(`/query-category`);
     }
-  }, [category]);
+  }, []);
 
   const [selected, setSelected] = useState<User[]>(
     currentTransaction?.payee || []
@@ -118,7 +119,7 @@ export default function AddNewTransactionDialog({
             <div className="items-center hover:cursor-pointer">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-4 h-8">
+                  <Button variant="outline" className="w-4 h-8 z-[999]">
                     +
                   </Button>
                 </PopoverTrigger>
@@ -236,7 +237,7 @@ export default function AddNewTransactionDialog({
             options={books?.splitters}
             selected={selected}
             onChange={setSelected}
-            className="w-80"
+            className="w-80 z-[999]"
             name="payee_ids"
           />
           <input
@@ -246,7 +247,7 @@ export default function AddNewTransactionDialog({
           />
         </div>
         <div>
-          <PopoverClose asChild>
+          <SheetClose asChild>
             <Button
               className="mr-2"
               type="submit"
@@ -255,7 +256,7 @@ export default function AddNewTransactionDialog({
             >
               {title}
             </Button>
-          </PopoverClose>
+          </SheetClose>
           <AddNewPerson bookId={books.id.toString()} />
         </div>
       </Form>

@@ -43,6 +43,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { getData, deleteData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -120,8 +121,8 @@ export default function Books() {
               All Books
             </div>
             <div>
-              <Popover>
-                <PopoverTrigger asChild>
+              <Sheet>
+                <SheetTrigger asChild>
                   <div className="text-right">
                     <IoMdAdd
                       color="white"
@@ -129,11 +130,11 @@ export default function Books() {
                       className="w-6 h-6 border-2 rounded"
                     />
                   </div>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="z-10 p-0"
-                  side="bottom"
-                  align="start"
+                </SheetTrigger>
+                <SheetContent
+                  className="h-[450px]"
+                  side="left"
+                  // align="start"
                 >
                   <AddNewBookDialog
                     //   TODO: Fix here
@@ -145,8 +146,8 @@ export default function Books() {
                         : []
                     }
                   />
-                </PopoverContent>
-              </Popover>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 
@@ -257,8 +258,8 @@ export default function Books() {
                           {/* Share Icon Content Ends */}
                           {/* Update Book Icon */}
                           <div>
-                            <Popover>
-                              <PopoverTrigger asChild>
+                            <Sheet>
+                              <SheetTrigger asChild>
                                 <div className="text-right">
                                   {/* <Button
                                   variant="outline"
@@ -267,8 +268,8 @@ export default function Books() {
                                   <MdOutlineModeEdit className="w-4 h-4" />
                                   {/* </Button> */}
                                 </div>
-                              </PopoverTrigger>
-                              <PopoverContent className="z-10 ">
+                              </SheetTrigger>
+                              <SheetContent className="z-10 ">
                                 <AddNewBookDialog
                                   existing_books={
                                     userBooks
@@ -279,8 +280,8 @@ export default function Books() {
                                   }
                                   editBook={book}
                                 />
-                              </PopoverContent>
-                            </Popover>
+                              </SheetContent>
+                            </Sheet>
                           </div>
                           {/* Delete Book */}
                           <div>
@@ -343,8 +344,8 @@ export default function Books() {
                   All Books
                 </th>
                 <th className="p-2">
-                  <Popover>
-                    <PopoverTrigger asChild>
+                  <Sheet>
+                    <SheetTrigger asChild>
                       <div className="text-right">
                         <Button
                           variant="outline"
@@ -353,8 +354,11 @@ export default function Books() {
                           Add New Book
                         </Button>
                       </div>
-                    </PopoverTrigger>
-                    <PopoverContent className="p-0">
+                    </SheetTrigger>
+                    <SheetContent
+                      className="grid gap-2 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                      side="bottom"
+                    >
                       <AddNewBookDialog
                         existing_books={
                           userBooks
@@ -364,8 +368,8 @@ export default function Books() {
                             : []
                         }
                       />
-                    </PopoverContent>
-                  </Popover>
+                    </SheetContent>
+                  </Sheet>
                 </th>
               </tr>
             </thead>

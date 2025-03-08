@@ -2,6 +2,7 @@ import { PencilIcon } from "lucide-react";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 export default function EditTransactionView({
   book,
@@ -11,8 +12,8 @@ export default function EditTransactionView({
   transaction: Transaction;
 }) {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Sheet>
+      <SheetTrigger asChild>
         <Button
           variant="shadow"
           size="sm"
@@ -20,8 +21,8 @@ export default function EditTransactionView({
         >
           <PencilIcon className="h-4 w-4" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent
+      </SheetTrigger>
+      <SheetContent
         className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
         style={{
           maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
@@ -33,7 +34,7 @@ export default function EditTransactionView({
           currentTransaction={transaction}
           title="Update"
         />
-      </PopoverContent>
-    </Popover>
+      </SheetContent>
+    </Sheet>
   );
 }

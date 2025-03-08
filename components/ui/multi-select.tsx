@@ -92,7 +92,7 @@ function MultiSelect({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className="w-full p-0 z-[999]">
         <Command className={className}>
           <CommandInput placeholder="Search ..." />
           <CommandEmpty>No item found.</CommandEmpty>

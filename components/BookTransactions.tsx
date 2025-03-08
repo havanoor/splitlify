@@ -35,6 +35,7 @@ import EditTransactionView from "./EditTransactionView";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 type BookTransactionsProps = {
   transactions: Transaction[];
@@ -66,22 +67,21 @@ export default function BookTransactions({
               Transactions
             </th>
             <th className="p-2">
-              <Popover>
-                <PopoverTrigger asChild>
+              <Sheet>
+                <SheetTrigger asChild>
                   <div className="text-right">
                     <Button variant="outline" className="text-xs md:text-base">
                       Add Transaction
                     </Button>
                   </div>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="z-50 grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                </SheetTrigger>
+                <SheetContent
+                  className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
                   side="bottom"
-                  align="start"
                 >
                   <AddNewTransactionDialog books={book} title="Add" />
-                </PopoverContent>
-              </Popover>
+                </SheetContent>
+              </Sheet>
             </th>
           </tr>
         </thead>
@@ -133,18 +133,21 @@ export default function BookTransactions({
               </td>
               <td>
                 <div className="flex gap-8 justify-center align-middle">
-                  <Popover>
-                    <PopoverTrigger>
+                  <Sheet>
+                    <SheetTrigger asChild>
                       <MdOutlineModeEdit className="w-4 h-4" />
-                    </PopoverTrigger>
-                    <PopoverContent className="z-50 grid gap-4 p-10 w-450 bg-white  rounded-md shadow-lg ">
+                    </SheetTrigger>
+                    <SheetContent
+                      className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                      side="bottom"
+                    >
                       <AddNewTransactionDialog
                         books={book}
                         currentTransaction={transaction}
                         title="Update"
                       />
-                    </PopoverContent>
-                  </Popover>
+                    </SheetContent>
+                  </Sheet>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <RiDeleteBinLine className="w-4 h-4" />
