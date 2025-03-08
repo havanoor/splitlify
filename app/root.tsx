@@ -9,6 +9,10 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
+import "./tailwind.css";
+import NavBar from "../components/Navbar";
+import { getSession } from "./lib/helperFunctions";
+
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await getSession(request);
   // console.log(user);
@@ -18,12 +22,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json(user);
 }
 
-import "./tailwind.css";
-import NavBar from "../components/Navbar";
-import { getSession } from "./lib/helperFunctions";
-
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { username } = useLoaderData<typeof loader>();
+  const { username } = useLoaderData<typeof loader>() || { username: "Guest" };
   return (
     <html lang="en">
       <head>

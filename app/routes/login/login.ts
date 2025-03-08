@@ -1,5 +1,6 @@
-import { createCookie, redirect } from "@remix-run/node";
+import { createCookie } from "@remix-run/node";
 import { z } from "zod";
+import { postData } from "~/lib/ApiRequests";
 import { LoginSchema, SignUpSchema } from "~/schemas";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
@@ -33,6 +34,7 @@ const signIn = async (method: string, username: string, password: string) => {
   const formData = new URLSearchParams();
   formData.append("username", username);
   formData.append("password", password);
+  console.log("formData", formData);
 
   const response = await fetch(`${process.env.BACKEND_URL}/auth/token`, {
     method: "POST",
@@ -93,5 +95,18 @@ export const register = async (values: z.infer<typeof SignUpSchema>) => {
     }
   ).then((data) => data.json());
 
-  return loginUsingCredentials(userName, password);
+  return await loginUsingCredentials(userName, password);
+};
+
+export const update_username = async (username: string, user_id: number) => {
+  const data = {
+    username: username,
+    id: user_id,
+  };
+
+  console.log("data", data);
+
+  const response = await postData("auth/users/update_username/", data);
+
+  return response.data;
 };
