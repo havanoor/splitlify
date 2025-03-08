@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { FcGoogle } from "react-icons/fc";
-import { Form, json, Link, useLoaderData } from "@remix-run/react";
+import { Form, json, Link, useLoaderData, useNavigate } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { generateAuthUrl } from "~/lib/googleLogin";
 
@@ -16,14 +16,14 @@ type CardProps = {
 
 export default function CardWrapper({
   children,
-  header = "HIIi",
+  header = "Set an Header",
   footerHref,
   footerLabel,
   googleLogin,
   cardWidth = 550,
 }: CardProps) {
   return (
-    <Card style={{ width: cardWidth }} className={"shadow-md m-3"}>
+    <Card style={{ width: cardWidth }} className={"shadow-md mx-auto mt-5"}>
       <div className="flex flex-col w-full items-center gap-y-4 ">
         <h1 className="font-semibold text-2xl m-3">{header}</h1>
       </div>
@@ -48,7 +48,7 @@ export default function CardWrapper({
       <CardFooter>
         <Link
           className="text-sm text hover:underline hover:text-green-800 w-full text-center"
-          href={footerHref}
+          to={footerHref}
         >
           {footerLabel}
         </Link>

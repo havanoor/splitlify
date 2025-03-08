@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LoginSchema } from "~/schemas";
 import {
-  Form,
+  FormProvider,
   FormControl,
   FormField,
   FormItem,
@@ -17,37 +17,30 @@ import LoaderIcon from "./LoaderIcon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { login } from "~/routes/login/login";
+import { useRemixForm } from "remix-hook-form";
+import { Form } from "@remix-run/react";
 
 export const LoginForm = ({ url }: { url: string }) => {
   const [formError, setFormError] = useState("");
   const [loading, isLoading] = useState(false);
-  const form = useForm<z.infer<typeof LoginSchema>>({
+  const form = useRemixForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       username: "",
       password: "",
     },
   });
-
-  const handleSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    isLoading(true);
-    const data = await login(values);
-    if (data?.error) {
-      setFormError(data.error);
-    }
-    isLoading(false);
-  };
-
+  const { handleSubmit, control, watch, setError, clearErrors } = form;
   return (
     <CardWrapper
       header="Login"
       footerLabel="Don't have an account? Register"
-      footerHref="/authentication/register"
+      footerHref="/register"
       googleLogin={url}
       cardWidth={450}
     >
-      <Form {...form}>
-        <form method="POST" className="space-y-4">
+      <FormProvider {...(form as any)}>
+        <Form onSubmit={handleSubmit} method="POST" className="space-y-4">
           <FormField
             control={form.control}
             name="username"
@@ -55,7 +48,7 @@ export const LoginForm = ({ url }: { url: string }) => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="username" />
+                  <Input {...field} placeholder="username" required />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -68,7 +61,12 @@ export const LoginForm = ({ url }: { url: string }) => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="password" type="password" />
+                  <Input
+                    {...field}
+                    placeholder="password"
+                    type="password"
+                    required
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,8 +89,8 @@ export const LoginForm = ({ url }: { url: string }) => {
               "Login"
             )}
           </Button>
-        </form>
-      </Form>
+        </Form>
+      </FormProvider>
     </CardWrapper>
   );
 };
