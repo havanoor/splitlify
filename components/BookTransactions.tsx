@@ -58,116 +58,118 @@ export default function BookTransactions({
   };
   return (
     <>
-      <div className="hidden md:table w-full mt-4 ">
-        <table className="w-full border-2 border-[#c4d1eb]">
-          <thead className="bg-[#79AC78]">
-            <tr>
-              <th colSpan={6} className=" p-4 text-2xl text-left ">
-                Transactions
-              </th>
-              <th className="p-2">
-                <Popover>
-                  <PopoverTrigger asChild>
+      {/* <div className="hidden md:table w-full mt-4 "> */}
+      <table className="hidden md:table w-full border-2 border-[#c4d1eb] mt-4">
+        <thead className="bg-[#79AC78]">
+          <tr>
+            <th colSpan={6} className="px-4 text-2xl text-left ">
+              Transactions
+            </th>
+            <th className="p-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="text-right">
                     <Button variant="outline" className="text-xs md:text-base">
                       Add Transaction
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="z-50 grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
-                    side="bottom"
-                    align="start"
-                  >
-                    <AddNewTransactionDialog books={book} title="Add" />
-                  </PopoverContent>
-                </Popover>
-              </th>
-            </tr>
-          </thead>
-          <thead className=" bg-[#79AC78]">
-            <tr>
-              <th scope="col" className="px-6 py-4">
-                Date
-              </th>
-              <th scope="col" className="px-6 py-4">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-4">
-                Category
-              </th>
-              <th scope="col" className="hidden px-6 py-4 sm:table-cell ">
-                Amount paid
-              </th>
-              <th scope="col" className="hidden px-6 py-4 sm:table-cell">
-                Paid By
-              </th>
-              <th scope="col" className="px-6 py-4">
-                Paid For
-              </th>
-              <th scope="col" className="px-6 py-4">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            {transactions?.map((transaction, index) => (
-              <tr key={index}>
-                <td className="hidden px-6 py-1 sm:table-cell">
-                  {transaction.date}
-                </td>
-                <td className="px-6 py-2">{transaction.desc}</td>
-                <td className="px-6 py-2">{transaction.category?.category}</td>
-                <td className=" px-6 py-1">{transaction.amount}</td>
-                <td className=" px-6 py-2 ">
-                  {transaction.payer.username
-                    ? transaction.payer.username
-                    : transaction.payer.first_name +
-                      " " +
-                      transaction.payer.last_name}
-                </td>
-                <td className="px-6 py-2 text-sm">
-                  {transaction.payee
-                    .map((user) => user.first_name + " " + user.last_name)
-                    .join(", ")}
-                </td>
-                <td>
-                  <div className="flex gap-8 justify-center align-middle">
-                    <Popover>
-                      <PopoverTrigger>
-                        <MdOutlineModeEdit className="w-4 h-4" />
-                      </PopoverTrigger>
-                      <PopoverContent className="z-50 grid gap-4 p-10 w-450 bg-white  rounded-md shadow-lg ">
-                        <AddNewTransactionDialog
-                          books={book}
-                          currentTransaction={transaction}
-                          title="Update"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <RiDeleteBinLine className="w-4 h-4" />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete the transaction
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction>Continue</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="z-50 grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                  side="bottom"
+                  align="start"
+                >
+                  <AddNewTransactionDialog books={book} title="Add" />
+                </PopoverContent>
+              </Popover>
+            </th>
+          </tr>
+        </thead>
+        <thead className=" bg-[#79AC78]">
+          <tr>
+            <th scope="col" className="px-6 py-4">
+              Date
+            </th>
+            <th scope="col" className="px-6 py-4">
+              Name
+            </th>
+            <th scope="col" className="px-6 py-4">
+              Category
+            </th>
+            <th scope="col" className="hidden px-6 py-4 sm:table-cell ">
+              Amount paid
+            </th>
+            <th scope="col" className="hidden px-6 py-4 sm:table-cell">
+              Paid By
+            </th>
+            <th scope="col" className="px-6 py-4">
+              Paid For
+            </th>
+            <th scope="col" className="px-6 py-4">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody className="text-center">
+          {transactions?.map((transaction, index) => (
+            <tr key={index}>
+              <td className="hidden px-6 py-1 sm:table-cell">
+                {transaction.date}
+              </td>
+              <td className="px-6 py-2">{transaction.desc}</td>
+              <td className="px-6 py-2">{transaction.category?.category}</td>
+              <td className=" px-6 py-1">{transaction.amount}</td>
+              <td className=" px-6 py-2 ">
+                {transaction.payer.username
+                  ? transaction.payer.username
+                  : transaction.payer.first_name +
+                    " " +
+                    transaction.payer.last_name}
+              </td>
+              <td className="px-6 py-2 text-sm">
+                {transaction.payee
+                  .map((user) => user.first_name + " " + user.last_name)
+                  .join(", ")}
+              </td>
+              <td>
+                <div className="flex gap-8 justify-center align-middle">
+                  <Popover>
+                    <PopoverTrigger>
+                      <MdOutlineModeEdit className="w-4 h-4" />
+                    </PopoverTrigger>
+                    <PopoverContent className="z-50 grid gap-4 p-10 w-450 bg-white  rounded-md shadow-lg ">
+                      <AddNewTransactionDialog
+                        books={book}
+                        currentTransaction={transaction}
+                        title="Update"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <RiDeleteBinLine className="w-4 h-4" />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete the transaction
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction>Continue</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {/* </div> */}
       <div className="md:hidden m-2">
         <Collapsible
           open={open}

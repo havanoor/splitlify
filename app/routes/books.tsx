@@ -5,6 +5,7 @@ import {
   Link,
   Outlet,
   useLoaderData,
+  useNavigate,
   useParams,
   useSearchParams,
 } from "@remix-run/react";
@@ -82,6 +83,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Books() {
+  const navigate = useNavigate();
+
   const { bookId } = useParams();
   const userBooks: Book[] = useLoaderData<typeof loader>();
   const [isFlex, setIsFlex] = useState(false);
@@ -89,7 +92,6 @@ export default function Books() {
     userBooks.find((book) => book.id === Number(bookId))
   );
   const [viewTransactions, setViewTransactions] = useState(false);
-  const [bookOffset, setBookOffset] = useState(0);
   const handleClick = () => {
     const bookCount = userBooks != null && userBooks.length > 0;
     setViewTransactions(true);
@@ -212,119 +214,123 @@ export default function Books() {
               </div>
               <CollapsibleContent className="space-y-2">
                 {userBooks?.map((book: Book, index: number) => (
-                  <div
-                    key={index}
-                    className={`${
-                      isFlex ? "relative" : "absolute  top-4 group-hover:top-4 "
-                    }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
-                      "hover:bg-green-100 cursor-pointer",
-                      selectedBook?.id == book.id && "bg-[#d3f2d5]"
-                    )}`}
-                  >
-                    <div className="flex justify-between items-center space-x-4">
-                      <div>
-                        {selectedBook?.id == book.id ? (
-                          <GrCheckmark className="w-5 h-5" />
-                        ) : (
-                          <div>{index + 1}</div>
-                        )}
-                      </div>
-                      <div
-                        className="w-48"
-                        onClick={() => {
-                          setSelected(book);
-                          handleClick();
-                        }}
-                      >
-                        Name: {book.name}
-                        <div className="text-xs text-gray-500">
-                          Book Type:{book.type_of_book.toLowerCase()}
-                        </div>
-                      </div>
-
-                      <div className="flex gap-8 justify-center align-middle">
-                        {/* Share Icon */}
-                        <ShareBookPanel
-                          typeOfBook={book.type_of_book}
-                          bookUrl={`http://localhost:3000/singleBook/publicBook/${book.id}`}
-                        />
-
-                        {/* Share Icon Content Ends */}
-                        {/* Update Book Icon */}
+                  <Link to={`/books/${book.id}`} key={index} className="block">
+                    <div
+                      key={index}
+                      className={`${
+                        isFlex
+                          ? "relative"
+                          : "absolute  top-4 group-hover:top-4 "
+                      }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
+                        "hover:bg-green-100 cursor-pointer",
+                        selectedBook?.id == book.id && "bg-[#d3f2d5]"
+                      )}`}
+                    >
+                      <div className="flex justify-between items-center space-x-4">
                         <div>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <div className="text-right">
-                                {/* <Button
+                          {selectedBook?.id == book.id ? (
+                            <GrCheckmark className="w-5 h-5" />
+                          ) : (
+                            <div>{index + 1}</div>
+                          )}
+                        </div>
+                        <div
+                          className="w-48"
+                          onClick={() => {
+                            setSelected(book);
+                            handleClick();
+                          }}
+                        >
+                          Name: {book.name}
+                          <div className="text-xs text-gray-500">
+                            Book Type:{book.type_of_book.toLowerCase()}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-8 justify-center align-middle">
+                          {/* Share Icon */}
+                          <ShareBookPanel
+                            typeOfBook={book.type_of_book}
+                            bookUrl={`http://localhost:3000/singleBook/publicBook/${book.id}`}
+                          />
+
+                          {/* Share Icon Content Ends */}
+                          {/* Update Book Icon */}
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <div className="text-right">
+                                  {/* <Button
                                   variant="outline"
                                   className="text-xs md:text-base"
                                 > */}
-                                <MdOutlineModeEdit className="w-4 h-4" />
-                                {/* </Button> */}
-                              </div>
-                            </PopoverTrigger>
-                            <PopoverContent className="z-10 ">
-                              <AddNewBookDialog
-                                existing_books={
-                                  userBooks
-                                    ? userBooks.map((book: Book) => {
-                                        return book.name;
-                                      })
-                                    : []
-                                }
-                                editBook={book}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        {/* Delete Book */}
-                        <div>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <RiDeleteBinLine
-                                className="w-4 h-4"
-                                // onClick={() => deleteBook(book.id)}
-                              />
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Are you sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This action cannot be undone. This will
-                                  permanently delete the Book {book.name}
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <Form method="POST" className="w-full ">
-                                  {" "}
-                                  <AlertDialogAction
-                                  //   onClick={() => deleteBook(book.id)}
-                                  >
-                                    <input
-                                      type="hidden"
-                                      name="book_id"
-                                      value={book.id}
-                                    />
-                                    <Button
-                                      type="submit"
-                                      name="_action"
-                                      value="DeleteBook"
+                                  <MdOutlineModeEdit className="w-4 h-4" />
+                                  {/* </Button> */}
+                                </div>
+                              </PopoverTrigger>
+                              <PopoverContent className="z-10 ">
+                                <AddNewBookDialog
+                                  existing_books={
+                                    userBooks
+                                      ? userBooks.map((book: Book) => {
+                                          return book.name;
+                                        })
+                                      : []
+                                  }
+                                  editBook={book}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          {/* Delete Book */}
+                          <div>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <RiDeleteBinLine
+                                  className="w-4 h-4"
+                                  // onClick={() => deleteBook(book.id)}
+                                />
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>
+                                    Are you sure?
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will
+                                    permanently delete the Book {book.name}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <Form method="POST" className="w-full ">
+                                    {" "}
+                                    <AlertDialogAction
+                                    //   onClick={() => deleteBook(book.id)}
                                     >
-                                      Continue
-                                    </Button>
-                                  </AlertDialogAction>
-                                </Form>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                                      <input
+                                        type="hidden"
+                                        name="book_id"
+                                        value={book.id}
+                                      />
+                                      <Button
+                                        type="submit"
+                                        name="_action"
+                                        value="DeleteBook"
+                                      >
+                                        Continue
+                                      </Button>
+                                    </AlertDialogAction>
+                                  </Form>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                          {/* Delete Book Icon Ends */}
                         </div>
-                        {/* Delete Book Icon Ends */}
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </CollapsibleContent>
             </Collapsible>
@@ -379,10 +385,12 @@ export default function Books() {
             </thead>
             <tbody className="text-center">
               {userBooks?.map((book: Book, index: number) => (
+                // <Link to={`/books/${book.id}`} className="block">
                 <tr
                   key={index}
                   onClick={() => {
                     setSelected(book);
+                    navigate(`/books/${book.id}`);
                   }}
                   className={twMerge(
                     "hover:bg-gray-300 cursor-pointer",
@@ -395,7 +403,7 @@ export default function Books() {
                     )}
                   </td>
                   <td className="px-4 py-2">
-                    <Link to={`/books/${book.id}`}>{book.name}</Link>
+                    {book.name}
                     <dl className="sm:hidden">
                       <dd className="sm:hidden text-xs text-gray-500">
                         Book Type:{book.type_of_book.toLowerCase()}
@@ -410,6 +418,7 @@ export default function Books() {
                       {/* Share Icon */}
                       <ShareBookPanel
                         typeOfBook={book.type_of_book}
+                        // TODO: Fix this URL
                         bookUrl={`http://localhost:3000/singleBook/publicBook/${book.id}`}
                       />
 
@@ -426,6 +435,7 @@ export default function Books() {
                     </div>
                   </td>
                 </tr>
+                // </Link>
               ))}
             </tbody>
           </table>

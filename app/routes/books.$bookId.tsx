@@ -112,7 +112,7 @@ export default function IndividualBook() {
     if (spliTrans.state === "idle" && !spliTrans.data) {
       spliTrans.load(`/split-fetcher/${bookId}`);
     }
-  }, [spliTrans.state, spliTrans.data]);
+  }, [spliTrans.state, spliTrans.data, bookId]);
 
   const handleClick = () => {
     setViewTransactions(
@@ -123,67 +123,64 @@ export default function IndividualBook() {
   };
   return (
     <div>
-      {bookTransactions.length > 0 ? (
-        <div>
-          <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
-            <div
-              className="text-xl font-bold flex items-center"
-              onClick={handleClick}
-            >
-              {viewTransactions &&
-              bookTransactions?.length &&
-              bookTransactions.length > 0 ? (
-                <MdKeyboardDoubleArrowUp className="w-6 h-6" />
-              ) : (
-                <MdKeyboardDoubleArrowDown className="w-6 h-6" />
-              )}
-              Transactions
-            </div>
-
-            <div>
-              <Popover>
-                <PopoverTrigger>
-                  <IoMdAdd
-                    color="white"
-                    fill="white"
-                    className="w-6 h-6 border-2 rounded"
-                  />
-                </PopoverTrigger>
-                <PopoverContent
-                  className=" z-50 grid gap-4 p-10  mt-10 mr-2 w-80 bg-white border-2 border-green-800   rounded-md shadow-lg overflow-y-auto"
-                  side="left"
-                  style={{
-                    maxHeight:
-                      "calc(var(--radix-popper-available-height) - 20px)",
-                  }}
-                  align="end"
-                >
-                  <AddNewTransactionDialog books={book} title="Add" />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-          {book ? (
-            <BookStatsBox
-              amount={totalAmount}
-              currency={book?.book_currency}
-              numberFriends={book?.splitters.length}
-              numberTransactions={
-                bookTransactions ? bookTransactions.length : 0
-              }
-              bookName={book?.name}
-            />
-          ) : null}
-          <BookTransactions
-            transactions={bookTransactions}
-            book={book}
-            offset={Number(searchParams.get("transaction_offset") || 0)}
-            setOffset={updateOffset}
-            open={viewTransactions}
-            setOpen={setViewTransactions}
-          />
+      <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
+        <div
+          className="text-xl font-bold flex items-center"
+          onClick={handleClick}
+        >
+          {viewTransactions &&
+          bookTransactions?.length &&
+          bookTransactions.length > 0 ? (
+            <MdKeyboardDoubleArrowUp className="w-6 h-6" />
+          ) : (
+            <MdKeyboardDoubleArrowDown className="w-6 h-6" />
+          )}
+          Transactions
         </div>
-      ) : null}
+
+        <div>
+          <Popover>
+            <PopoverTrigger>
+              <IoMdAdd
+                color="white"
+                fill="white"
+                className="w-6 h-6 border-2 rounded"
+              />
+            </PopoverTrigger>
+            <PopoverContent
+              className=" z-50 grid gap-4 p-10  mt-10 mr-2 w-80 bg-white border-2 border-green-800   rounded-md shadow-lg overflow-y-auto"
+              side="left"
+              style={{
+                maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
+              }}
+              align="end"
+            >
+              <AddNewTransactionDialog books={book} title="Add" />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+      {/* {bookTransactions.length > 0 ? ( */}
+      <div>
+        {book ? (
+          <BookStatsBox
+            amount={totalAmount}
+            currency={book?.book_currency}
+            numberFriends={book?.splitters.length}
+            numberTransactions={bookTransactions ? bookTransactions.length : 0}
+            bookName={book?.name}
+          />
+        ) : null}
+        <BookTransactions
+          transactions={bookTransactions}
+          book={book}
+          offset={Number(searchParams.get("transaction_offset") || 0)}
+          setOffset={updateOffset}
+          open={viewTransactions}
+          setOpen={setViewTransactions}
+        />
+      </div>
+      {/* ) : null} */}
       <TransactionSplit split={spliTrans.data?.splits as Payment[]} />
     </div>
   );
