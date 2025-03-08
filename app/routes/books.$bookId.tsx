@@ -30,6 +30,7 @@ import { getSession } from "~/lib/helperFunctions";
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
   const user = await getSession(request);
+
   const { _action, ...data } = Object.fromEntries(formData);
   switch (_action) {
     case "AddNewCategory":
@@ -86,7 +87,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 export default function IndividualBook() {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const [payments, setPayments] = useState<Payment[]>([]);
   const updateOffset = (newOffset: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("transaction_offset", newOffset);
@@ -109,10 +110,18 @@ export default function IndividualBook() {
 
   const spliTrans = useFetcher();
   useEffect(() => {
-    if (spliTrans.state === "idle" && !spliTrans.data) {
-      spliTrans.load(`/split-fetcher/${bookId}`);
+    // if (spliTrans.state === "idle" && !spliTrans.data) {
+    spliTrans.load(`/split-fetcher/${bookId}`);
+    // }
+  }, [bookId]);
+
+  useEffect(() => {
+    if (spliTrans.state === "loading") {
+      setPayments([]);
+    } else if (spliTrans.data) {
+      setPayments(spliTrans.data.splits as Payment[]);
     }
-  }, [spliTrans.state, spliTrans.data, bookId]);
+  }, [spliTrans.data, spliTrans.state]);
 
   const handleClick = () => {
     setViewTransactions(
@@ -180,8 +189,7 @@ export default function IndividualBook() {
           setOpen={setViewTransactions}
         />
       </div>
-      {/* ) : null} */}
-      <TransactionSplit split={spliTrans.data?.splits as Payment[]} />
+      <TransactionSplit split={payments} />
     </div>
   );
 }
