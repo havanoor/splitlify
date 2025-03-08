@@ -28,7 +28,7 @@ export const getDataWithParams = async (url: string, params: any) => {
         "/" +
         url +
         "?" +
-        new URLSearchParams(params).toString,
+        new URLSearchParams(params).toString(),
       {
         method: "GET",
         headers: {

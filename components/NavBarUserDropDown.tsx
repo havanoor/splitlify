@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -33,9 +34,9 @@ export default function NavBarUserDropDown({
                 </form>
               </DropdownMenuItem>
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <a href="/singleBook">
+              <Link to="/books">
                 <DropdownMenuItem>My Books</DropdownMenuItem>
-              </a>
+              </Link>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
