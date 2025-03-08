@@ -1,9 +1,9 @@
+import { PopoverClose } from "@radix-ui/react-popover";
+import { Form } from "@remix-run/react";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
 import { IoIosArrowDown } from "react-icons/io";
+import { useDebounce } from "~/customHooks/Debounce";
+import { Button } from "./ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,6 +12,9 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/command";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Select,
   SelectContent,
@@ -20,9 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { PopoverClose } from "@radix-ui/react-popover";
-import { useDebounce } from "~/customHooks/Debounce";
-import { Form } from "@remix-run/react";
 
 const currencies = [
   "AFN",

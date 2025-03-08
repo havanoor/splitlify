@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { UsernameForm } from "components/UsernameForm";
-import { User } from "lucide-react";
 import { getValidatedFormData } from "remix-hook-form";
 import { z } from "zod";
 import { getSession } from "~/lib/helperFunctions";

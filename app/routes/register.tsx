@@ -1,17 +1,17 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ActionFunctionArgs,
   json,
   LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { RegisterForm } from "components/RegisterForm";
-import { cookie, register } from "./login/login";
-import { generateAuthUrl } from "~/lib/googleLogin";
-import { Form, useLoaderData } from "@remix-run/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SignUpSchema } from "~/schemas";
 import { getValidatedFormData } from "remix-hook-form";
 import { z } from "zod";
+import { generateAuthUrl } from "~/lib/googleLogin";
+import { SignUpSchema } from "~/schemas";
+import { cookie, register } from "./login/login";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // Put "register" in the state so we know where the user is

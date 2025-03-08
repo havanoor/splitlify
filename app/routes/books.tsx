@@ -385,7 +385,6 @@ export default function Books() {
             </thead>
             <tbody className="text-center">
               {userBooks?.map((book: Book, index: number) => (
-                // <Link to={`/books/${book.id}`} className="block">
                 <tr
                   key={index}
                   onClick={() => {
@@ -435,17 +434,12 @@ export default function Books() {
                     </div>
                   </td>
                 </tr>
-                // </Link>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-      <div>
-        {/* <h1 className="text-center font-bold text-2xl mt-16 underline underline-offset-8">
-          {state.books?.name}
-        </h1> */}
-      </div>
+      <div></div>
       <Outlet />
 
       <div className="m-2 md:m-16 ">

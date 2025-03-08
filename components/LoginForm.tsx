@@ -1,24 +1,22 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "@remix-run/react";
 import { useState } from "react";
+import { IoWarningOutline } from "react-icons/io5";
+import { useRemixForm } from "remix-hook-form";
+import { z } from "zod";
 import { LoginSchema } from "~/schemas";
+import CardWrapper from "./CardWrapper";
+import LoaderIcon from "./LoaderIcon";
+import { Button } from "./ui/button";
 import {
-  FormProvider,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  FormProvider,
 } from "./ui/form";
-import { useForm } from "react-hook-form";
-import CardWrapper from "./CardWrapper";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { IoWarningOutline } from "react-icons/io5";
-import LoaderIcon from "./LoaderIcon";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { login } from "~/routes/login/login";
-import { useRemixForm } from "remix-hook-form";
-import { Form } from "@remix-run/react";
 
 export const LoginForm = ({ url }: { url: string }) => {
   const [formError, setFormError] = useState("");

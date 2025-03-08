@@ -1,14 +1,13 @@
+import { PopoverClose } from "@radix-ui/react-popover";
 import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { Label } from "components/ui/label";
-import { PopoverClose } from "@radix-ui/react-popover";
 
+import { Form } from "@remix-run/react";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { ChangeEvent, useState } from "react";
-import { Form } from "@remix-run/react";
 
 type userProps = {
-  // addNewUser: (newUser: NewUser) => void;
   bookId: string;
 };
 

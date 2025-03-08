@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/react";
-import { getData, getDataWithParams } from "~/lib/ApiRequests";
+import { getDataWithParams } from "~/lib/ApiRequests";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   console.log("params==============================", params);
