@@ -37,7 +37,6 @@ export const LoginForm = ({ url }: { url: string }) => {
       footerLabel="Don't have an account? Register"
       footerHref="/register"
       googleLogin={url}
-      cardWidth={450}
     >
       <FormProvider {...(form as any)}>
         <Form onSubmit={handleSubmit} method="POST" className="space-y-4">

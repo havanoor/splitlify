@@ -68,7 +68,6 @@ export const RegisterForm = ({ url }: { url: string }) => {
       header="Register"
       footerLabel="Already have an account? Login"
       footerHref="/login"
-      cardWidth={600}
       googleLogin={url}
     >
       <FormProvider {...(form as any)}>

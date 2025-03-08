@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@remix-run/react";
+import { Form, useFetcher } from "@remix-run/react";
 import { useRemixForm } from "remix-hook-form";
 import { z } from "zod";
 import { UsernameSchema } from "~/schemas";
@@ -13,6 +13,9 @@ import {
   FormProvider,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { Card } from "./ui/card";
+import { useDebounce } from "~/customHooks/Debounce";
+import { useEffect, useState } from "react";
 
 export const UsernameForm = () => {
   const form = useRemixForm<z.infer<typeof UsernameSchema>>({
@@ -22,26 +25,57 @@ export const UsernameForm = () => {
     },
   });
   const { handleSubmit, control, watch, setError, clearErrors } = form;
+  const debounceUsername = useDebounce(watch("username"));
+  const validUsername = useFetcher();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    console.log("Debounce Username", debounceUsername);
+
+    const isValidUsername = async () => {
+      validUsername.load(`/valid-username/${debounceUsername}`);
+      console.log("Valid Username", validUsername.data);
+      if (validUsername.data === false) {
+        setUsername("");
+        setError("username", {
+          type: "manual",
+          message: `Username: ${debounceUsername} is already taken`,
+        });
+      } else {
+        clearErrors("username");
+        setUsername(`Username: ${debounceUsername} is valid`);
+      }
+    };
+
+    if (debounceUsername != "") {
+      isValidUsername();
+    }
+  }, [debounceUsername]);
 
   return (
     <FormProvider {...(form as any)}>
-      <Form onSubmit={handleSubmit} method="POST">
-        <FormField
-          control={control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Username" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Card className={"shadow-md mx-auto mt-5 p-4"}>
+        <Form onSubmit={handleSubmit} method="POST">
+          <FormField
+            control={control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Username" />
+                </FormControl>
+                <p className="text-sm text-green-800">{username}</p>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Button type="submit">Add Username</Button>
-      </Form>
+          <Button type="submit" className="mt-2">
+            Add Username
+          </Button>
+        </Form>
+      </Card>
     </FormProvider>
   );
 };

@@ -10,7 +10,6 @@ type CardProps = {
   header: string;
   footerLabel: string;
   footerHref: string;
-  cardWidth: number;
   googleLogin?: string;
 };
 
@@ -20,10 +19,9 @@ export default function CardWrapper({
   footerHref,
   footerLabel,
   googleLogin,
-  cardWidth = 550,
 }: CardProps) {
   return (
-    <Card style={{ width: cardWidth }} className={"shadow-md mx-auto mt-5"}>
+    <Card className="shadow-md mx-auto mt-5  md:w-1/2 p-4">
       <div className="flex flex-col w-full items-center gap-y-4 ">
         <h1 className="font-semibold text-2xl m-3">{header}</h1>
       </div>
