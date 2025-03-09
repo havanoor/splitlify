@@ -1,4 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
 import {
   Form,
   json,
@@ -52,6 +56,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   const offset = url.searchParams.get("offset") || "0";
   const user = await getSession(request);
+
+  if (!user) {
+    throw redirect("/login");
+  }
+
   const data = await getData(
     `book/?user_id=${user.user_id}&limit=5&offset=${offset}`
   );
