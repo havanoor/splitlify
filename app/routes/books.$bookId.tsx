@@ -107,9 +107,7 @@ export default function IndividualBook() {
 
   const spliTrans = useFetcher();
   useEffect(() => {
-    // if (spliTrans.state === "idle" && !spliTrans.data) {
     spliTrans.load(`/split-fetcher/${bookId}`);
-    // }
   }, [bookId]);
 
   useEffect(() => {

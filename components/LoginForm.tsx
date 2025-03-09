@@ -19,8 +19,6 @@ import {
 import { Input } from "./ui/input";
 
 export const LoginForm = ({ url }: { url: string }) => {
-  const [formError, setFormError] = useState("");
-  const [loading, isLoading] = useState(false);
   const form = useRemixForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -28,7 +26,8 @@ export const LoginForm = ({ url }: { url: string }) => {
       password: "",
     },
   });
-  const { handleSubmit, control, watch, setError, clearErrors } = form;
+  const { handleSubmit, control, watch, setError, clearErrors, formState } =
+    form;
   return (
     <CardWrapper
       header="Login"
@@ -69,15 +68,9 @@ export const LoginForm = ({ url }: { url: string }) => {
               </FormItem>
             )}
           />
-          {formError && (
-            <div className="flex gap-2 w-full p-2 rounded-md  bg-destructive/15 items-center text-destructive text-sm">
-              <IoWarningOutline className="w-5 h-5" />
-              <p>{formError}</p>
-            </div>
-          )}
 
           <Button type="submit" className="w-full">
-            {loading ? (
+            {formState.isSubmitting ? (
               <>
                 <LoaderIcon />
                 Logging In ...

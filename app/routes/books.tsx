@@ -68,6 +68,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json(data);
 }
 
+
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const user = await getSession(request);
@@ -278,7 +279,7 @@ export default function Books() {
                                   {/* </Button> */}
                                 </div>
                               </SheetTrigger>
-                              <SheetContent className="z-10 ">
+                              <SheetContent className="h-[450px]" side="left">
                                 <AddNewBookDialog
                                   existing_books={
                                     userBooks

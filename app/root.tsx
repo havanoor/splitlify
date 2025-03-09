@@ -10,7 +10,7 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 
 import "./tailwind.css";
 import NavBar from "../components/Navbar";
