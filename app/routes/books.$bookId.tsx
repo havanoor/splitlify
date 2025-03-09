@@ -33,12 +33,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const user = await getSession(request);
 
   const { _action, ...data } = Object.fromEntries(formData);
+
   switch (_action) {
-    case "AddNewCategory":
-      await postData("category/add", { ...data, user_id: user.user_id });
-      return json({
-        ok: "Suceess",
-      });
     case "AddNewTransaction":
       const dataToSend = {
         ...data,

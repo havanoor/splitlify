@@ -31,12 +31,25 @@ export default function AddNewTransactionDialog({
   title,
 }: AddNewTransactionProps) {
   const category = useFetcher();
-
+  const categoryUpdater = useFetcher();
+  const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
     if (!category.data) {
       category.load(`/query-category`);
     }
   }, []);
+
+  useEffect(() => {
+    if (category.data) {
+      setCategories(category.data);
+    }
+  }, [category.data]);
+
+  useEffect(() => {
+    if (categoryUpdater.state === "idle" && categoryUpdater.data) {
+      category.load(`/query-category`);
+    }
+  }, [categoryUpdater.data, categoryUpdater.state]);
 
   const [selected, setSelected] = useState<User[]>(
     currentTransaction?.payee || []
@@ -124,22 +137,17 @@ export default function AddNewTransactionDialog({
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="px-2 py-3 mr-3  bg-white border-2 rounded">
-                  <Form method="POST">
+                  <categoryUpdater.Form method="POST" action="/new-category">
                     <div className="flex items-center bg-white space-x-2">
                       <Label htmlFor="newcategory" className="mr-4">
                         Category:
                       </Label>
-                      <Input name="category_id" className="h-8 text-black" />
-                      <Button
-                        type="submit"
-                        variant="default"
-                        name="_action"
-                        value="AddNewCategory"
-                      >
+                      <Input name="category" className="h-8 text-black" />
+                      <Button type="submit" variant="default">
                         Add
                       </Button>
                     </div>
-                  </Form>
+                  </categoryUpdater.Form>
                 </PopoverContent>
               </Popover>
             </div>
