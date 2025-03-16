@@ -1,6 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   json,
+  ShouldRevalidateFunction,
+  useActionData,
   useFetcher,
   useLoaderData,
   useMatches,
@@ -11,22 +13,31 @@ import AddNewTransactionDialog from "components/AddNewTransactionDialog";
 import BookStatsBox from "components/BookStatsBox";
 import BookTransactions from "components/BookTransactions";
 import TransactionSplit from "components/BookTransSplit";
-import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
+import { toast } from "sonner";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import {
-  deleteData,
-  getData,
-  patchData,
-  postData,
-  putData,
-} from "~/lib/ApiRequests";
+import { deleteData, getData, patchData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
+
+export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
+  const prevOffset = args.currentUrl.searchParams.get("transaction_offset");
+  const nextOffset = args.nextUrl.searchParams.get("transaction_offset");
+
+  if (
+    args.currentParams.bookId === args.nextParams.bookId &&
+    args.formMethod === undefined &&
+    prevOffset === nextOffset
+  ) {
+    return false;
+  }
+
+  return args.defaultShouldRevalidate;
+};
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -104,6 +115,18 @@ export default function IndividualBook() {
     (total, transaction) => total + transaction.amount,
     0
   );
+
+  const actionData = useActionData<typeof action>();
+
+  useEffect(() => {
+    if (actionData) {
+      if (actionData.ok) {
+        toast.success("Added new Transaction to book");
+      } else {
+        toast.error("Failed to add transaction to Book");
+      }
+    }
+  }, [actionData]);
 
   const spliTrans = useFetcher();
   useEffect(() => {

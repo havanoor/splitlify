@@ -5,7 +5,6 @@ import { getSession } from "~/lib/helperFunctions";
 export async function action({ request }: ActionFunctionArgs) {
   const user = await getSession(request);
   const formData = await request.formData();
-  console.log("formData", Object.fromEntries(formData));
   const data = Object.fromEntries(formData);
   await postData("category/add", { ...data, user_id: user.user_id });
   return json({

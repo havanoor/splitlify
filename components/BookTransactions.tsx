@@ -59,7 +59,6 @@ export default function BookTransactions({
   };
   return (
     <>
-      {/* <div className="hidden md:table w-full mt-4 "> */}
       <table className="hidden md:table w-full border-2 border-[#c4d1eb] mt-4">
         <thead className="bg-[#79AC78]">
           <tr>
@@ -172,7 +171,6 @@ export default function BookTransactions({
           ))}
         </tbody>
       </table>
-      {/* </div> */}
       <div className="md:hidden m-2">
         <Collapsible
           open={open}
@@ -180,12 +178,17 @@ export default function BookTransactions({
           className="space-y-2 mt-4"
         >
           <div className="flex items-center justify-between space-x-4 px-4">
-            <h4 className="text-sm font-semibold">Page 1</h4>
+            <h4 className="text-sm font-semibold">Page {offset / 5 + 1}</h4>
             <div>
               <Button
                 variant="ghost"
                 size="sm"
-                disabled={!open || transactions?.length == 0 || offset <= 0}
+                disabled={
+                  !open ||
+                  transactions?.length == 0 ||
+                  // transactions.length < 5 ||
+                  offset <= 0
+                }
                 onClick={() =>
                   setOffset(offset <= 5 ? "0" : (offset - 5).toString())
                 }
@@ -208,7 +211,9 @@ export default function BookTransactions({
               <Button
                 variant="ghost"
                 size="sm"
-                disabled={!open || transactions?.length == 0}
+                disabled={
+                  !open || transactions?.length == 0 || transactions.length < 5
+                }
                 onClick={() => setOffset((offset + 5).toString())}
               >
                 <MdKeyboardDoubleArrowRight className="w-5 h-5" />

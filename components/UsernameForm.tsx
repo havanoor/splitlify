@@ -30,8 +30,6 @@ export const UsernameForm = () => {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    console.log("Debounce Username", debounceUsername);
-
     const isValidUsername = async () => {
       validUsername.load(`/valid-username/${debounceUsername}`);
     };

@@ -8,12 +8,14 @@ import {
   json,
   Link,
   Outlet,
+  ShouldRevalidateFunction,
+  useActionData,
   useLoaderData,
   useNavigate,
   useParams,
   useSearchParams,
 } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GrCheckmark } from "react-icons/gr";
 import { IoMdAdd } from "react-icons/io";
 import {
@@ -48,9 +50,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { getData, deleteData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { toast } from "sonner";
+import { CircleX } from "lucide-react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
+
   if (!url.searchParams.get("offset")) {
     url.searchParams.set("offset", "0");
   }
@@ -68,6 +73,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json(data);
 }
 
+export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
+  const prevOffset = args.currentUrl.searchParams.get("offset") || "0";
+  const nextOffset = args.nextUrl.searchParams.get("offset") || "0";
+
+  if (
+    args.currentParams.bookId === args.nextParams.bookId &&
+    args.formMethod === undefined &&
+    prevOffset === nextOffset
+  ) {
+    return false;
+  }
+
+  return args.defaultShouldRevalidate;
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -75,27 +94,67 @@ export async function action({ request }: ActionFunctionArgs) {
   const { _action, ...data } = Object.fromEntries(formData);
   switch (_action) {
     case "AddNewBook":
-      await postData("books/new", { ...data, user_id: user.user_id });
+      const response: Book = await postData("books/new", {
+        ...data,
+        user_id: user.user_id,
+      });
+
+      console.log(response);
       return json({
-        ok: "Suceess",
+        ok: true,
+        type: "AddNewBook",
+        id: "",
       });
 
     case "DeleteBook":
       await deleteData(`books/delete/${data.book_id}`);
       return json({
-        ok: "Suceess",
+        ok: true,
+        type: "DeleteBook",
+        id: data.book_id,
       });
     case "AddNewCategory":
       await postData("category/add", { ...data, user_id: user.user_id });
       return json({
-        ok: "Suceess",
+        ok: true,
+        type: "AddNewCategory",
+        name: data.category,
       });
   }
 }
 
 export default function Books() {
   const navigate = useNavigate();
+  const actionData = useActionData<typeof action>();
+  useEffect(() => {
+    if (actionData) {
+      switch (actionData.type) {
+        case "AddNewBook":
+          if (actionData.ok) {
+            toast.success("Added new book", {
+              action: {
+                label: (
+                  // <Button variant="ghost">
+                  <CircleX className="bg-transparent" />
+                  // </Button>
+                ),
+                onClick: () => toast.dismiss(),
+              },
+            });
+          } else {
+            toast.error("Failed to add new Book");
+          }
+          break;
 
+        case "AddNewCategory":
+          toast.success("Added new Category to Book ");
+          break;
+        case "DeleteBook":
+          toast.success("Deleted book successfully");
+          break;
+      }
+    }
+  }, [actionData]);
   const { bookId } = useParams();
   const userBooks: Book[] = useLoaderData<typeof loader>();
   const [isFlex, setIsFlex] = useState(false);
@@ -141,11 +200,7 @@ export default function Books() {
                     />
                   </div>
                 </SheetTrigger>
-                <SheetContent
-                  className="h-[450px]"
-                  side="left"
-                  // align="start"
-                >
+                <SheetContent className="h-[450px]" side="left">
                   <AddNewBookDialog
                     //   TODO: Fix here
                     existing_books={
@@ -346,7 +401,9 @@ export default function Books() {
               </CollapsibleContent>
             </Collapsible>
           </div>
-
+          {/* {actionData?.ok &&
+            actionData?.type == "AddNewBook" &&
+            toast("New Book Created")} */}
           <table className="hidden md:table w-full border-2 border-[#c4d1eb]">
             <thead className="bg-[#79AC78]">
               <tr>

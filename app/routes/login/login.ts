@@ -34,7 +34,6 @@ const signIn = async (method: string, username: string, password: string) => {
   const formData = new URLSearchParams();
   formData.append("username", username);
   formData.append("password", password);
-  console.log("formData", formData);
 
   const response = await fetch(`${process.env.BACKEND_URL}/auth/token`, {
     method: "POST",
@@ -103,8 +102,6 @@ export const update_username = async (username: string, user_id: number) => {
     username: username,
     id: user_id,
   };
-
-  console.log("data", data);
 
   const response = await postData("auth/users/update_username/", data);
 

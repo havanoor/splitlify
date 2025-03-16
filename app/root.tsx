@@ -7,6 +7,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  ShouldRevalidateFunction,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
@@ -16,15 +17,32 @@ import "./tailwind.css";
 import NavBar from "../components/Navbar";
 import { getSession } from "./lib/helperFunctions";
 import { ArrowLeft, Home } from "lucide-react";
+import { Toaster } from "./components/ui/sonner";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await getSession(request);
-  // console.log(user);
   if (!user) {
     return json({ user_id: null, username: null });
   }
   return json(user);
 }
+
+export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
+  console.log({ args });
+
+  if (
+    args.formAction &&
+    ["/login", "/signup", "logout"].includes(args.formAction)
+  ) {
+    return true;
+  }
+
+  if (args.currentParams.bookId === args.nextParams.bookId) {
+    return false;
+  }
+
+  return args.defaultShouldRevalidate;
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { username } = useLoaderData<typeof loader>() || { username: "Guest" };
@@ -39,6 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <NavBar username={username} />
         {children}
+        <Toaster richColors />
         <ScrollRestoration />
         <Scripts />
       </body>

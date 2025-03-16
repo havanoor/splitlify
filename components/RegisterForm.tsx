@@ -41,8 +41,6 @@ export const RegisterForm = ({ url }: { url: string }) => {
   const validUsername = useFetcher();
 
   useEffect(() => {
-    console.log("Debounce Username", debounceUsername);
-
     const isValidUsername = async () => {
       validUsername.load(`/valid-username/${debounceUsername}`);
     };
