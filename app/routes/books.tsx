@@ -99,7 +99,6 @@ export async function action({ request }: ActionFunctionArgs) {
         user_id: user.user_id,
       });
 
-      console.log(response);
       return json({
         ok: true,
         type: "AddNewBook",

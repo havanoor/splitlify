@@ -58,6 +58,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
         const response = await patchData(`transactions/update/${data.id}`, {
           ...dataToSend,
         });
+        return json({
+          ok: "Suceess",
+        });
       } else {
         const response = await postData("transactions/new", dataToSend);
       }

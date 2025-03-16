@@ -120,7 +120,7 @@ export default function AddNewTransactionDialog({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {category.data?.map((val, id) => (
+                    {categories?.map((val, id) => (
                       <SelectItem key={id} value={val.id.toString()}>
                         {val.category}
                       </SelectItem>
