@@ -28,8 +28,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
-  console.log({ args });
-
   if (
     args.formAction &&
     ["/login", "/signup", "logout"].includes(args.formAction)

@@ -70,7 +70,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     `book/?user_id=${user.user_id}&limit=5&offset=${offset}`
   );
 
-  return json(data);
+  console.log({ userBooks: data });
+  return json({ userBooks: data, baseURL: process.env.BASE_URL });
 }
 
 export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
@@ -155,7 +156,7 @@ export default function Books() {
     }
   }, [actionData]);
   const { bookId } = useParams();
-  const userBooks: Book[] = useLoaderData<typeof loader>();
+  const { userBooks, baseURL } = useLoaderData<typeof loader>();
   const [isFlex, setIsFlex] = useState(false);
   const [selectedBook, setSelected] = useState<Book | undefined>(
     userBooks.find((book) => book.id === Number(bookId))
@@ -316,7 +317,7 @@ export default function Books() {
                           {/* Share Icon */}
                           <ShareBookPanel
                             typeOfBook={book.type_of_book}
-                            bookUrl={`http://localhost:3000/singleBook/publicBook/${book.id}`}
+                            bookUrl={`${baseURL}/public-book/${book.id}`}
                           />
 
                           {/* Share Icon Content Ends */}
@@ -488,7 +489,7 @@ export default function Books() {
                       <ShareBookPanel
                         typeOfBook={book.type_of_book}
                         // TODO: Fix this URL
-                        bookUrl={`http://localhost:3000/singleBook/publicBook/${book.id}`}
+                        bookUrl={`${baseURL}/public-book/${book.id}`}
                       />
 
                       {/* Share Icon Content Ends */}

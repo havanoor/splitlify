@@ -109,8 +109,12 @@ export default function IndividualBook() {
   const { bookId } = useParams();
   const matches = useMatches();
 
-  const books = matches.find((match) => match.id === "routes/books")
-    ?.data as Book[];
+  const books = (
+    matches.find((match) => match.id === "routes/books")?.data as {
+      userBooks: Book[];
+    }
+  )?.userBooks;
+
   const book: Book | undefined = books.find((b) => b.id === Number(bookId));
 
   const bookTransactions: Transaction[] = useLoaderData<typeof loader>();
