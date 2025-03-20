@@ -187,14 +187,12 @@ export default function AddNewTransactionDialog({
               className="w-auto bg-white  rounded-md shadow-lg"
               align="start"
             >
-              <PopoverClose>
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverClose>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+              />
             </PopoverContent>
           </Popover>
           <input
