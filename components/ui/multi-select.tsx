@@ -30,7 +30,7 @@ export type User = {
 interface MultiSelectProps {
   options: User[] | undefined;
   selected: User[];
-  onChange: React.Dispatch<React.SetStateAction<User[]>>;
+  onChange: (a: User[]) => {};
   className?: string;
   name?: string;
 }
@@ -66,7 +66,7 @@ function MultiSelect({
                   variant="secondary"
                   key={id}
                   // className="w-24"
-                  onClick={() => handleUnselect(option)}
+                  onClick={() => onChange([option])}
                 >
                   {option.username
                     ? option.username
@@ -75,10 +75,10 @@ function MultiSelect({
                     className="ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        handleUnselect(option);
+                        onChange([option]);
                       }
                     }}
-                    onClick={() => handleUnselect(option)}
+                    onClick={() => onChange([option])}
                   >
                     <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                   </button>
@@ -95,35 +95,44 @@ function MultiSelect({
       <PopoverContent className="w-full p-0 z-[999]">
         <Command className={className}>
           <CommandInput placeholder="Search ..." />
+          <Button
+            onClick={() => {
+              const unselectedOptions = options?.filter(
+                (option) => !selected.some((item) => item.id === option.id)
+              );
+              onChange(
+                unselectedOptions?.length ? unselectedOptions : options || []
+              );
+            }}
+            variant="outline"
+            className="m-2"
+          >
+            Select All
+          </Button>
           <CommandEmpty>No item found.</CommandEmpty>
           <CommandGroup className="max-h-64 overflow-auto">
             <CommandList>
               {options?.map((option, id) => (
                 <div
                   onClick={() => {
-                    onChange(
-                      selected.includes(option)
-                        ? selected.filter((item) => item.id !== option.id)
-                        : [...selected, option]
-                    );
+                    onChange([option]);
                     setOpen(true);
                   }}
                   key={id}
                 >
                   <CommandItem
                     onSelect={() => {
-                      onChange(
-                        selected.includes(option)
-                          ? selected.filter((item) => item.id !== option.id)
-                          : [...selected, option]
-                      );
+                      onChange([option]);
                       setOpen(true);
                     }}
                   >
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        selected.includes(option) ? "opacity-100" : "opacity-0"
+                        selected.filter((item) => item.id === option.id)
+                          .length == 1
+                          ? "opacity-100"
+                          : "opacity-0"
                       )}
                     />
                     {option.username

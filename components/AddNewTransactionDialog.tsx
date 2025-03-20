@@ -58,6 +58,19 @@ export default function AddNewTransactionDialog({
     currentTransaction?.date ? new Date(currentTransaction?.date) : new Date()
   );
 
+  const toggleSelected = (users: User[]) => {
+    const newSelected = [...selected];
+    users.forEach((user) => {
+      const index = newSelected.findIndex((u) => u.id === user.id);
+      if (index === -1) {
+        newSelected.push(user); // Add if not already selected
+      } else {
+        newSelected.splice(index, 1); // Remove if already selected
+      }
+    });
+    setSelected(newSelected);
+  };
+
   const [transaction, setTransaction] = useState<NewTransaction>(null);
 
   const handleNewTransaction = (e: ChangeEvent<HTMLInputElement>) => {
@@ -155,21 +168,11 @@ export default function AddNewTransactionDialog({
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="date">Date</Label>
-          {/* <Input
-            defaultValue={currentTransaction?.date}
-            id="amount"
-            type="number"
-            placeholder="0"
-            onChange={handleNewTransaction}
-            className="col-span-2 h-8 text-black"
-            name="amount"
-          /> */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 name="date"
                 id="date"
-                // defaultValue={currentTransaction?.date}
                 variant={"outline"}
                 value={date ? date.toDateString() : "Pick a date"}
                 className={cn(
@@ -197,7 +200,6 @@ export default function AddNewTransactionDialog({
           <input
             type="hidden"
             name="date"
-            // defaultValue={currentTransaction?.date}
             value={
               currentTransaction?.date
                 ? currentTransaction?.date
@@ -244,7 +246,7 @@ export default function AddNewTransactionDialog({
           <MultiSelect
             options={books?.splitters}
             selected={selected}
-            onChange={setSelected}
+            onChange={toggleSelected}
             className="w-80 z-[999]"
             name="payee_ids"
           />
