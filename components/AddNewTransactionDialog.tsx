@@ -88,6 +88,7 @@ export default function AddNewTransactionDialog({
             name="desc"
             onChange={handleNewTransaction}
             readOnly={!!currentTransaction && title === "View"}
+            required
           />
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
@@ -101,6 +102,7 @@ export default function AddNewTransactionDialog({
             className="col-span-2 h-8 text-black"
             name="amount"
             readOnly={!!currentTransaction && title === "View"}
+            required
           />
         </div>
         <div className="grid items-center gap-4 lg:grid-cols-3">

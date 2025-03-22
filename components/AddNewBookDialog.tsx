@@ -34,7 +34,6 @@ const currencies = [
   "EUR",
   "AOA",
   "XCD",
-  "XCD",
   "ARS",
   "AMD",
   "AWG",
@@ -339,6 +338,7 @@ export default function AddNewBookDialog({
             className="col-span-2"
             name="name"
             onChange={handleNewBook}
+            required
           />
         </div>
         {!available ? (

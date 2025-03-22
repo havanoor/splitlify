@@ -13,7 +13,7 @@ import AddNewTransactionDialog from "components/AddNewTransactionDialog";
 import BookStatsBox from "components/BookStatsBox";
 import BookTransactions from "components/BookTransactions";
 import TransactionSplit from "components/BookTransSplit";
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import {
   MdKeyboardDoubleArrowDown,
@@ -59,27 +59,39 @@ export async function action({ request, params }: ActionFunctionArgs) {
           ...dataToSend,
         });
         return json({
-          ok: "Suceess",
+          ok: true,
+          type: "UpdateTransaction",
+          id: data.id,
+          name: response.desc,
         });
       } else {
         const response = await postData("transactions/new", dataToSend);
+        return json({
+          ok: "Suceess",
+          type: "AddNewTransaction",
+          name: response.desc,
+          id: response.id,
+        });
       }
-      return json({
-        ok: "Suceess",
-      });
 
     case "AddNewUser":
-      await postData("books/add_new_user/", {
+      const responseUser = await postData("books/add_new_user/", {
         ...data,
         book_id: params.bookId,
       });
       return json({
-        ok: "Suceess",
+        ok: true,
+        type: "AddNewUser",
+        id: responseUser.id,
+        name: responseUser.firstName,
       });
     case "DeleteTransaction":
       await deleteData(`transactions/delete/${data.id}`);
       return json({
-        ok: "Suceess",
+        ok: true,
+        id: data.id,
+        name: data.name,
+        type: "DeleteTransaction",
       });
   }
 }
@@ -129,12 +141,39 @@ export default function IndividualBook() {
   const actionData = useActionData<typeof action>();
 
   useEffect(() => {
+    console.log(actionData);
     if (actionData) {
-      if (actionData.ok) {
-        toast.success("Added new Transaction to book");
-      } else {
-        toast.error("Failed to add transaction to Book");
+      switch (actionData.type) {
+        case "DeleteTransaction":
+          if (actionData.ok) {
+            toast.success(
+              `Deleted Transaction ${actionData.name} with id ${actionData.id}`
+            );
+          } else {
+            toast.error("Failed to add the book. Please try again");
+          }
+        case "AddNewTransaction":
+          if (actionData.ok) {
+            toast.success(`Added New transaction ${actionData.name} to Book`);
+          } else {
+            toast.error(`Failed to add transaction. Please try again`);
+          }
+          break;
+        case "UpdateTransaction":
+          if (actionData.ok) {
+            toast.success(`Updated transaction ${actionData.name}`);
+          } else {
+            toast.error("Failed to update transaction. Please try again");
+          }
+          break;
       }
+
+      // if (actionData.ok) {
+      //   toast.success("Added new Transaction to book");
+      // } else {
+      //   toast.error("Failed to add transaction to Book");
+      // }
+      // break;/
     }
   }, [actionData]);
 

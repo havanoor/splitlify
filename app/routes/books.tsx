@@ -102,7 +102,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return json({
         ok: true,
         type: "AddNewBook",
-        id: "",
+        id: response.id,
+        name: data.name,
       });
 
     case "DeleteBook":
@@ -111,13 +112,18 @@ export async function action({ request }: ActionFunctionArgs) {
         ok: true,
         type: "DeleteBook",
         id: data.book_id,
+        name: data.name,
       });
     case "AddNewCategory":
-      await postData("category/add", { ...data, user_id: user.user_id });
+      const categoryResponse = await postData("category/add", {
+        ...data,
+        user_id: user.user_id,
+      });
       return json({
         ok: true,
         type: "AddNewCategory",
         name: data.category,
+        id: "",
       });
   }
 }
@@ -130,13 +136,14 @@ export default function Books() {
       switch (actionData.type) {
         case "AddNewBook":
           if (actionData.ok) {
-            toast.success("Added new book", {
+            toast.success(`Added new book ${actionData.name}`, {
               action: {
                 label: (
                   // <Button variant="ghost">
-                  <CircleX className="bg-transparent" />
-                  // </Button>
+                  // <CircleX className="bg-transparent" />
+                  <div className="bg-inherit">X</div>
                 ),
+                // </Button>
                 onClick: () => toast.dismiss(),
               },
             });
