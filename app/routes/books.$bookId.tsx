@@ -98,6 +98,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 export default function IndividualBook() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const category = useFetcher();
+  const [categories, setCategories] = useState<Category[]>([]);
+
   const [payments, setPayments] = useState<Payment[]>([]);
   const updateOffset = (newOffset: string) => {
     const params = new URLSearchParams(searchParams);
@@ -134,6 +137,18 @@ export default function IndividualBook() {
       }
     }
   }, [actionData]);
+
+  useEffect(() => {
+    if (!category.data) {
+      category.load(`/query-category`);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (category.data) {
+      setCategories(category.data);
+    }
+  }, [category.data]);
 
   const spliTrans = useFetcher();
   useEffect(() => {
@@ -182,14 +197,17 @@ export default function IndividualBook() {
               />
             </SheetTrigger>
             <SheetContent
-              className="p-10  mt-10 mr-2 w-80 bg-white "
+              className="p-10 mt-10 mb-4 mr-2 w-80 bg-white overflow-y-auto"
               side="left"
               // style={{
               //   maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
               // }}
-              // align="end"
             >
-              <AddNewTransactionDialog books={book} title="Add" />
+              <AddNewTransactionDialog
+                books={book}
+                title="Add"
+                categories={categories}
+              />
             </SheetContent>
           </Sheet>
         </div>
@@ -212,6 +230,7 @@ export default function IndividualBook() {
           setOffset={updateOffset}
           open={viewTransactions}
           setOpen={setViewTransactions}
+          categories={categories}
         />
       </div>
       <TransactionSplit split={payments} />

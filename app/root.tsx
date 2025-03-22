@@ -22,7 +22,7 @@ import { Toaster } from "./components/ui/sonner";
 export async function loader({ request }: LoaderFunctionArgs) {
   let user = await getSession(request);
   if (!user) {
-    return json({ user_id: null, username: null });
+    return json({ user_id: "Guest", username: "Guest" });
   }
   return json(user);
 }

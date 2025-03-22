@@ -43,6 +43,8 @@ type BookTransactionsProps = {
   offset: number;
   setOffset: (offset: string) => void;
   open: boolean;
+  title?: string;
+  categories?: Category[];
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -52,7 +54,9 @@ export default function BookTransactions({
   offset,
   setOffset,
   open,
+  title,
   setOpen,
+  categories,
 }: BookTransactionsProps) {
   const handleClick = () => {
     setOpen(!open && transactions ? transactions.length > 0 : false);
@@ -75,10 +79,18 @@ export default function BookTransactions({
                   </div>
                 </SheetTrigger>
                 <SheetContent
-                  className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                  className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg overflow-y-auto"
                   side="bottom"
+                  // style={{
+                  //   maxHeight:
+                  //     "calc(var(--radix-popper-available-height) - 20px)",
+                  // }}
                 >
-                  <AddNewTransactionDialog books={book} title="Add" />
+                  <AddNewTransactionDialog
+                    books={book}
+                    title={title ? title : "Add"}
+                    categories={categories}
+                  />
                 </SheetContent>
               </Sheet>
             </th>
@@ -137,13 +149,18 @@ export default function BookTransactions({
                       <MdOutlineModeEdit className="w-4 h-4" />
                     </SheetTrigger>
                     <SheetContent
-                      className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                      className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg overflow-y-auto"
                       side="bottom"
+                      // style={{
+                      //   maxHeight:
+                      //     "calc(var(--radix-popper-available-height) - 20px)",
+                      // }}
                     >
                       <AddNewTransactionDialog
                         books={book}
                         currentTransaction={transaction}
-                        title="Update"
+                        categories={categories}
+                        title={title ? title : "Update"}
                       />
                     </SheetContent>
                   </Sheet>
@@ -257,6 +274,8 @@ export default function BookTransactions({
                     <EditTransactionView
                       book={book}
                       transaction={transaction}
+                      title={title}
+                      categories={categories}
                     />
 
                     <AlertDialog>

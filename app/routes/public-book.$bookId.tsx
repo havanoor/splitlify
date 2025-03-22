@@ -80,8 +80,6 @@ export default function PublicBook() {
   useEffect(() => {
     if (bookTrans.data) {
       setBook(bookTrans.data as Book);
-
-      console.log(bookTrans.data);
     }
   }, [bookTrans.data, bookTrans.state]);
 
@@ -155,7 +153,7 @@ export default function PublicBook() {
                     className="p-10  mt-10 mr-2 w-80 bg-white "
                     side="left"
                   >
-                    <AddNewTransactionDialog books={book} title="Add" />
+                    <AddNewTransactionDialog books={book} title="View" />
                   </SheetContent>
                 </Sheet>
               </div>
@@ -180,6 +178,7 @@ export default function PublicBook() {
                 setOffset={updateOffset}
                 open={viewTransactions}
                 setOpen={setViewTransactions}
+                title="View"
               />
             </div>
             <TransactionSplit split={payments} />

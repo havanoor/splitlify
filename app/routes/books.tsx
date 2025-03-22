@@ -70,7 +70,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     `book/?user_id=${user.user_id}&limit=5&offset=${offset}`
   );
 
-  console.log({ userBooks: data });
   return json({ userBooks: data, baseURL: process.env.BASE_URL });
 }
 

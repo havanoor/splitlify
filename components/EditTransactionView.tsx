@@ -7,9 +7,13 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 export default function EditTransactionView({
   book,
   transaction,
+  categories,
+  title,
 }: {
   book: Book;
   transaction: Transaction;
+  categories?: Category[];
+  title?: string;
 }) {
   return (
     <Sheet>
@@ -30,9 +34,9 @@ export default function EditTransactionView({
       >
         <AddNewTransactionDialog
           books={book}
-          // addNewUser={addNewUser}
           currentTransaction={transaction}
-          title="Update"
+          categories={categories}
+          title={title ? title : "Update"}
         />
       </SheetContent>
     </Sheet>

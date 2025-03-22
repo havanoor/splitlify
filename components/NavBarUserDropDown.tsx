@@ -17,7 +17,7 @@ export default function NavBarUserDropDown({
 }) {
   return (
     <>
-      {username ? (
+      {username && username !== "Guest" ? (
         <DropdownMenu>
           <DropdownMenuTrigger>
             <p className="flex items-center gap-2">
