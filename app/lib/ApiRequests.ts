@@ -82,7 +82,9 @@ export const postData = async (url: string, data: any) => {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json();
+      console.log({ errorData });
+      throw errorData;
     }
 
     return await response.json();

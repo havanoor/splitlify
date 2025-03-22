@@ -45,5 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         },
       });
     }
+  } else if (user.Error) {
+    return redirect("/login?error=existing_credentials");
   }
 }

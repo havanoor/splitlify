@@ -7,11 +7,13 @@ import {
 import { LoginForm } from "components/LoginForm";
 import { cookie, login } from "./login";
 import { generateAuthUrl } from "~/lib/googleLogin";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { LoginSchema } from "~/schemas";
 import { getValidatedFormData } from "remix-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // Put "register" in the state so we know where the user is
