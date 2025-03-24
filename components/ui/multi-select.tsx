@@ -1,7 +1,7 @@
 import { cn } from "~/lib/utils";
 
 import { CommandList } from "cmdk";
-import { Check, X } from "lucide-react";
+import { Check, MousePointerClick, X } from "lucide-react";
 import { Button } from "components/ui/button";
 import {
   Command,
@@ -86,8 +86,11 @@ function MultiSelect({
               </div>
             ))
           ) : (
-            <div className="w-full text-muted-foreground">
-              Click to add Payees
+            <div
+              // variant="ghost"
+              className="flex justify-between align-middle w-full font-medium text-muted-foreground text-left text-sm"
+            >
+              Click to add Payees <MousePointerClick className="h-4 w-4" />
             </div>
           )}
         </Button>

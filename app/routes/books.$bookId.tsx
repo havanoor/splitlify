@@ -20,7 +20,14 @@ import {
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
 import { toast } from "sonner";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import { deleteData, getData, patchData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
@@ -211,7 +218,7 @@ export default function IndividualBook() {
   };
   return (
     <div>
-      <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
+      <div className="w-full md:hidden p-1.5 border-2 rounded-tl-lg rounded-tr-lg  border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
         <div
           className="text-xl font-bold flex items-center"
           onClick={handleClick}
@@ -235,13 +242,20 @@ export default function IndividualBook() {
                 className="w-6 h-6 border-2 rounded"
               />
             </SheetTrigger>
+
             <SheetContent
-              className="p-10 mt-10 mb-4 mr-2 w-80 bg-white overflow-y-auto"
+              className="p-10 mr-2 w-80 bg-white overflow-y-scroll rounded-lg"
               side="left"
               // style={{
               //   maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
               // }}
             >
+              <SheetHeader className="text-left mb-7">
+                <SheetTitle>Add New Transaction</SheetTitle>
+                <SheetDescription>
+                  Add details for a new transaction.
+                </SheetDescription>
+              </SheetHeader>
               <AddNewTransactionDialog
                 books={book}
                 title="Add"

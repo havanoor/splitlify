@@ -324,12 +324,11 @@ export default function AddNewBookDialog({
   };
 
   return (
-    <div className="grid gap-2 p-5  bg-white ">
-      <h2 className="text-lg underline">Book Detail</h2>
+    <div className="grid gap-2 bg-white ">
       <Form method="POST" className="grid grid-cols-1 items-center gap-4">
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="name" className="text-left">
-            Book Name
+            Name
           </Label>
           <Input
             id="name"
@@ -348,7 +347,7 @@ export default function AddNewBookDialog({
         ) : null}
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="name" className="text-left">
-            Book Currency
+            Currency
           </Label>
           <Popover open={open}>
             <PopoverTrigger asChild>
@@ -422,7 +421,7 @@ export default function AddNewBookDialog({
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="btype" className="text-left">
-            Book Type
+            Type
           </Label>
           <Select
             name="type_of_book"
@@ -457,7 +456,7 @@ export default function AddNewBookDialog({
               name="_action"
               value="AddNewBook"
             >
-              Add Book
+              Add
             </Button>
           </SheetClose>
         </div>

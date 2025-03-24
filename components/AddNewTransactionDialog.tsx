@@ -72,12 +72,12 @@ export default function AddNewTransactionDialog({
   return (
     <>
       <Form className="grid grid-cols-1 items-center gap-4" method="POST">
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <h4 className="font-medium leading-none">{title} Transaction</h4>
           <p className="text-sm text-muted-foreground">
             {title} details for the transaction
           </p>
-        </div>
+        </div> */}
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="name">Transaction Name</Label>
           <Input
@@ -228,32 +228,43 @@ export default function AddNewTransactionDialog({
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="payer_id">Paid By</Label>
-          <Select
-            name="payer_id"
-            defaultValue={currentTransaction?.payer.id.toString()}
-            onValueChange={(v) => {
-              setTransaction({ ...transaction, payer_id: v });
-            }}
-          >
-            <SelectTrigger className="col-span-2 h-8">
-              <SelectValue
-                placeholder={
-                  currentTransaction?.payer.username || "Select a payer"
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {books?.splitters.map((val, id) => (
-                  <SelectItem key={id} value={val.id.toString()}>
-                    {val.username
-                      ? val.username
-                      : val.first_name + val.last_name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          {currentTransaction && title === "View" ? (
+            <Input
+              readOnly
+              className="col-span-2 h-8"
+              defaultValue={
+                currentTransaction?.payer.username ||
+                `${currentTransaction?.payer.first_name} ${currentTransaction?.payer.last_name}`
+              }
+            />
+          ) : (
+            <Select
+              name="payer_id"
+              defaultValue={currentTransaction?.payer.id.toString()}
+              onValueChange={(v) => {
+                setTransaction({ ...transaction, payer_id: v });
+              }}
+            >
+              <SelectTrigger className="col-span-2 h-8">
+                <SelectValue
+                  placeholder={
+                    currentTransaction?.payer.username || "Select a payer"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {books?.splitters.map((val, id) => (
+                    <SelectItem key={id} value={val.id.toString()}>
+                      {val.username
+                        ? val.username
+                        : `${val.first_name} ${val.last_name}`}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
         </div>
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
           <Label htmlFor="payee">Paid For</Label>
@@ -270,7 +281,7 @@ export default function AddNewTransactionDialog({
               options={books?.splitters}
               selected={selected}
               onChange={toggleSelected}
-              className="w-80 z-[999]"
+              className="w-60 z-[999]"
               name="payee_ids"
             />
           )}

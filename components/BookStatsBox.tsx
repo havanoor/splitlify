@@ -15,7 +15,7 @@ export default function BookStatsBox({
 }: BookStatsBoxProps) {
   return (
     <>
-      <table className=" table-fixed border-2 border-t-0 border-[#bdc7db] w-full md:hidden">
+      <table className="rounded-lg border-2 border-t-0  border-[#bdc7db] w-full md:hidden">
         <tbody>
           <tr className="border-2 border-[#bdc7db]   border-t-0">
             <td colSpan={3} className="pl-3   ">
@@ -33,7 +33,7 @@ export default function BookStatsBox({
             <th className="w-1/3 border-2 border-[#bdc7db]">Total Friends</th>
           </tr>
           <tr>
-            <td className="border-2 border-[#bdc7db] text-center">
+            <td className="border-2  border-[#bdc7db] text-center">
               {amount} <span className="text-sm">{currency}</span>
             </td>
             <td className="border-2 border-[#bdc7db] text-center">

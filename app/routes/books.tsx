@@ -49,7 +49,14 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { getData, deleteData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import { toast } from "sonner";
 import { CircleX } from "lucide-react";
 
@@ -186,14 +193,17 @@ export default function Books() {
     <div className="m-2 md:m-16">
       <div>
         <div>
-          <div className="w-full  md:hidden p-1.5  border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
-            <div className="text-xl font-bold flex items-center">
+          <div className="w-full  md:hidden p-1.5 rounded-lg border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
+            <div
+              className="text-xl font-bold flex flex-grow items-center"
+              onClick={handleClick}
+            >
               {isFlex && userBooks != null && userBooks?.length > 0 ? (
                 <MdKeyboardDoubleArrowUp className="w-6 h-6" />
               ) : (
                 <MdKeyboardDoubleArrowDown className="w-6 h-6" />
               )}
-              All Books
+              {selectedBook && !isFlex ? selectedBook.name : "All Books"}
             </div>
             <div>
               <Sheet>
@@ -206,7 +216,13 @@ export default function Books() {
                     />
                   </div>
                 </SheetTrigger>
-                <SheetContent className="h-[450px]" side="left">
+                <SheetContent className="h-[450px] rounded-lg" side="left">
+                  <SheetHeader className="text-left  mb-7">
+                    <SheetTitle>Add New Book</SheetTitle>
+                    <SheetDescription>
+                      Add details for a new book.
+                    </SheetDescription>
+                  </SheetHeader>
                   <AddNewBookDialog
                     //   TODO: Fix here
                     existing_books={
@@ -228,51 +244,62 @@ export default function Books() {
               onOpenChange={handleClick}
               className="space-y-2 mt-4"
             >
-              <div className="flex items-center justify-between space-x-3 px-4">
-                <h4 className="text-sm underline font-semibold">
-                  {selectedBook
-                    ? `Selected: ${selectedBook.name}`
-                    : "No Book Selected"}
-                </h4>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={!isFlex}
-                    onClick={() => {
-                      let number = parseInt(searchParams.get("offset") || "5");
-                      updateOffset(number <= 5 ? "0" : (number - 5).toString());
-                    }}
-                  >
-                    <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
-                  </Button>
-                  <CollapsibleTrigger asChild>
+              {selectedBook && isFlex ? (
+                <div className="flex items-center justify-between space-x-3 px-4">
+                  <h4 className="text-sm underline font-semibold">
+                    {selectedBook
+                      ? `Selected: ${selectedBook.name}`
+                      : "No Book Selected"}
+                  </h4>
+                  <div>
                     <Button
                       variant="ghost"
                       size="sm"
-                      disabled={userBooks != null && userBooks?.length == 0}
+                      disabled={!isFlex}
+                      onClick={() => {
+                        let number = parseInt(
+                          searchParams.get("offset") || "5"
+                        );
+                        updateOffset(
+                          number <= 5 ? "0" : (number - 5).toString()
+                        );
+                      }}
                     >
-                      {isFlex && userBooks != null && userBooks?.length > 0 ? (
-                        <MdKeyboardDoubleArrowUp className="w-5 h-5" />
-                      ) : (
-                        <MdKeyboardDoubleArrowDown className="w-5 h-5" />
-                      )}
+                      <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
                     </Button>
-                  </CollapsibleTrigger>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={!isFlex}
-                    onClick={() => {
-                      let number = parseInt(searchParams.get("offset") || "0");
-                      updateOffset((number + 5).toString());
-                    }}
-                  >
-                    <MdKeyboardDoubleArrowRight className="w-5 h-5" />
-                  </Button>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={userBooks != null && userBooks?.length == 0}
+                      >
+                        {isFlex &&
+                        userBooks != null &&
+                        userBooks?.length > 0 ? (
+                          <MdKeyboardDoubleArrowUp className="w-5 h-5" />
+                        ) : (
+                          <MdKeyboardDoubleArrowDown className="w-5 h-5" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={!isFlex}
+                      onClick={() => {
+                        let number = parseInt(
+                          searchParams.get("offset") || "0"
+                        );
+                        updateOffset((number + 5).toString());
+                      }}
+                    >
+                      <MdKeyboardDoubleArrowRight className="w-5 h-5" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div
+              ) : null}
+
+              {/* <div
                 className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${
                   isFlex && userBooks && userBooks.length > 0
                     ? "hidden"
@@ -283,7 +310,7 @@ export default function Books() {
                 {userBooks != null && userBooks.length > 0
                   ? "Click to display your Books"
                   : "No books. Start by creating one"}
-              </div>
+              </div> */}
               <CollapsibleContent className="space-y-2">
                 {userBooks?.map((book: Book, index: number) => (
                   <Link to={`/books/${book.id}`} key={index} className="block">
@@ -410,10 +437,10 @@ export default function Books() {
           {/* {actionData?.ok &&
             actionData?.type == "AddNewBook" &&
             toast("New Book Created")} */}
-          <table className="hidden md:table w-full border-2 border-[#c4d1eb]">
-            <thead className="bg-[#79AC78]">
+          <table className="hidden md:table w-full rounded-md border-2 border-[#c4d1eb]">
+            <thead className="bg-[#79AC78] rounded-md">
               <tr>
-                <th colSpan={3} className="px-4 text-2xl text-left">
+                <th colSpan={3} className="px-4 text-2xl text-left ">
                   All Books
                 </th>
                 <th className="p-2">

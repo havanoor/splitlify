@@ -12,7 +12,7 @@ export default function TransactionSplit({ split }: TransSplit) {
   const [viewDues, setViewDues] = useState(false);
   return (
     <div>
-      <div className="w-full md:hidden p-1.5  border-2 border-b-0 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
+      <div className="rounded-lg w-full md:hidden p-1.5  border-2 border-b-0 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
         <div
           className="text-xl font-bold flex items-center"
           onClick={() => setViewDues(!viewDues)}

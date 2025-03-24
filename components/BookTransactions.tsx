@@ -237,7 +237,7 @@ export default function BookTransactions({
               </Button>
             </div>
           </div>
-          <div
+          {/* <div
             className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${
               open && transactions?.length > 0 ? "hidden" : "block"
             }`}
@@ -246,7 +246,7 @@ export default function BookTransactions({
             {transactions?.length > 0
               ? "Click to expand transactions"
               : "No transactions for selected book"}
-          </div>
+          </div> */}
           <CollapsibleContent className="space-y-2">
             {transactions?.map((transaction, index) => (
               <Card className="w-full max-w-md" key={index}>
