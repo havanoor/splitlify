@@ -50,7 +50,7 @@ function MultiSelect({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen} {...props}>
+    <Popover open={open} onOpenChange={setOpen} {...props} modal={true}>
       <PopoverTrigger className="col-span-2 h-8 text-black" asChild>
         <Button
           variant="outline"
@@ -95,7 +95,7 @@ function MultiSelect({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 z-[999]" side="top">
+      <PopoverContent className="w-full p-0 " side="top">
         <Command className={className}>
           <CommandInput placeholder="Search ..." />
           <Button
@@ -113,7 +113,7 @@ function MultiSelect({
             Select All
           </Button>
           <CommandEmpty>No item found.</CommandEmpty>
-          <CommandGroup className="max-h-64 overflow-auto">
+          <CommandGroup className="max-h-64 overflow-scroll">
             <CommandList>
               {options?.map((option, id) => (
                 <div

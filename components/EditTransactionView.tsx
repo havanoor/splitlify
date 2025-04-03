@@ -1,8 +1,7 @@
 import { PencilIcon } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import { Button } from "./ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 
 export default function EditTransactionView({
   book,
@@ -31,6 +30,7 @@ export default function EditTransactionView({
         style={{
           maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
         }}
+        side="left"
       >
         <AddNewTransactionDialog
           books={book}
