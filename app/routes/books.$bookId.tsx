@@ -13,7 +13,7 @@ import AddNewTransactionDialog from "components/AddNewTransactionDialog";
 import BookStatsBox from "components/BookStatsBox";
 import BookTransactions from "components/BookTransactions";
 import TransactionSplit from "components/BookTransSplit";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import {
   MdKeyboardDoubleArrowDown,
@@ -124,7 +124,7 @@ export default function IndividualBook() {
   const updateOffset = (newOffset: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("transaction_offset", newOffset);
-    setSearchParams(params);
+    setSearchParams(params, { replace: true });
   };
 
   const [viewTransactions, setViewTransactions] = useState(false);
@@ -138,17 +138,10 @@ export default function IndividualBook() {
   )?.userBooks;
 
   const book: Book | undefined = books.find((b) => b.id === Number(bookId));
-
-  const bookTransactions: Transaction[] = useLoaderData<typeof loader>();
-  const totalAmount = bookTransactions.reduce(
-    (total, transaction) => total + transaction.amount,
-    0
-  );
-
+  const bookTransactions: TransactionSummary = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   useEffect(() => {
-    console.log(actionData);
     if (actionData) {
       switch (actionData.type) {
         case "DeleteTransaction":
@@ -174,13 +167,6 @@ export default function IndividualBook() {
           }
           break;
       }
-
-      // if (actionData.ok) {
-      //   toast.success("Added new Transaction to book");
-      // } else {
-      //   toast.error("Failed to add transaction to Book");
-      // }
-      // break;/
     }
   }, [actionData]);
 
@@ -212,7 +198,7 @@ export default function IndividualBook() {
   const handleClick = () => {
     setViewTransactions(
       !viewTransactions && bookTransactions
-        ? bookTransactions.length > 0
+        ? bookTransactions.transactions.length > 0
         : false
     );
   };
@@ -224,8 +210,8 @@ export default function IndividualBook() {
           onClick={handleClick}
         >
           {viewTransactions &&
-          bookTransactions?.length &&
-          bookTransactions.length > 0 ? (
+          bookTransactions.transactions?.length &&
+          bookTransactions.transactions.length > 0 ? (
             <MdKeyboardDoubleArrowUp className="w-6 h-6" />
           ) : (
             <MdKeyboardDoubleArrowDown className="w-6 h-6" />
@@ -269,15 +255,17 @@ export default function IndividualBook() {
       <div>
         {book ? (
           <BookStatsBox
-            amount={totalAmount}
+            amount={bookTransactions.total_amount}
             currency={book?.book_currency}
             numberFriends={book?.splitters.length}
-            numberTransactions={bookTransactions ? bookTransactions.length : 0}
+            numberTransactions={
+              bookTransactions ? bookTransactions.total_transactions : 0
+            }
             bookName={book?.name}
           />
         ) : null}
         <BookTransactions
-          transactions={bookTransactions}
+          transactions={bookTransactions.transactions}
           book={book}
           offset={Number(searchParams.get("transaction_offset") || 0)}
           setOffset={updateOffset}

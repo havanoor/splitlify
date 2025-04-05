@@ -10,6 +10,12 @@ type Transaction = {
   category: Category | null;
 };
 
+type TransactionSummary = {
+  total_amount: number;
+  total_transactions: number;
+  transactions: Transaction[];
+};
+
 type NewTransaction = {
   amount: number;
   desc: string;

@@ -226,7 +226,9 @@ export default function BookTransactions({
                 disabled={
                   !open || transactions?.length == 0 || transactions.length < 5
                 }
-                onClick={() => setOffset((offset + 5).toString())}
+                onClick={() => {
+                  setOffset((offset + 5).toString());
+                }}
               >
                 <MdKeyboardDoubleArrowRight className="w-5 h-5" />
               </Button>
@@ -262,7 +264,8 @@ export default function BookTransactions({
                       </p>
                     </div>
                     <p className="text-xl font-bold text-gray-900">
-                      ${transaction.amount}
+                      <span className="text-sm">{book.book_currency}. </span>
+                      {transaction.amount}
                     </p>
                   </div>
                   <div className="flex justify-end space-x-2">

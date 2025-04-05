@@ -1,5 +1,12 @@
 import { PencilIcon } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import { Button } from "./ui/button";
 
@@ -32,6 +39,12 @@ export default function EditTransactionView({
         }}
         side="left"
       >
+        <SheetHeader className="text-left mb-7">
+          <SheetTitle>Edit Transaction</SheetTitle>
+          <SheetDescription>
+            Edit details for "{transaction?.desc}"
+          </SheetDescription>
+        </SheetHeader>
         <AddNewTransactionDialog
           books={book}
           currentTransaction={transaction}

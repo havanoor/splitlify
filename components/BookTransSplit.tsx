@@ -4,6 +4,7 @@ import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
+import { cn } from "~/lib/utils";
 
 type TransSplit = {
   split: Payment[];
@@ -12,7 +13,12 @@ export default function TransactionSplit({ split }: TransSplit) {
   const [viewDues, setViewDues] = useState(false);
   return (
     <div>
-      <div className="rounded-lg w-full md:hidden p-1.5  border-2 border-b-0 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
+      <div
+        className={cn(
+          "w-full md:hidden p-1.5  border-2 border-b-0 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between",
+          viewDues ? "rounded-tl-lg rounded-tr-lg" : "rounded-lg"
+        )}
+      >
         <div
           className="text-xl font-bold flex items-center"
           onClick={() => setViewDues(!viewDues)}
