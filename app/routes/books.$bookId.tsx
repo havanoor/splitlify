@@ -110,7 +110,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
   const offset = url.searchParams.get("transaction_offset");
   const transactions = await getData(
-    `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`
+    `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`,
   );
   return json(transactions);
 }
@@ -147,7 +147,7 @@ export default function IndividualBook() {
         case "DeleteTransaction":
           if (actionData.ok) {
             toast.success(
-              `Deleted Transaction ${actionData.name} with id ${actionData.id}`
+              `Deleted Transaction ${actionData.name} with id ${actionData.id}`,
             );
           } else {
             toast.error("Failed to add the book. Please try again");
@@ -199,7 +199,7 @@ export default function IndividualBook() {
     setViewTransactions(
       !viewTransactions && bookTransactions
         ? bookTransactions.transactions.length > 0
-        : false
+        : false,
     );
   };
   return (
@@ -254,25 +254,27 @@ export default function IndividualBook() {
       {/* {bookTransactions.length > 0 ? ( */}
       <div>
         {book ? (
-          <BookStatsBox
-            amount={bookTransactions.total_amount}
-            currency={book?.book_currency}
-            numberFriends={book?.splitters.length}
-            numberTransactions={
-              bookTransactions ? bookTransactions.total_transactions : 0
-            }
-            bookName={book?.name}
-          />
+          <>
+            <BookStatsBox
+              amount={bookTransactions.total_amount}
+              currency={book?.book_currency}
+              numberFriends={book?.splitters.length}
+              numberTransactions={
+                bookTransactions ? bookTransactions.total_transactions : 0
+              }
+              bookName={book?.name}
+            />
+            <BookTransactions
+              transactions={bookTransactions.transactions}
+              book={book}
+              offset={Number(searchParams.get("transaction_offset") || 0)}
+              setOffset={updateOffset}
+              open={viewTransactions}
+              setOpen={setViewTransactions}
+              categories={categories}
+            />
+          </>
         ) : null}
-        <BookTransactions
-          transactions={bookTransactions.transactions}
-          book={book}
-          offset={Number(searchParams.get("transaction_offset") || 0)}
-          setOffset={updateOffset}
-          open={viewTransactions}
-          setOpen={setViewTransactions}
-          categories={categories}
-        />
       </div>
       <TransactionSplit split={payments} />
     </div>

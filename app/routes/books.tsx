@@ -74,7 +74,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const data = await getData(
-    `book/?user_id=${user.user_id}&limit=5&offset=${offset}`
+    `book/?user_id=${user.user_id}&limit=5&offset=${offset}`,
   );
 
   return json({ userBooks: data, baseURL: process.env.BASE_URL });
@@ -172,7 +172,7 @@ export default function Books() {
   const { userBooks, baseURL } = useLoaderData<typeof loader>();
   const [isFlex, setIsFlex] = useState(false);
   const [selectedBook, setSelected] = useState<Book | undefined>(
-    userBooks.find((book) => book.id === Number(bookId))
+    userBooks.find((book) => book.id === Number(bookId)),
   );
   const [viewTransactions, setViewTransactions] = useState(false);
   const handleClick = () => {
@@ -244,7 +244,7 @@ export default function Books() {
               onOpenChange={handleClick}
               className="space-y-2 mt-4"
             >
-              {selectedBook && isFlex ? (
+              {isFlex ? (
                 <div className="flex items-center justify-between space-x-3 px-4">
                   <h4 className="text-sm underline font-semibold">
                     {selectedBook
@@ -255,13 +255,13 @@ export default function Books() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      disabled={!isFlex}
+                      disabled={!isFlex || searchParams.get("offset") === "0"}
                       onClick={() => {
                         let number = parseInt(
-                          searchParams.get("offset") || "5"
+                          searchParams.get("offset") || "5",
                         );
                         updateOffset(
-                          number <= 5 ? "0" : (number - 5).toString()
+                          number <= 5 ? "0" : (number - 5).toString(),
                         );
                       }}
                     >
@@ -285,10 +285,10 @@ export default function Books() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      disabled={!isFlex}
+                      disabled={!isFlex || userBooks?.length < 5}
                       onClick={() => {
                         let number = parseInt(
-                          searchParams.get("offset") || "0"
+                          searchParams.get("offset") || "0",
                         );
                         updateOffset((number + 5).toString());
                       }}
@@ -322,7 +322,7 @@ export default function Books() {
                           : "absolute  top-4 group-hover:top-4 "
                       }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
                         "hover:bg-green-100 cursor-pointer",
-                        selectedBook?.id == book.id && "bg-[#d3f2d5]"
+                        selectedBook?.id == book.id && "bg-[#d3f2d5]",
                       )}`}
                     >
                       <div className="flex justify-between items-center space-x-4">
@@ -497,7 +497,7 @@ export default function Books() {
                   }}
                   className={twMerge(
                     "hover:bg-gray-300 cursor-pointer",
-                    selectedBook?.id == book.id && "bg-gray-200"
+                    selectedBook?.id == book.id && "bg-gray-200",
                   )}
                 >
                   <td className="p-2">
