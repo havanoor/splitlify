@@ -210,8 +210,8 @@ export default function IndividualBook() {
           onClick={handleClick}
         >
           {viewTransactions &&
-          bookTransactions.transactions?.length &&
-          bookTransactions.transactions.length > 0 ? (
+            bookTransactions.transactions?.length &&
+            bookTransactions.transactions.length > 0 ? (
             <MdKeyboardDoubleArrowUp className="w-6 h-6" />
           ) : (
             <MdKeyboardDoubleArrowDown className="w-6 h-6" />
@@ -230,11 +230,12 @@ export default function IndividualBook() {
             </SheetTrigger>
 
             <SheetContent
-              className="p-10 mr-2 w-80 bg-white overflow-y-scroll rounded-lg"
+              className="p-6 md:p-10 mr-2 w-full md:w-80 bg-white overflow-y-scroll rounded-t-lg md:rounded-lg"
               side="left"
-              // style={{
-              //   maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
-              // }}
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            // style={{
+            //   maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
+            // }}
             >
               <SheetHeader className="text-left mb-7">
                 <SheetTitle>Add New Transaction</SheetTitle>
@@ -242,11 +243,13 @@ export default function IndividualBook() {
                   Add details for a new transaction.
                 </SheetDescription>
               </SheetHeader>
-              <AddNewTransactionDialog
-                books={book}
-                title="Add"
-                categories={categories}
-              />
+              {book && (
+                <AddNewTransactionDialog
+                  books={book}
+                  title="Add"
+                  categories={categories}
+                />
+              )}
             </SheetContent>
           </Sheet>
         </div>

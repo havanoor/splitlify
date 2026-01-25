@@ -228,8 +228,8 @@ export default function Books() {
                     existing_books={
                       userBooks
                         ? userBooks.map((book: Book) => {
-                            return book.name;
-                          })
+                          return book.name;
+                        })
                         : []
                     }
                   />
@@ -274,8 +274,8 @@ export default function Books() {
                         disabled={userBooks != null && userBooks?.length == 0}
                       >
                         {isFlex &&
-                        userBooks != null &&
-                        userBooks?.length > 0 ? (
+                          userBooks != null &&
+                          userBooks?.length > 0 ? (
                           <MdKeyboardDoubleArrowUp className="w-5 h-5" />
                         ) : (
                           <MdKeyboardDoubleArrowDown className="w-5 h-5" />
@@ -313,17 +313,20 @@ export default function Books() {
               </div> */}
               <CollapsibleContent className="space-y-2">
                 {userBooks?.map((book: Book, index: number) => (
-                  <Link to={`/books/${book.id}`} key={index} className="block">
+                  <Link
+                    to={`/books/${book.id}?${searchParams.toString()}`}
+                    key={index}
+                    className="block"
+                  >
                     <div
                       key={index}
-                      className={`${
-                        isFlex
-                          ? "relative"
-                          : "absolute  top-4 group-hover:top-4 "
-                      }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
-                        "hover:bg-green-100 cursor-pointer",
-                        selectedBook?.id == book.id && "bg-[#d3f2d5]",
-                      )}`}
+                      className={`${isFlex
+                        ? "relative"
+                        : "absolute  top-4 group-hover:top-4 "
+                        }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
+                          "hover:bg-green-100 cursor-pointer",
+                          selectedBook?.id == book.id && "bg-[#d3f2d5]",
+                        )}`}
                     >
                       <div className="flex justify-between items-center space-x-4">
                         <div>
@@ -372,8 +375,8 @@ export default function Books() {
                                   existing_books={
                                     userBooks
                                       ? userBooks.map((book: Book) => {
-                                          return book.name;
-                                        })
+                                        return book.name;
+                                      })
                                       : []
                                   }
                                   editBook={book}
@@ -387,7 +390,7 @@ export default function Books() {
                               <AlertDialogTrigger asChild>
                                 <RiDeleteBinLine
                                   className="w-4 h-4"
-                                  // onClick={() => deleteBook(book.id)}
+                                // onClick={() => deleteBook(book.id)}
                                 />
                               </AlertDialogTrigger>
                               <AlertDialogContent>
@@ -463,8 +466,8 @@ export default function Books() {
                         existing_books={
                           userBooks
                             ? userBooks.map((book: Book) => {
-                                return book.name;
-                              })
+                              return book.name;
+                            })
                             : []
                         }
                       />
@@ -493,7 +496,9 @@ export default function Books() {
                   key={index}
                   onClick={() => {
                     setSelected(book);
-                    navigate(`/books/${book.id}`);
+                    navigate(
+                      `/books/${book.id}?${searchParams.toString()}`,
+                    );
                   }}
                   className={twMerge(
                     "hover:bg-gray-300 cursor-pointer",

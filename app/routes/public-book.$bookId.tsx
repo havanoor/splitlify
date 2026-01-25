@@ -90,7 +90,6 @@ export default function PublicBook() {
       setPayments(spliTrans.data.splits as Payment[]);
     }
   }, [spliTrans.data, spliTrans.state]);
-
   return (
     <div>
       {book ? (
@@ -98,12 +97,12 @@ export default function PublicBook() {
           <div className="m-2 md:m-16">
             <div
               className="w-full p-4 bg-white  border-2  rounded-lg shadow"
-              // className={`${
-              //   isFlex ? "relative" : "absolute  top-4 group-hover:top-4 "
-              // }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
-              //   "hover:bg-green-100 cursor-pointer",
-              //   selectedBook?.id == book.id && "bg-[#d3f2d5]"
-              // )}`}
+            // className={`${
+            //   isFlex ? "relative" : "absolute  top-4 group-hover:top-4 "
+            // }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
+            //   "hover:bg-green-100 cursor-pointer",
+            //   selectedBook?.id == book.id && "bg-[#d3f2d5]"
+            // )}`}
             >
               <div className="flex justify-between items-center space-x-4">
                 <div className="w-48">
@@ -131,8 +130,8 @@ export default function PublicBook() {
                 onClick={handleClick}
               >
                 {viewTransactions &&
-                bookTransactions?.length &&
-                bookTransactions.length > 0 ? (
+                  bookTransactions?.length &&
+                  bookTransactions.length > 0 ? (
                   <MdKeyboardDoubleArrowUp className="w-6 h-6" />
                 ) : (
                   <MdKeyboardDoubleArrowDown className="w-6 h-6" />
@@ -150,8 +149,9 @@ export default function PublicBook() {
                     />
                   </SheetTrigger>
                   <SheetContent
-                    className="p-10  mt-10 mr-2 w-80 bg-white "
+                    className="p-6 md:p-10 md:mt-10 mr-2 w-full md:w-80 bg-white rounded-t-lg md:rounded-lg"
                     side="left"
+                    onOpenAutoFocus={(e) => e.preventDefault()}
                   >
                     <AddNewTransactionDialog books={book} title="View" />
                   </SheetContent>
@@ -160,17 +160,15 @@ export default function PublicBook() {
             </div>
             {/* {bookTransactions.length > 0 ? ( */}
             <div>
-              {book ? (
-                <BookStatsBox
-                  amount={totalAmount}
-                  currency={book?.book_currency}
-                  numberFriends={book?.splitters.length}
-                  numberTransactions={
-                    bookTransactions ? bookTransactions.length : 0
-                  }
-                  bookName={book?.name}
-                />
-              ) : null}
+              <BookStatsBox
+                amount={totalAmount}
+                currency={book?.book_currency}
+                numberFriends={book?.splitters.length}
+                numberTransactions={
+                  bookTransactions ? bookTransactions.length : 0
+                }
+                bookName={book?.name}
+              />
               <BookTransactions
                 transactions={bookTransactions}
                 book={book}

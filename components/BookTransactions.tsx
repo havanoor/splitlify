@@ -74,12 +74,13 @@ export default function BookTransactions({
                   </div>
                 </SheetTrigger>
                 <SheetContent
-                  className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg overflow-y-auto"
+                  className="grid gap-4 p-6 md:p-10 md:m-10 w-full md:w-450 bg-white rounded-t-lg md:rounded-md shadow-lg overflow-y-auto"
                   side="bottom"
-                  // style={{
-                  //   maxHeight:
-                  //     "calc(var(--radix-popper-available-height) - 20px)",
-                  // }}
+                  onOpenAutoFocus={(e) => e.preventDefault()}
+                // style={{
+                //   maxHeight:
+                //     "calc(var(--radix-popper-available-height) - 20px)",
+                // }}
                 >
                   <AddNewTransactionDialog
                     books={book}
@@ -129,8 +130,8 @@ export default function BookTransactions({
                 {transaction.payer.username
                   ? transaction.payer.username
                   : transaction.payer.first_name +
-                    " " +
-                    transaction.payer.last_name}
+                  " " +
+                  transaction.payer.last_name}
               </td>
               <td className="px-6 py-2 text-sm">
                 {transaction.payee
@@ -144,12 +145,13 @@ export default function BookTransactions({
                       <MdOutlineModeEdit className="w-4 h-4" />
                     </SheetTrigger>
                     <SheetContent
-                      className="grid gap-4 p-10 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg overflow-y-auto"
+                      className="grid gap-4 p-6 md:p-10 md:m-10 w-full md:w-450 bg-white rounded-t-lg md:rounded-md shadow-lg overflow-y-auto"
                       side="bottom"
-                      // style={{
-                      //   maxHeight:
-                      //     "calc(var(--radix-popper-available-height) - 20px)",
-                      // }}
+                      onOpenAutoFocus={(e) => e.preventDefault()}
+                    // style={{
+                    //   maxHeight:
+                    //     "calc(var(--radix-popper-available-height) - 20px)",
+                    // }}
                     >
                       <AddNewTransactionDialog
                         books={book}
@@ -235,9 +237,8 @@ export default function BookTransactions({
             </div>
           </div>
           <div
-            className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${
-              open && transactions?.length > 0 ? "hidden" : "block"
-            }`}
+            className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${open && transactions?.length > 0 ? "hidden" : "block"
+              }`}
             onClick={handleClick}
           >
             {transactions?.length > 0
