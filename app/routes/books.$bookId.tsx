@@ -109,10 +109,15 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     url.searchParams.set("transaction_offset", "0");
   }
   const offset = url.searchParams.get("transaction_offset");
-  const transactions = await getData(
-    `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`,
-  );
-  return json(transactions);
+
+  const [data, transactions] = await Promise.all([
+    getData(`book/?book_id=${params.bookId}`),
+    getData(
+      `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`
+    ),
+  ]);
+
+  return json({ bookTransactions: transactions, selectedBook: data[0] as Book });
 }
 
 export default function IndividualBook() {
@@ -129,16 +134,17 @@ export default function IndividualBook() {
 
   const [viewTransactions, setViewTransactions] = useState(false);
   const { bookId } = useParams();
-  const matches = useMatches();
+  // const matches = useMatches();
 
-  const books = (
-    matches.find((match) => match.id === "routes/books")?.data as {
-      userBooks: Book[];
-    }
-  )?.userBooks;
+  // const books = (
+  //   matches.find((match) => match.id === "routes/books")?.data as {
+  //     userBooks: Book[];
+  //   }
+  // )?.userBooks;
 
-  const book: Book | undefined = books.find((b) => b.id === Number(bookId));
-  const bookTransactions: TransactionSummary = useLoaderData<typeof loader>();
+  // const book: Book | undefined = books.find((b) => b.id === Number(bookId));
+  const { bookTransactions, selectedBook } = useLoaderData<typeof loader>();
+  const book = selectedBook;
   const actionData = useActionData<typeof action>();
 
   useEffect(() => {
