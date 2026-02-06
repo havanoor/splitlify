@@ -216,7 +216,11 @@ export default function Books() {
                     />
                   </div>
                 </SheetTrigger>
-                <SheetContent className="h-[450px] rounded-lg" side="left">
+                <SheetContent
+                  className="h-[450px] w-full md:w-80 rounded-lg"
+                  side="left"
+                  onOpenAutoFocus={(e) => e.preventDefault()}
+                >
                   <SheetHeader className="text-left  mb-7">
                     <SheetTitle>Add New Book</SheetTitle>
                     <SheetDescription>
@@ -370,7 +374,11 @@ export default function Books() {
                                   {/* </Button> */}
                                 </div>
                               </SheetTrigger>
-                              <SheetContent className="h-[450px]" side="left">
+                              <SheetContent
+                                className="h-[450px] w-full md:w-80"
+                                side="left"
+                                onOpenAutoFocus={(e) => e.preventDefault()}
+                              >
                                 <AddNewBookDialog
                                   existing_books={
                                     userBooks
@@ -459,8 +467,9 @@ export default function Books() {
                       </div>
                     </SheetTrigger>
                     <SheetContent
-                      className="grid gap-2 m-10 w-80 md:w-450  bg-white  rounded-md shadow-lg"
+                      className="grid gap-2 m-10 w-full md:w-80 bg-white rounded-md shadow-lg"
                       side="bottom"
+                      onOpenAutoFocus={(e) => e.preventDefault()}
                     >
                       <AddNewBookDialog
                         existing_books={

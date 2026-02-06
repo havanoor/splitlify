@@ -383,6 +383,7 @@ export default function AddNewBookDialog({
                   <CommandInput
                     name="currency"
                     placeholder="Type a currency or search..."
+                    autoFocus={false}
                   />
                   <CommandEmpty>No results found.</CommandEmpty>
                   <CommandGroup>

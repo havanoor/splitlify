@@ -95,9 +95,17 @@ function MultiSelect({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 " side="top">
-        <Command className={className}>
-          <CommandInput placeholder="Search ..." />
+      <PopoverContent
+        className="w-full p-0"
+        side="top"
+        avoidCollisions={false}
+      >
+        <Command
+          className={cn(
+            className,
+            "[&_[cmdk-input-wrapper]]:border-b-0 [&_[cmdk-input-wrapper]]:border-t"
+          )}
+        >
           <Button
             onClick={() => {
               const unselectedOptions = options?.filter(
@@ -146,6 +154,7 @@ function MultiSelect({
               ))}
             </CommandList>
           </CommandGroup>
+          <CommandInput placeholder="Search ..." autoFocus={false} />
         </Command>
       </PopoverContent>
     </Popover>
