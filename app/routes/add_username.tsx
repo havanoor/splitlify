@@ -5,12 +5,13 @@ import { getValidatedFormData } from "remix-hook-form";
 import { z } from "zod";
 import { getSession } from "~/lib/helperFunctions";
 import { UsernameSchema } from "~/schemas";
-import { cookie, update_username } from "./login/login";
+import { update_username } from "./login/login";
+import { cookie } from "~/lib/cookies";
 
 const resolver = zodResolver(UsernameSchema);
 
 export async function action({ request }: ActionFunctionArgs) {
-  let session = await getSession(request);
+  const { user, refreshToken } = await getSession(request);
   const formData = await request.formData();
   const { receivedValues, errors, data } = await getValidatedFormData<
     z.infer<typeof UsernameSchema>
@@ -21,17 +22,27 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const { username } = data;
+  const headers = new Headers();
 
-  const respone = await update_username(username, session.user_id);
+  const respone = await update_username(
+    username,
+    user.user_id,
+    user.token,
+    refreshToken,
+    headers,
+    user
+  );
+
+  headers.append(
+    "Set-Cookie",
+    await cookie.serialize({
+      ...user,
+      username: username,
+    })
+  );
 
   return redirect("/books", {
-    headers: {
-      "Set-Cookie": await cookie.serialize({
-        username: username,
-        token: session.token,
-        user_id: session.user_id,
-      }),
-    },
+    headers: headers,
   });
 }
 

@@ -48,7 +48,8 @@ export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const user = await getSession(request);
+  const { user, refreshToken } = await getSession(request);
+  const headers = new Headers();
 
   const { _action, ...data } = Object.fromEntries(formData);
 
@@ -62,44 +63,83 @@ export async function action({ request, params }: ActionFunctionArgs) {
       };
 
       if ("id" in data) {
-        const response = await patchData(`transactions/update/${data.id}`, {
-          ...dataToSend,
-        });
-        return json({
-          ok: true,
-          type: "UpdateTransaction",
-          id: data.id,
-          name: response.desc,
-        });
+        const response = await patchData(
+          `transactions/update/${data.id}`,
+          {
+            ...dataToSend,
+          },
+          user.token,
+          refreshToken,
+          headers,
+          user
+        );
+        return json(
+          {
+            ok: true,
+            type: "UpdateTransaction",
+            id: data.id,
+            name: response.desc,
+          },
+          { headers }
+        );
       } else {
-        const response = await postData("transactions/new", dataToSend);
-        return json({
-          ok: "Suceess",
-          type: "AddNewTransaction",
-          name: response.desc,
-          id: response.id,
-        });
+        const response = await postData(
+          "transactions/new",
+          dataToSend,
+          user.token,
+          refreshToken,
+          headers,
+          user
+        );
+        return json(
+          {
+            ok: "Suceess",
+            type: "AddNewTransaction",
+            name: response.desc,
+            id: response.id,
+          },
+          { headers }
+        );
       }
 
     case "AddNewUser":
-      const responseUser = await postData("books/add_new_user/", {
-        ...data,
-        book_id: params.bookId,
-      });
-      return json({
-        ok: true,
-        type: "AddNewUser",
-        id: responseUser.id,
-        name: responseUser.firstName,
-      });
+      const responseUser = await postData(
+        "books/add_new_user/",
+        {
+          ...data,
+          book_id: params.bookId,
+        },
+        user.token,
+        refreshToken,
+        headers,
+        user
+      );
+      return json(
+        {
+          ok: true,
+          type: "AddNewUser",
+          id: responseUser.id,
+          name: responseUser.firstName,
+        },
+        { headers }
+      );
     case "DeleteTransaction":
-      await deleteData(`transactions/delete/${data.id}`);
-      return json({
-        ok: true,
-        id: data.id,
-        name: data.name,
-        type: "DeleteTransaction",
-      });
+      await deleteData(
+        `transactions/delete/${data.id}`,
+        user.token,
+        refreshToken,
+        headers,
+        user
+      );
+      return json(
+        {
+          ok: true,
+          id: data.id,
+          name: data.name,
+          type: "DeleteTransaction",
+        },
+        { headers }
+      );
   }
 }
 
@@ -110,14 +150,23 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
   const offset = url.searchParams.get("transaction_offset");
 
+  const { user, refreshToken } = await getSession(request);
+  const headers = new Headers();
   const [data, transactions] = await Promise.all([
-    getData(`book/?book_id=${params.bookId}`),
+    getData(`book/?book_id=${params.bookId}`, user.token, refreshToken, headers, user),
     getData(
-      `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`
+      `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`,
+      user.token,
+      refreshToken,
+      headers,
+      user
     ),
   ]);
 
-  return json({ bookTransactions: transactions, selectedBook: data[0] as Book });
+  return json(
+    { bookTransactions: transactions, selectedBook: data[0] as Book },
+    { headers }
+  );
 }
 
 export default function IndividualBook() {

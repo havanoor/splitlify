@@ -154,7 +154,7 @@ function MultiSelect({
               ))}
             </CommandList>
           </CommandGroup>
-          <CommandInput placeholder="Search ..." autoFocus={false} />
+          <CommandInput placeholder="Search ..." />
         </Command>
       </PopoverContent>
     </Popover>

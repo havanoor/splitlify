@@ -4,14 +4,17 @@ import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-
   const bookId = url.searchParams.get("book_id");
 
-  //   const transactions = await getData(
-  //     `book/get_book_transactions/${bookId}/?offset=${offset}&limit=5`
-  //   );
+  const { user, refreshToken } = await getSession(request);
+  const headers = new Headers();
+  const data = await getData(
+    `book/?book_id=${bookId}`,
+    user?.token,
+    refreshToken,
+    headers,
+    user
+  );
 
-  const data = await getData(`book/?book_id=${bookId}`);
-
-  return json(data[0]);
+  return json(data[0], { headers });
 }

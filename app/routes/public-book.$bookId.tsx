@@ -20,6 +20,8 @@ import { twMerge } from "tailwind-merge";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { getData } from "~/lib/ApiRequests";
 
+import { getSession } from "~/lib/helperFunctions";
+
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   if (!url.searchParams.get("transaction_offset")) {
@@ -27,18 +29,24 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   const offset = url.searchParams.get("transaction_offset");
-  // const bookId = url.searchParams.get("book_id");
+  const { user, refreshToken } = await getSession(request);
+  const headers = new Headers();
 
   const transactions = await getData(
-    `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`
+    `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`,
+    user?.token,
+    refreshToken,
+    headers,
+    user
   );
 
-  //   const data = await getData(`book/?book_id=${params.bookId}`);
-
-  return json({
-    bookTransactions: transactions,
-    baseURL: process.env.BASE_URL,
-  });
+  return json(
+    {
+      bookTransactions: transactions,
+      baseURL: process.env.BASE_URL,
+    },
+    { headers }
+  );
 }
 
 export default function PublicBook() {

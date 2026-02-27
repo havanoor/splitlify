@@ -4,10 +4,15 @@ import { getData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getSession(request);
+  const { user, refreshToken } = await getSession(request);
+  const headers = new Headers();
 
   const data = await getData(
-    `category/get_user_categories?user_id=${user.user_id}`
+    `category/get_user_categories?user_id=${user.user_id}`,
+    user.token,
+    refreshToken,
+    headers,
+    user
   );
-  return json(data);
+  return json(data, { headers });
 }

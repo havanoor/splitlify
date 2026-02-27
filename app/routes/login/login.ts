@@ -2,6 +2,7 @@ import { createCookie } from "@remix-run/node";
 import { z } from "zod";
 import { postData } from "~/lib/ApiRequests";
 import { LoginSchema, SignUpSchema } from "~/schemas";
+import { cookie, refreshCookie } from "~/lib/cookies";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -56,14 +57,7 @@ const signIn = async (method: string, username: string, password: string) => {
   return null;
 };
 
-export let cookie = createCookie("__session", {
-  httpOnly: true,
-  path: "/",
-  sameSite: "lax",
-  secrets: ["abcd1234"],
-  secure: process.env.NODE_ENV === "production",
-  maxAge: 60 * 60 * 24 * 30,
-});
+// Cookies moved to ~/lib/cookies
 
 export const register = async (values: z.infer<typeof SignUpSchema>) => {
   const validatedFields = SignUpSchema.safeParse(values);
@@ -97,13 +91,27 @@ export const register = async (values: z.infer<typeof SignUpSchema>) => {
   return await loginUsingCredentials(userName, password);
 };
 
-export const update_username = async (username: string, user_id: number) => {
+export const update_username = async (
+  username: string,
+  user_id: number | string,
+  token?: string,
+  refreshToken?: string,
+  headers?: Headers,
+  user?: any
+) => {
   const data = {
     username: username,
     id: user_id,
   };
 
-  const response = await postData("auth/users/update_username/", data);
+  const response = await postData(
+    "auth/users/update_username/",
+    data,
+    token,
+    refreshToken,
+    headers,
+    user
+  );
 
   return response.data;
 };

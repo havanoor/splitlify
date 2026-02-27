@@ -67,17 +67,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
     url.searchParams.set("offset", "0");
   }
   const offset = url.searchParams.get("offset") || "0";
-  const user = await getSession(request);
+  const { user, refreshToken } = await getSession(request);
 
   if (!user) {
     throw redirect("/login");
   }
 
+  const headers = new Headers();
   const data = await getData(
     `book/?user_id=${user.user_id}&limit=5&offset=${offset}`,
+    user.token,
+    refreshToken,
+    headers,
+    user
   );
 
-  return json({ userBooks: data, baseURL: process.env.BASE_URL });
+  return json({ userBooks: data, baseURL: process.env.BASE_URL }, { headers });
 }
 
 export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
@@ -97,41 +102,72 @@ export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const user = await getSession(request);
+  const { user, refreshToken } = await getSession(request);
   const { _action, ...data } = Object.fromEntries(formData);
+  const headers = new Headers();
+
   switch (_action) {
     case "AddNewBook":
-      const response: Book = await postData("books/new", {
-        ...data,
-        user_id: user.user_id,
-      });
+      const response: Book = await postData(
+        "books/new",
+        {
+          ...data,
+          user_id: user.user_id,
+        },
+        user.token,
+        refreshToken,
+        headers,
+        user
+      );
 
-      return json({
-        ok: true,
-        type: "AddNewBook",
-        id: response.id,
-        name: data.name,
-      });
+      return json(
+        {
+          ok: true,
+          type: "AddNewBook",
+          id: response.id,
+          name: data.name,
+        },
+        { headers }
+      );
 
     case "DeleteBook":
-      await deleteData(`books/delete/${data.book_id}`);
-      return json({
-        ok: true,
-        type: "DeleteBook",
-        id: data.book_id,
-        name: data.name,
-      });
+      await deleteData(
+        `books/delete/${data.book_id}`,
+        user.token,
+        refreshToken,
+        headers,
+        user
+      );
+      return json(
+        {
+          ok: true,
+          type: "DeleteBook",
+          id: data.book_id,
+          name: data.name,
+        },
+        { headers }
+      );
     case "AddNewCategory":
-      const categoryResponse = await postData("category/add", {
-        ...data,
-        user_id: user.user_id,
-      });
-      return json({
-        ok: true,
-        type: "AddNewCategory",
-        name: data.category,
-        id: "",
-      });
+      const categoryResponse = await postData(
+        "category/add",
+        {
+          ...data,
+          user_id: user.user_id,
+        },
+        user.token,
+        refreshToken,
+        headers,
+        user
+      );
+      return json(
+        {
+          ok: true,
+          type: "AddNewCategory",
+          name: data.category,
+          id: "",
+        },
+        { headers }
+      );
   }
 }
 

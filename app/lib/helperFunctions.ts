@@ -1,8 +1,9 @@
-import { cookie } from "~/routes/login/login";
+import { cookie, refreshCookie } from "~/lib/cookies";
 
 export async function getSession(request: Request) {
   let cookieString = request.headers.get("Cookie");
-  let user_id = await cookie.parse(cookieString);
+  let user = await cookie.parse(cookieString);
+  let refreshToken = await refreshCookie.parse(cookieString);
 
-  return user_id;
+  return { user, refreshToken };
 }

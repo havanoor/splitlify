@@ -1,11 +1,7 @@
-import {
-  ActionFunctionArgs,
-  json,
-  LoaderFunctionArgs,
-  redirect,
-} from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { LoginForm } from "components/LoginForm";
-import { cookie, login } from "./login";
+import { login } from "./login";
+import { cookie, refreshCookie } from "~/lib/cookies";
 import { generateAuthUrl } from "~/lib/googleLogin";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { LoginSchema } from "~/schemas";
@@ -36,14 +32,22 @@ export async function action({ request }: ActionFunctionArgs) {
   const { username, password } = data;
   const userData = await login({ username: username, password: password });
 
+  const headers = new Headers();
+  headers.append(
+    "Set-Cookie",
+    await cookie.serialize({
+      username: userData.user.username,
+      token: userData.access_token,
+      user_id: userData.user.id,
+    })
+  );
+  headers.append(
+    "Set-Cookie",
+    await refreshCookie.serialize(userData.refresh_token)
+  );
+
   return redirect("/books", {
-    headers: {
-      "Set-Cookie": await cookie.serialize({
-        username: userData.user.username,
-        token: userData.access_token,
-        user_id: userData.user.id,
-      }),
-    },
+    headers: headers,
   });
 }
 
