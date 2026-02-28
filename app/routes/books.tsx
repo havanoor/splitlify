@@ -15,7 +15,7 @@ import {
   useParams,
   useSearchParams,
 } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { GrCheckmark } from "react-icons/gr";
 import { IoMdAdd } from "react-icons/io";
 import {
@@ -174,6 +174,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Books() {
   const navigate = useNavigate();
+  const outletRef = useRef<HTMLDivElement>(null);
   const actionData = useActionData<typeof action>();
 
   useEffect(() => {
@@ -279,7 +280,10 @@ export default function Books() {
                     )}
                     onClick={() => {
                       setSelected(book);
-                      navigate(`/books/${book.id}?${searchParams.toString()}`);
+                      navigate(`/books/${book.id}?${searchParams.toString()}`, { preventScrollReset: true });
+                      setTimeout(() => {
+                        outletRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }, 150);
                     }}
                   >
                     {/* Decorative Header Background */}
@@ -460,7 +464,7 @@ export default function Books() {
         )}
 
         {/* Outlet section for rendering selected book content (like transactions) */}
-        <div className={twMerge("mt-12 transition-all duration-500", selectedBook ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 hidden")}>
+        <div ref={outletRef} className={twMerge("mt-12 transition-all duration-500", selectedBook ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 hidden")}>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-12"></div>
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
             <Outlet />
