@@ -15,36 +15,27 @@ export default function BookStatsBox({
 }: BookStatsBoxProps) {
   return (
     <>
-      <table className="rounded-lg border-2 border-t-0  border-[#bdc7db] w-full md:hidden">
-        <tbody>
-          <tr className="border-2 border-[#bdc7db]   border-t-0">
-            <td colSpan={3} className="pl-3   ">
-              <div className="flex justify-center space-x-2">
-                <div className="font-bold">{bookName}</div>
-                <div>Summary</div>
-              </div>
-            </td>
-          </tr>
-          <tr className="border-2  border-[#bdc7db]">
-            <th className="w-1/3 border-2 border-[#bdc7db]">Total Amount</th>
-            <th className="w-1/3 border-2 border-[#bdc7db]">
-              Total Transactions
-            </th>
-            <th className="w-1/3 border-2 border-[#bdc7db]">Total Friends</th>
-          </tr>
-          <tr>
-            <td className="border-2  border-[#bdc7db] text-center">
-              {amount} <span className="text-sm">{currency}</span>
-            </td>
-            <td className="border-2 border-[#bdc7db] text-center">
-              {numberTransactions}
-            </td>
-            <td className="border-2 border-[#bdc7db] text-center">
-              {numberFriends}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="md:hidden mt-2 grid grid-cols-3 gap-2 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
+        <div className="col-span-3 text-center mb-2 pb-2 border-b border-gray-100">
+          <span className="font-bold text-gray-900">{bookName}</span>
+          <span className="text-gray-500 ml-2 text-sm">Summary</span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center p-2 bg-blue-50/50 rounded-lg">
+          <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1 text-center">Amount</span>
+          <span className="font-bold text-gray-900">{amount} <span className="text-xs font-normal text-gray-600">{currency}</span></span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center p-2 bg-green-50/50 rounded-lg">
+          <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1 text-center">Trans.</span>
+          <span className="font-bold text-gray-900">{numberTransactions}</span>
+        </div>
+
+        <div className="flex flex-col items-center justify-center p-2 bg-orange-50/50 rounded-lg">
+          <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1 text-center">Friends</span>
+          <span className="font-bold text-gray-900">{numberFriends}</span>
+        </div>
+      </div>
     </>
   );
 }

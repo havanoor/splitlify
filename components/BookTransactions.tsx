@@ -17,6 +17,7 @@ import {
 } from "components/ui/collapsible";
 import { TrashIcon } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
+import { IoMdAdd } from "react-icons/io";
 import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowLeft,
@@ -25,7 +26,7 @@ import {
   MdOutlineModeEdit,
 } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "~/components/ui/sheet";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import EditTransactionView from "./EditTransactionView";
 import { Badge } from "./ui/badge";
@@ -58,133 +59,160 @@ export default function BookTransactions({
   };
   return (
     <>
-      <table className="hidden md:table w-full border-2 border-[#c4d1eb] mt-4">
-        <thead className="bg-[#79AC78]">
-          <tr>
-            <th colSpan={6} className="px-4 text-2xl text-left ">
-              Transactions
-            </th>
-            <th className="p-2">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <div className="text-right">
-                    <Button variant="outline" className="text-xs md:text-base">
-                      Add Transaction
-                    </Button>
-                  </div>
-                </SheetTrigger>
-                <SheetContent
-                  className="grid gap-4 p-6 md:p-10 md:m-10 w-full md:w-450 bg-white rounded-t-lg md:rounded-md shadow-lg overflow-y-auto"
-                  side="bottom"
-                  onOpenAutoFocus={(e) => e.preventDefault()}
-                // style={{
-                //   maxHeight:
-                //     "calc(var(--radix-popper-available-height) - 20px)",
-                // }}
-                >
-                  <AddNewTransactionDialog
-                    books={book}
-                    title={title ? title : "Add"}
-                    categories={categories}
-                  />
-                </SheetContent>
-              </Sheet>
-            </th>
-          </tr>
-        </thead>
-        <thead className=" bg-[#79AC78]">
-          <tr>
-            <th scope="col" className="px-6 py-4">
-              Date
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Category
-            </th>
-            <th scope="col" className="hidden px-6 py-4 sm:table-cell ">
-              Amount paid
-            </th>
-            <th scope="col" className="hidden px-6 py-4 sm:table-cell">
-              Paid By
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Paid For
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="text-center">
-          {transactions?.map((transaction, index) => (
-            <tr key={index}>
-              <td className="hidden px-6 py-1 sm:table-cell">
-                {transaction.date}
-              </td>
-              <td className="px-6 py-2">{transaction.desc}</td>
-              <td className="px-6 py-2">{transaction.category?.category}</td>
-              <td className=" px-6 py-1">{transaction.amount}</td>
-              <td className=" px-6 py-2 ">
-                {transaction.payer.username
-                  ? transaction.payer.username
-                  : transaction.payer.first_name +
-                  " " +
-                  transaction.payer.last_name}
-              </td>
-              <td className="px-6 py-2 text-sm">
-                {transaction.payee
-                  .map((user) => user.first_name + " " + user.last_name)
-                  .join(", ")}
-              </td>
-              <td>
-                <div className="flex gap-8 justify-center align-middle">
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <MdOutlineModeEdit className="w-4 h-4" />
-                    </SheetTrigger>
-                    <SheetContent
-                      className="grid gap-4 p-6 md:p-10 md:m-10 w-full md:w-450 bg-white rounded-t-lg md:rounded-md shadow-lg overflow-y-auto"
-                      side="bottom"
-                      onOpenAutoFocus={(e) => e.preventDefault()}
-                    // style={{
-                    //   maxHeight:
-                    //     "calc(var(--radix-popper-available-height) - 20px)",
-                    // }}
-                    >
-                      <AddNewTransactionDialog
-                        books={book}
-                        currentTransaction={transaction}
-                        categories={categories}
-                        title={title ? title : "Update"}
-                      />
-                    </SheetContent>
-                  </Sheet>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <RiDeleteBinLine className="w-4 h-4" />
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete the transaction
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction>Continue</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="hidden md:block w-full">
+        <div
+          className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50 cursor-pointer hover:bg-gray-100/50 transition-colors"
+          onClick={() => setOpen(!open)}
+        >
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-900">Recent Transactions</h2>
+            <div className="text-gray-400">
+              {open ? <MdKeyboardDoubleArrowUp className="w-5 h-5" /> : <MdKeyboardDoubleArrowDown className="w-5 h-5" />}
+            </div>
+          </div>
+
+          <div onClick={(e) => e.stopPropagation()}>
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] px-4 py-2 rounded-full transition-all shadow-sm">
+                  <IoMdAdd className="w-4 h-4" /> Add Transaction
+                </button>
+              </SheetTrigger>
+
+              <SheetContent
+                className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
+                side="right"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+              >
+                <SheetHeader className="text-left mb-7">
+                  <SheetTitle className="text-2xl font-bold">Add New Transaction</SheetTitle>
+                </SheetHeader>
+                <AddNewTransactionDialog
+                  books={book}
+                  title={title ? title : "Add"}
+                  categories={categories}
+                />
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        {open && (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-gray-100 text-sm tracking-wider text-gray-500 uppercase">
+                <th className="px-6 py-4 font-medium">Date</th>
+                <th className="px-6 py-4 font-medium">Name</th>
+                <th className="px-6 py-4 font-medium">Category</th>
+                <th className="px-6 py-4 font-medium">Amount paid</th>
+                <th className="px-6 py-4 font-medium">Paid By</th>
+                <th className="px-6 py-4 font-medium">Paid For</th>
+                <th className="px-6 py-4 font-medium text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50 bg-white">
+              {transactions?.length > 0 ? transactions.map((transaction, index) => (
+                <tr key={index} className="hover:bg-gray-50/50 transition-colors group">
+                  <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                    {transaction.date}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="font-semibold text-gray-900 group-hover:text-[#79AC78] transition-colors">{transaction.desc}</span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                      {transaction.category?.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="font-bold text-gray-900">{book.book_currency} {transaction.amount}</span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-[#79AC78]/10 text-[#79AC78] flex items-center justify-center text-xs font-bold">
+                        {(transaction.payer.username || transaction.payer.first_name).charAt(0).toUpperCase()}
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">
+                        {transaction.payer.username
+                          ? transaction.payer.username
+                          : transaction.payer.first_name + " " + transaction.payer.last_name}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    <div className="flex -space-x-2 overflow-hidden">
+                      {transaction.payee.map((user, i) => (
+                        <div key={i} className="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-blue-100 text-blue-700 flex flex-shrink-0 items-center justify-center text-xs font-bold" title={user.first_name + " " + user.last_name}>
+                          {user.first_name.charAt(0).toUpperCase()}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Sheet>
+                        <SheetTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full">
+                            <MdOutlineModeEdit className="w-4 h-4" />
+                          </Button>
+                        </SheetTrigger>
+                        <SheetContent
+                          className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
+                          side="right"
+                          onOpenAutoFocus={(e) => e.preventDefault()}
+                        >
+                          <SheetHeader className="text-left mb-7">
+                            <SheetTitle className="text-2xl font-bold">Edit Transaction</SheetTitle>
+                          </SheetHeader>
+                          <AddNewTransactionDialog
+                            books={book}
+                            currentTransaction={transaction}
+                            categories={categories}
+                            title={title ? title : "Update"}
+                          />
+                        </SheetContent>
+                      </Sheet>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full">
+                            <RiDeleteBinLine className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="rounded-xl">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-xl">Delete this transaction?</AlertDialogTitle>
+                            <AlertDialogDescription className="text-base text-gray-500">
+                              This action cannot be undone. This will permanently delete the transaction: <strong>{transaction.desc}</strong>
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter className="gap-2 sm:gap-0 mt-2">
+                            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                            <Form method="POST">
+                              <AlertDialogAction asChild>
+                                <Button type="submit" name="_action" value="DeleteTransaction" variant="destructive" className="rounded-full">
+                                  Yes, delete
+                                </Button>
+                              </AlertDialogAction>
+                              <input type="hidden" name="transaction_id" value={transaction.id} />
+                            </Form>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </td>
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                    No transactions yet. Click the "Add Transaction" button to get started.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
       <div className="md:hidden m-2">
         <Collapsible
           open={open}

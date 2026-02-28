@@ -258,44 +258,40 @@ export default function IndividualBook() {
     );
   };
   return (
-    <div>
-      <div className="w-full md:hidden p-1.5 border-2 rounded-tl-lg rounded-tr-lg  border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
+    <div className="bg-white rounded-3xl p-4 sm:p-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
+      {/* Mobile Transactions Header/Trigger */}
+      <div className="w-full md:hidden p-4 rounded-xl shadow-sm border border-gray-100 bg-gray-50 flex items-center justify-between mt-2 mb-6">
         <div
-          className="text-xl font-bold flex items-center"
+          className="text-lg font-bold flex items-center gap-2 cursor-pointer"
           onClick={handleClick}
         >
           {viewTransactions &&
             bookTransactions.transactions?.length &&
             bookTransactions.transactions.length > 0 ? (
-            <MdKeyboardDoubleArrowUp className="w-6 h-6" />
+            <div className="bg-[#79AC78] text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
           ) : (
-            <MdKeyboardDoubleArrowDown className="w-6 h-6" />
+            <div className="bg-white border border-gray-200 text-gray-400 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
           )}
-          Transactions
+          <span>Transactions</span>
         </div>
 
         <div>
           <Sheet>
             <SheetTrigger asChild>
-              <IoMdAdd
-                color="white"
-                fill="white"
-                className="w-6 h-6 border-2 rounded"
-              />
+              <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] px-4 py-2 rounded-full transition-all shadow-sm">
+                <IoMdAdd className="w-4 h-4" /> Add Transaction
+              </button>
             </SheetTrigger>
 
             <SheetContent
-              className="p-6 md:p-10 mr-2 w-full md:w-80 bg-white overflow-y-scroll rounded-t-lg md:rounded-lg"
-              side="left"
+              className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
+              side="right"
               onOpenAutoFocus={(e) => e.preventDefault()}
-            // style={{
-            //   maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
-            // }}
             >
               <SheetHeader className="text-left mb-7">
-                <SheetTitle>Add New Transaction</SheetTitle>
+                <SheetTitle className="text-2xl font-bold">Add New Transaction</SheetTitle>
                 <SheetDescription>
-                  Add details for a new transaction.
+                  Record a new transaction for {book?.name}.
                 </SheetDescription>
               </SheetHeader>
               {book && (
@@ -309,32 +305,48 @@ export default function IndividualBook() {
           </Sheet>
         </div>
       </div>
-      {/* {bookTransactions.length > 0 ? ( */}
-      <div>
-        {book ? (
-          <>
-            <BookStatsBox
-              amount={bookTransactions.total_amount}
-              currency={book?.book_currency}
-              numberFriends={book?.splitters.length}
-              numberTransactions={
-                bookTransactions ? bookTransactions.total_transactions : 0
-              }
-              bookName={book?.name}
-            />
-            <BookTransactions
-              transactions={bookTransactions.transactions}
-              book={book}
-              offset={Number(searchParams.get("transaction_offset") || 0)}
-              setOffset={updateOffset}
-              open={viewTransactions}
-              setOpen={setViewTransactions}
-              categories={categories}
-            />
-          </>
-        ) : null}
+
+      {/* Main Content Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 flex flex-col gap-8">
+          {book ? (
+            <>
+              {/* Stats Overview */}
+              <div className="bg-gradient-to-br from-[#79AC78]/5 to-transparent rounded-2xl p-1 border border-[#79AC78]/10">
+                <BookStatsBox
+                  amount={bookTransactions.total_amount}
+                  currency={book?.book_currency}
+                  numberFriends={book?.splitters.length}
+                  numberTransactions={
+                    bookTransactions ? bookTransactions.total_transactions : 0
+                  }
+                  bookName={book?.name}
+                />
+              </div>
+
+              {/* Transactions List */}
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <BookTransactions
+                  transactions={bookTransactions.transactions}
+                  book={book}
+                  offset={Number(searchParams.get("transaction_offset") || 0)}
+                  setOffset={updateOffset}
+                  open={viewTransactions}
+                  setOpen={setViewTransactions}
+                  categories={categories}
+                />
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        {/* Sidebar (Splits/Balances) */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="bg-blue-50/50 rounded-2xl p-1 border border-blue-100 shadow-sm sticky top-6">
+            <TransactionSplit split={payments} />
+          </div>
+        </div>
       </div>
-      <TransactionSplit split={payments} />
     </div>
   );
 }

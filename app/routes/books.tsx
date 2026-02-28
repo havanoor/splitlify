@@ -174,6 +174,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Books() {
   const navigate = useNavigate();
   const actionData = useActionData<typeof action>();
+
   useEffect(() => {
     if (actionData) {
       switch (actionData.type) {
@@ -181,12 +182,7 @@ export default function Books() {
           if (actionData.ok) {
             toast.success(`Added new book ${actionData.name}`, {
               action: {
-                label: (
-                  // <Button variant="ghost">
-                  // <CircleX className="bg-transparent" />
-                  <div className="bg-inherit">X</div>
-                ),
-                // </Button>
+                label: <div className="bg-inherit">X</div>,
                 onClick: () => toast.dismiss(),
               },
             });
@@ -204,18 +200,19 @@ export default function Books() {
       }
     }
   }, [actionData]);
+
   const { bookId } = useParams();
   const { userBooks, baseURL } = useLoaderData<typeof loader>();
-  const [isFlex, setIsFlex] = useState(false);
-  const [selectedBook, setSelected] = useState<Book | undefined>(
-    userBooks.find((book) => book.id === Number(bookId)),
+
+  const [selectedBook, setSelected] = useState<any | undefined>(
+    userBooks?.find((book: any) => book.id === Number(bookId))
   );
-  const [viewTransactions, setViewTransactions] = useState(false);
-  const handleClick = () => {
-    const bookCount = userBooks != null && userBooks.length > 0;
-    setViewTransactions(true);
-    setIsFlex(!isFlex && bookCount);
-  };
+
+  useEffect(() => {
+    if (userBooks && bookId) {
+      setSelected(userBooks.find((book: any) => book.id === Number(bookId)));
+    }
+  }, [bookId, userBooks]);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -225,380 +222,248 @@ export default function Books() {
     setSearchParams(params);
   };
 
+  const currentOffset = parseInt(searchParams.get("offset") || "0");
+
   return (
-    <div className="m-2 md:m-16">
-      <div>
-        <div>
-          <div className="w-full  md:hidden p-1.5 rounded-lg border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
-            <div
-              className="text-xl font-bold flex flex-grow items-center"
-              onClick={handleClick}
-            >
-              {isFlex && userBooks != null && userBooks?.length > 0 ? (
-                <MdKeyboardDoubleArrowUp className="w-6 h-6" />
-              ) : (
-                <MdKeyboardDoubleArrowDown className="w-6 h-6" />
-              )}
-              {selectedBook && !isFlex ? selectedBook.name : "All Books"}
-            </div>
-            <div>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <div className="text-right">
-                    <IoMdAdd
-                      color="white"
-                      fill="white"
-                      className="w-6 h-6 border-2 rounded"
-                    />
-                  </div>
-                </SheetTrigger>
-                <SheetContent
-                  className="h-[450px] w-full md:w-80 rounded-lg"
-                  side="left"
-                  onOpenAutoFocus={(e) => e.preventDefault()}
-                >
-                  <SheetHeader className="text-left  mb-7">
-                    <SheetTitle>Add New Book</SheetTitle>
-                    <SheetDescription>
-                      Add details for a new book.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <AddNewBookDialog
-                    //   TODO: Fix here
-                    existing_books={
-                      userBooks
-                        ? userBooks.map((book: Book) => {
-                          return book.name;
-                        })
-                        : []
-                    }
-                  />
-                </SheetContent>
-              </Sheet>
-            </div>
+    <div className="min-h-screen bg-gray-50/50 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Your Books</h1>
+            <p className="text-gray-500 mt-1">Manage all your financial books in one place.</p>
           </div>
 
-          <div className="md:hidden">
-            <Collapsible
-              open={isFlex}
-              onOpenChange={handleClick}
-              className="space-y-2 mt-4"
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] px-4 py-2 rounded-full transition-all shadow-sm">
+                <IoMdAdd className="w-4 h-4" />
+                Add New Book
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              className="h-[450px] w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl"
+              side="right"
+              onOpenAutoFocus={(e) => e.preventDefault()}
             >
-              {isFlex ? (
-                <div className="flex items-center justify-between space-x-3 px-4">
-                  <h4 className="text-sm underline font-semibold">
-                    {selectedBook
-                      ? `Selected: ${selectedBook.name}`
-                      : "No Book Selected"}
-                  </h4>
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={!isFlex || searchParams.get("offset") === "0"}
-                      onClick={() => {
-                        let number = parseInt(
-                          searchParams.get("offset") || "5",
-                        );
-                        updateOffset(
-                          number <= 5 ? "0" : (number - 5).toString(),
-                        );
-                      }}
-                    >
-                      <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
-                    </Button>
-                    <CollapsibleTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={userBooks != null && userBooks?.length == 0}
-                      >
-                        {isFlex &&
-                          userBooks != null &&
-                          userBooks?.length > 0 ? (
-                          <MdKeyboardDoubleArrowUp className="w-5 h-5" />
-                        ) : (
-                          <MdKeyboardDoubleArrowDown className="w-5 h-5" />
-                        )}
-                      </Button>
-                    </CollapsibleTrigger>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={!isFlex || userBooks?.length < 5}
-                      onClick={() => {
-                        let number = parseInt(
-                          searchParams.get("offset") || "0",
-                        );
-                        updateOffset((number + 5).toString());
-                      }}
-                    >
-                      <MdKeyboardDoubleArrowRight className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-              ) : null}
+              <SheetHeader className="text-left mb-7">
+                <SheetTitle className="text-2xl font-bold text-gray-800">Add New Book</SheetTitle>
+                <SheetDescription>
+                  Create a new book to start organizing your finances.
+                </SheetDescription>
+              </SheetHeader>
+              <AddNewBookDialog
+                existing_books={
+                  userBooks ? userBooks.map((book: any) => book.name) : []
+                }
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
 
-              {/* <div
-                className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${
-                  isFlex && userBooks && userBooks.length > 0
-                    ? "hidden"
-                    : "block"
-                }`}
-                onClick={handleClick}
-              >
-                {userBooks != null && userBooks.length > 0
-                  ? "Click to display your Books"
-                  : "No books. Start by creating one"}
-              </div> */}
-              <CollapsibleContent className="space-y-2">
-                {userBooks?.map((book: Book, index: number) => (
-                  <Link
-                    to={`/books/${book.id}?${searchParams.toString()}`}
-                    key={index}
-                    className="block"
+        {/* Books Grid View */}
+        {userBooks && userBooks.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
+              {userBooks.map((book: any) => {
+                const isSelected = selectedBook?.id === book.id;
+                return (
+                  <div
+                    key={book.id}
+                    className={twMerge(
+                      "group relative flex flex-col bg-white rounded-2xl border p-0 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1",
+                      isSelected
+                        ? "border-[#79AC78] ring-2 ring-[#79AC78]/20 bg-[#79AC78]/[0.02]"
+                        : "border-gray-100"
+                    )}
+                    onClick={() => {
+                      setSelected(book);
+                      navigate(`/books/${book.id}?${searchParams.toString()}`);
+                    }}
                   >
-                    <div
-                      key={index}
-                      className={`${isFlex
-                        ? "relative"
-                        : "absolute  top-4 group-hover:top-4 "
-                        }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
-                          "hover:bg-green-100 cursor-pointer",
-                          selectedBook?.id == book.id && "bg-[#d3f2d5]",
-                        )}`}
-                    >
-                      <div className="flex justify-between items-center space-x-4">
-                        <div>
-                          {selectedBook?.id == book.id ? (
-                            <GrCheckmark className="w-5 h-5" />
-                          ) : (
-                            <div>{index + 1}</div>
-                          )}
-                        </div>
-                        <div
-                          className="w-48"
-                          onClick={() => {
-                            setSelected(book);
-                            handleClick();
-                          }}
-                        >
-                          Name: {book.name}
-                          <div className="text-xs text-gray-500">
-                            Book Type:{book.type_of_book.toLowerCase()}
-                          </div>
-                        </div>
+                    {/* Decorative Header Background */}
+                    <div className={twMerge(
+                      "absolute top-0 left-0 w-full h-24 opacity-20 pointer-events-none transition-colors",
+                      isSelected ? "bg-[#79AC78]" : "bg-gradient-to-br from-gray-100 to-transparent group-hover:from-blue-50 group-hover:to-transparent"
+                    )} />
 
-                        <div className="flex gap-8 justify-center align-middle">
-                          {/* Share Icon */}
+                    <div className="p-6 flex-1 flex flex-col relative z-10">
+                      {/* Selected Indicator */}
+                      {isSelected && (
+                        <div className="absolute top-0 right-0 bg-[#79AC78] text-white rounded-bl-2xl rounded-tr-xl p-2.5 shadow-md z-10 animate-in zoom-in duration-200">
+                          <GrCheckmark className="w-5 h-5" />
+                        </div>
+                      )}
+
+                      {/* Card Content */}
+                      <div className="flex-1 mb-6 mt-2">
+                        <div className="flex items-center gap-3 mb-4">
+                          {/* Visual Icon Box */}
+                          <div className={twMerge(
+                            "w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm",
+                            book.type_of_book.toLowerCase().includes("business") ? "bg-blue-100 text-blue-600" :
+                              book.type_of_book.toLowerCase().includes("personal") ? "bg-green-100 text-[#79AC78]" :
+                                "bg-orange-100 text-orange-600"
+                          )}>
+                            {book.type_of_book.toLowerCase().includes("business") ? "💼" :
+                              book.type_of_book.toLowerCase().includes("personal") ? "👤" : "🏷️"}
+                          </div>
+                          <span className="inline-flex items-center rounded-full bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
+                            {book.type_of_book}
+                          </span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-[#79AC78] transition-colors pr-8">
+                          {book.name}
+                        </h3>
+                      </div>
+
+                      {/* Card Footer Actions */}
+                      <div
+                        className="flex items-center gap-2 pt-5 border-t border-gray-100/80 mt-auto"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex items-center hover:scale-105 transition-transform bg-gray-50 rounded-full px-2 py-1 flex-1">
                           <ShareBookPanel
                             typeOfBook={book.type_of_book}
                             bookUrl={`${baseURL}/public-book/${book.id}`}
                           />
+                        </div>
 
-                          {/* Share Icon Content Ends */}
-                          {/* Update Book Icon */}
-                          <div>
-                            <Sheet>
-                              <SheetTrigger asChild>
-                                <div className="text-right">
-                                  {/* <Button
-                                  variant="outline"
-                                  className="text-xs md:text-base"
-                                > */}
-                                  <MdOutlineModeEdit className="w-4 h-4" />
-                                  {/* </Button> */}
-                                </div>
-                              </SheetTrigger>
-                              <SheetContent
-                                className="h-[450px] w-full md:w-80"
-                                side="left"
-                                onOpenAutoFocus={(e) => e.preventDefault()}
-                              >
-                                <AddNewBookDialog
-                                  existing_books={
-                                    userBooks
-                                      ? userBooks.map((book: Book) => {
-                                        return book.name;
-                                      })
-                                      : []
-                                  }
-                                  editBook={book}
-                                />
-                              </SheetContent>
-                            </Sheet>
-                          </div>
-                          {/* Delete Book */}
-                          <div>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <RiDeleteBinLine
-                                  className="w-4 h-4"
-                                // onClick={() => deleteBook(book.id)}
-                                />
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Are you sure?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will
-                                    permanently delete the Book {book.name}
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <Form method="POST" className="w-full ">
-                                    {" "}
-                                    <AlertDialogAction
-                                    //   onClick={() => deleteBook(book.id)}
+                        <div className="flex items-center gap-2">
+                          <Sheet>
+                            <SheetTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors border border-transparent hover:border-blue-100 bg-white shadow-sm">
+                                <MdOutlineModeEdit className="w-5 h-5" />
+                              </Button>
+                            </SheetTrigger>
+                            <SheetContent
+                              className="h-[450px] w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl"
+                              side="right"
+                              onOpenAutoFocus={(e) => e.preventDefault()}
+                            >
+                              <SheetHeader className="text-left mb-7">
+                                <SheetTitle className="text-2xl font-bold">Edit Book</SheetTitle>
+                              </SheetHeader>
+                              <AddNewBookDialog
+                                existing_books={
+                                  userBooks ? userBooks.map((b: any) => b.name) : []
+                                }
+                                editBook={book}
+                              />
+                            </SheetContent>
+                          </Sheet>
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-transparent hover:border-red-100 bg-white shadow-sm">
+                                <RiDeleteBinLine className="w-5 h-5" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="rounded-xl">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="text-xl">Delete this book?</AlertDialogTitle>
+                                <AlertDialogDescription className="text-base text-gray-500">
+                                  This action cannot be undone. This will permanently delete <strong>{book.name}</strong> and all its associated data.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter className="gap-2 sm:gap-0 mt-2">
+                                <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                <Form method="POST">
+                                  <AlertDialogAction asChild>
+                                    <Button
+                                      type="submit"
+                                      name="_action"
+                                      value="DeleteBook"
+                                      variant="destructive"
+                                      className="rounded-full w-full sm:w-auto"
                                     >
-                                      <input
-                                        type="hidden"
-                                        name="book_id"
-                                        value={book.id}
-                                      />
-                                      <Button
-                                        type="submit"
-                                        name="_action"
-                                        value="DeleteBook"
-                                      >
-                                        Continue
-                                      </Button>
-                                    </AlertDialogAction>
-                                  </Form>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                          {/* Delete Book Icon Ends */}
+                                      Yes, delete book
+                                    </Button>
+                                  </AlertDialogAction>
+                                  <input type="hidden" name="book_id" value={book.id} />
+                                </Form>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </CollapsibleContent>
-            </Collapsible>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-center gap-4 bg-white p-2 rounded-full border border-gray-200 shadow-sm w-max mx-auto">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-gray-100"
+                disabled={currentOffset === 0}
+                onClick={() => {
+                  updateOffset(
+                    currentOffset <= 5 ? "0" : (currentOffset - 5).toString(),
+                  );
+                }}
+              >
+                <MdKeyboardDoubleArrowLeft className="w-5 h-5 text-gray-600" />
+              </Button>
+              <span className="text-sm font-medium text-gray-600 px-4">
+                Page {Math.floor(currentOffset / 5) + 1}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-gray-100"
+                disabled={userBooks?.length < 5}
+                onClick={() => {
+                  updateOffset((currentOffset + 5).toString());
+                }}
+              >
+                <MdKeyboardDoubleArrowRight className="w-5 h-5 text-gray-600" />
+              </Button>
+            </div>
+          </>
+        ) : (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white rounded-3xl border-2 border-dashed border-gray-200">
+            <div className="w-20 h-20 bg-[#d3f2d5] rounded-full flex items-center justify-center mb-6">
+              <IoMdAdd className="w-10 h-10 text-[#79AC78]" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">No books yet</h3>
+            <p className="text-gray-500 max-w-sm mx-auto mb-8">
+              You haven't created any books. Get started by adding a new book to track your finances.
+            </p>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button className="flex items-center gap-2 bg-[#79AC78] hover:bg-[#639362] text-white rounded-full px-8 py-6 text-lg transition-all shadow-md hover:shadow-xl">
+                  <IoMdAdd className="w-6 h-6" />
+                  Create Your First Book
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                className="h-[450px] w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl"
+                side="right"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+              >
+                <SheetHeader className="text-left mb-7">
+                  <SheetTitle className="text-2xl font-bold">Add New Book</SheetTitle>
+                  <SheetDescription>
+                    Create a new book to start organizing your finances.
+                  </SheetDescription>
+                </SheetHeader>
+                <AddNewBookDialog existing_books={[]} />
+              </SheetContent>
+            </Sheet>
           </div>
-          {/* {actionData?.ok &&
-            actionData?.type == "AddNewBook" &&
-            toast("New Book Created")} */}
-          <table className="hidden md:table w-full rounded-md border-2 border-[#c4d1eb]">
-            <thead className="bg-[#79AC78] rounded-md">
-              <tr>
-                <th colSpan={3} className="px-4 text-2xl text-left ">
-                  All Books
-                </th>
-                <th className="p-2">
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <div className="text-right">
-                        <Button
-                          variant="outline"
-                          className="text-xs md:text-base"
-                        >
-                          Add New Book
-                        </Button>
-                      </div>
-                    </SheetTrigger>
-                    <SheetContent
-                      className="grid gap-2 m-10 w-full md:w-80 bg-white rounded-md shadow-lg"
-                      side="bottom"
-                      onOpenAutoFocus={(e) => e.preventDefault()}
-                    >
-                      <AddNewBookDialog
-                        existing_books={
-                          userBooks
-                            ? userBooks.map((book: Book) => {
-                              return book.name;
-                            })
-                            : []
-                        }
-                      />
-                    </SheetContent>
-                  </Sheet>
-                </th>
-              </tr>
-            </thead>
-            <thead className=" bg-[#79AC78]">
-              <tr>
-                <th scope="col" className="px-6 py-4"></th>
-                <th scope="col" className="px-6 py-4">
-                  Book Name
-                </th>
-                <th scope="col" className="px-6 py-4 hidden sm:table-cell">
-                  Book Type
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              {userBooks?.map((book: Book, index: number) => (
-                <tr
-                  key={index}
-                  onClick={() => {
-                    setSelected(book);
-                    navigate(
-                      `/books/${book.id}?${searchParams.toString()}`,
-                    );
-                  }}
-                  className={twMerge(
-                    "hover:bg-gray-300 cursor-pointer",
-                    selectedBook?.id == book.id && "bg-gray-200",
-                  )}
-                >
-                  <td className="p-2">
-                    {selectedBook?.id == book.id && (
-                      <GrCheckmark className="w-5 h-5" />
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {book.name}
-                    <dl className="sm:hidden">
-                      <dd className="sm:hidden text-xs text-gray-500">
-                        Book Type:{book.type_of_book.toLowerCase()}
-                      </dd>
-                    </dl>
-                  </td>
-                  <td className="hidden sm:table-cell px-6 py-2">
-                    {book.type_of_book.toLowerCase()}
-                  </td>
-                  <td>
-                    <div className="flex gap-8 justify-center align-middle">
-                      {/* Share Icon */}
-                      <ShareBookPanel
-                        typeOfBook={book.type_of_book}
-                        // TODO: Fix this URL
-                        bookUrl={`${baseURL}/public-book/${book.id}`}
-                      />
+        )}
 
-                      {/* Share Icon Content Ends */}
-                      {/* Update Book Icon */}
-                      <div>
-                        <MdOutlineModeEdit className="w-4 h-4" />
-                      </div>
-                      {/* Delete Book */}
-                      <div>
-                        <RiDeleteBinLine className="w-4 h-4" />
-                      </div>
-                      {/* Delete Book Icon Ends */}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div></div>
-      <Outlet />
-
-      <div className="m-2 md:m-16 ">
-        <div className="w-full md:hidden p-1.5  border-2 border-[#c4d1eb] bg-[#79AC78] flex items-center justify-between">
-          <div className="text-xl font-bold flex items-center">Reports</div>
+        {/* Outlet section for rendering selected book content (like transactions) */}
+        <div className={twMerge("mt-12 transition-all duration-500", selectedBook ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 hidden")}>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-12"></div>
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>

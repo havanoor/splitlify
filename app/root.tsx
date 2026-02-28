@@ -43,7 +43,10 @@ export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { username } = useLoaderData<typeof loader>() || { username: "Guest" };
+  const loaderData = useLoaderData<typeof loader>();
+  const username = loaderData && "user" in loaderData && loaderData.user
+    ? loaderData.user.username
+    : (loaderData as any)?.username || "Guest";
   return (
     <html lang="en">
       <head>
