@@ -68,8 +68,8 @@ export const RegisterForm = ({ url }: { url: string }) => {
 
   return (
     <CardWrapper
-      header="Register"
-      footerLabel="Already have an account? Login"
+      header="Create an account"
+      footerLabel="Already have an account? Log in instead"
       footerHref="/login"
       googleLogin={url}
     >
@@ -84,12 +84,16 @@ export const RegisterForm = ({ url }: { url: string }) => {
             name="firstName"
             render={({ field }) => {
               return (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="text-sm font-semibold text-gray-700">First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="First Name" {...field} />
+                    <Input
+                      placeholder="e.g. John"
+                      {...field}
+                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-red-500" />
                 </FormItem>
               );
             }}
@@ -100,12 +104,16 @@ export const RegisterForm = ({ url }: { url: string }) => {
             name="lastName"
             render={({ field }) => {
               return (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="text-sm font-semibold text-gray-700">Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Last Name" {...field} />
+                    <Input
+                      placeholder="e.g. Doe"
+                      {...field}
+                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-red-500" />
                 </FormItem>
               );
             }}
@@ -115,12 +123,17 @@ export const RegisterForm = ({ url }: { url: string }) => {
             name="password"
             render={({ field }) => {
               return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Password *</FormLabel>
+                <FormItem className="col-span-2 space-y-1.5">
+                  <FormLabel className="text-sm font-semibold text-gray-700">Password *</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Create a strong password"
+                      {...field}
+                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-red-500" />
                 </FormItem>
               );
             }}
@@ -130,16 +143,17 @@ export const RegisterForm = ({ url }: { url: string }) => {
             name="confirmPassword"
             render={({ field }) => {
               return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Confirm Password *</FormLabel>
+                <FormItem className="col-span-2 space-y-1.5">
+                  <FormLabel className="text-sm font-semibold text-gray-700">Confirm Password *</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Confirm Password"
+                      placeholder="Repeat your password"
                       {...field}
+                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-red-500" />
                 </FormItem>
               );
             }}
@@ -149,16 +163,17 @@ export const RegisterForm = ({ url }: { url: string }) => {
             name="email"
             render={({ field }) => {
               return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Email</FormLabel>
+                <FormItem className="col-span-2 space-y-1.5">
+                  <FormLabel className="text-sm font-semibold text-gray-700">Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
                       placeholder="name@example.com"
                       {...field}
+                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs text-red-500" />
                 </FormItem>
               );
             }}
@@ -168,31 +183,35 @@ export const RegisterForm = ({ url }: { url: string }) => {
             name="userName"
             render={({ field }) => {
               return (
-                <FormItem className="col-span-2">
-                  <FormLabel>Username *</FormLabel>
+                <FormItem className="col-span-2 space-y-1.5">
+                  <FormLabel className="text-sm font-semibold text-gray-700">Username *</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input
+                      placeholder="Choose a unique handle"
+                      {...field}
+                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                    />
                   </FormControl>
-                  <p className="text-sm text-green-800">{username}</p>
-                  <FormMessage />
+                  {username && <p className={`text-xs ${validUsername.data === true ? 'text-[#79AC78]' : validUsername.state === 'loading' ? 'text-blue-500' : 'text-red-500'}`}>{username}</p>}
+                  <FormMessage className="text-xs text-red-500" />
                 </FormItem>
               );
             }}
           />
           {formError && (
-            <div className="flex gap-2 w-full p-2 rounded-md  bg-destructive/15 items-center text-destructive text-sm">
-              <IoWarningOutline className="w-5 h-5" />
+            <div className="col-span-2 flex gap-2 w-full p-3 rounded-xl bg-red-50 border border-red-100 items-center justify-center text-red-600 text-sm font-medium mt-2">
+              <IoWarningOutline className="w-5 h-5 flex-shrink-0" />
               <p>{formError}</p>
             </div>
           )}
-          <Button type="submit" className="col-span-2">
+          <Button type="submit" className="col-span-2 w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm mt-4">
             {loading ? (
-              <>
+              <div className="flex items-center gap-2">
                 <LoaderIcon />
-                Lets Go ...
-              </>
+                <span>Creating account...</span>
+              </div>
             ) : (
-              "Register"
+              "Create Account"
             )}
           </Button>
         </Form>
