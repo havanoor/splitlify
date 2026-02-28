@@ -30,7 +30,7 @@ export type User = {
 interface MultiSelectProps {
   options: User[] | undefined;
   selected: User[];
-  onChange: (a: User[]) => {};
+  onChange: (a: User[]) => void;
   className?: string;
   name?: string;
 }

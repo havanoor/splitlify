@@ -95,7 +95,7 @@ export default function PublicBook() {
     if (spliTrans.state === "loading") {
       setPayments([]);
     } else if (spliTrans.data) {
-      setPayments(spliTrans.data.splits as Payment[]);
+      setPayments((spliTrans.data as unknown as any).splits as Payment[]);
     }
   }, [spliTrans.data, spliTrans.state]);
   return (

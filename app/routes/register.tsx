@@ -11,7 +11,8 @@ import { getValidatedFormData } from "remix-hook-form";
 import { z } from "zod";
 import { generateAuthUrl } from "~/lib/googleLogin";
 import { SignUpSchema } from "~/schemas";
-import { cookie, register } from "./login/login";
+import { register } from "./login/login";
+import { cookie } from "~/lib/cookies";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // Put "register" in the state so we know where the user is

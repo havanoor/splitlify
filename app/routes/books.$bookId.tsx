@@ -233,7 +233,7 @@ export default function IndividualBook() {
 
   useEffect(() => {
     if (category.data) {
-      setCategories(category.data);
+      setCategories(category.data as unknown as Category[]);
     }
   }, [category.data]);
 
@@ -246,7 +246,7 @@ export default function IndividualBook() {
     if (spliTrans.state === "loading") {
       setPayments([]);
     } else if (spliTrans.data) {
-      setPayments(spliTrans.data.splits as Payment[]);
+      setPayments(spliTrans.data as unknown as Payment[]);
     }
   }, [spliTrans.data, spliTrans.state]);
 

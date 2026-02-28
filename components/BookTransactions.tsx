@@ -15,7 +15,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "components/ui/collapsible";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, X } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { IoMdAdd } from "react-icons/io";
 import {
@@ -26,7 +26,7 @@ import {
   MdOutlineModeEdit,
 } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "~/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "~/components/ui/sheet";
 import AddNewTransactionDialog from "./AddNewTransactionDialog";
 import EditTransactionView from "./EditTransactionView";
 import { Badge } from "./ui/badge";

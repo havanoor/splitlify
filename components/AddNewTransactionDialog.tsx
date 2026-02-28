@@ -59,7 +59,7 @@ export default function AddNewTransactionDialog({
     setSelected(newSelected);
   };
 
-  const [transaction, setTransaction] = useState<NewTransaction>(null);
+  const [transaction, setTransaction] = useState<NewTransaction>(null as unknown as NewTransaction);
 
   const handleNewTransaction = (e: ChangeEvent<HTMLInputElement>) => {
     setTransaction({
@@ -69,52 +69,49 @@ export default function AddNewTransactionDialog({
   };
 
   return (
-    <>
-      <Form className="grid grid-cols-1 items-center gap-4" method="POST">
-        {/* <div className="space-y-2">
-          <h4 className="font-medium leading-none">{title} Transaction</h4>
-          <p className="text-sm text-muted-foreground">
-            {title} details for the transaction
-          </p>
-        </div> */}
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="name">Transaction Name</Label>
+    <div className="bg-white px-1 pb-6">
+      <Form className="flex flex-col gap-5" method="POST">
+        <div className="space-y-1.5">
+          <Label htmlFor="name" className="text-sm font-semibold text-gray-700">Transaction Name</Label>
           <Input
             defaultValue={currentTransaction?.desc || ""}
             id="name"
-            placeholder="New transaction"
-            className="col-span-2 h-8"
+            placeholder="e.g. Dinner at Luigi's"
+            className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all w-full"
             name="desc"
             onChange={handleNewTransaction}
             readOnly={!!currentTransaction && title === "View"}
             required
           />
         </div>
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="amount">Amount</Label>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="amount" className="text-sm font-semibold text-gray-700">Amount</Label>
           <Input
             defaultValue={currentTransaction?.amount}
             id="amount"
             type="number"
-            placeholder="0"
+            placeholder="0.00"
             onChange={handleNewTransaction}
-            className="col-span-2 h-8 text-black"
+            className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all w-full text-gray-900"
             name="amount"
+            step="0.01"
             readOnly={!!currentTransaction && title === "View"}
             required
           />
         </div>
-        <div className="grid items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="amount">Category</Label>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="category_id" className="text-sm font-semibold text-gray-700">Category</Label>
 
           {currentTransaction?.category && title === "View" ? (
             <Input
               readOnly
-              className="col-span-2 h-8"
+              className="h-12 rounded-xl border-gray-200 w-full"
               defaultValue={currentTransaction?.category?.category.toString()}
             />
           ) : (
-            <div className="flex items-center gap-2 ">
+            <div className="flex items-center gap-2">
               <div className="flex-grow">
                 <Select
                   name="category_id"
@@ -123,7 +120,7 @@ export default function AddNewTransactionDialog({
                     setTransaction({ ...transaction, category_id: v });
                   }}
                 >
-                  <SelectTrigger className="col-span-2 h-8">
+                  <SelectTrigger className="w-full h-12 rounded-xl text-gray-700 border-gray-200 focus:ring-[#79AC78] transition-all bg-white">
                     <SelectValue
                       placeholder={
                         currentTransaction?.category?.category ||
@@ -131,10 +128,10 @@ export default function AddNewTransactionDialog({
                       }
                     />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[9999] rounded-xl border-gray-100 shadow-lg">
                     <SelectGroup>
                       {categories?.map((val, id) => (
-                        <SelectItem key={id} value={val.id.toString()}>
+                        <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
                           {val.category}
                         </SelectItem>
                       ))}
@@ -142,23 +139,25 @@ export default function AddNewTransactionDialog({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="items-center hover:cursor-pointer">
+              <div className="items-center">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-4 h-8 z-[999]">
+                    <Button variant="outline" className="w-12 h-12 rounded-xl border-gray-200 text-gray-500 hover:text-[#79AC78] transition-colors focus-visible:ring-[#79AC78]">
                       +
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="px-2 py-3 mr-3  bg-white border-2 rounded">
+                  <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-white border border-gray-100 shadow-xl rounded-xl mr-4" side="top" align="end">
                     <categoryUpdater.Form method="POST" action="/new-category">
-                      <div className="flex items-center bg-white space-x-2">
-                        <Label htmlFor="newcategory" className="mr-4">
-                          Category:
+                      <div className="flex flex-col space-y-3">
+                        <Label htmlFor="newcategory" className="text-sm font-semibold text-gray-700">
+                          New Category Name
                         </Label>
-                        <Input name="category" className="h-8 text-black" />
-                        <Button type="submit" variant="default">
-                          Add
-                        </Button>
+                        <div className="flex gap-2">
+                          <Input name="category" placeholder="e.g. Groceries" className="h-10 rounded-lg border-gray-200 focus-visible:ring-[#79AC78]" required />
+                          <Button type="submit" className="h-10 rounded-lg bg-[#79AC78] hover:bg-[#639362] text-white">
+                            Add
+                          </Button>
+                        </div>
                       </div>
                     </categoryUpdater.Form>
                   </PopoverContent>
@@ -166,17 +165,17 @@ export default function AddNewTransactionDialog({
               </div>
             </div>
           )}
-          {/* </div> */}
         </div>
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="date">Date</Label>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="date" className="text-sm font-semibold text-gray-700">Date</Label>
           {currentTransaction?.date && title === "View" ? (
             <Input
               value={date ? date.toDateString() : "Pick a date"}
               readOnly
               className={cn(
-                "col-span-2 h-8 text-black justify-start text-left font-normal",
-                !date && "text-muted-foreground"
+                "w-full h-12 rounded-xl border-gray-200 text-gray-900 justify-start text-left font-normal",
+                !date && "text-gray-400"
               )}
             />
           ) : (
@@ -188,15 +187,15 @@ export default function AddNewTransactionDialog({
                   variant={"outline"}
                   value={date ? date.toDateString() : "Pick a date"}
                   className={cn(
-                    "col-span-2 h-8 text-black justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
+                    "w-full h-12 rounded-xl bg-white border-gray-200 hover:bg-gray-50 text-gray-900 justify-start text-left font-normal transition-all focus-visible:ring-[#79AC78]",
+                    !date && "text-gray-400"
                   )}
                 >
                   {date ? date.toDateString() : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="w-auto bg-white  rounded-md shadow-lg"
+                className="z-[9999] w-auto bg-white rounded-xl shadow-xl border-gray-100 p-0"
                 align="start"
               >
                 <Calendar
@@ -204,6 +203,7 @@ export default function AddNewTransactionDialog({
                   selected={date}
                   onSelect={setDate}
                   initialFocus
+                  className="rounded-xl"
                 />
               </PopoverContent>
             </Popover>
@@ -216,7 +216,7 @@ export default function AddNewTransactionDialog({
               currentTransaction?.date
                 ? currentTransaction?.date
                 : date?.toISOString().slice(0, 10) ??
-                  new Date().toISOString().slice(0, 10)
+                new Date().toISOString().slice(0, 10)
             }
             readOnly={!!currentTransaction}
           />
@@ -225,12 +225,13 @@ export default function AddNewTransactionDialog({
             <input type="hidden" name="id" value={currentTransaction.id} />
           ) : null}
         </div>
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="payer_id">Paid By</Label>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="payer_id" className="text-sm font-semibold text-gray-700">Paid By</Label>
           {currentTransaction && title === "View" ? (
             <Input
               readOnly
-              className="col-span-2 h-8"
+              className="w-full h-12 rounded-xl border-gray-200 text-gray-900"
               defaultValue={
                 currentTransaction?.payer.username ||
                 `${currentTransaction?.payer.first_name} ${currentTransaction?.payer.last_name}`
@@ -244,17 +245,17 @@ export default function AddNewTransactionDialog({
                 setTransaction({ ...transaction, payer_id: v });
               }}
             >
-              <SelectTrigger className="col-span-2 h-8">
+              <SelectTrigger className="w-full h-12 rounded-xl text-gray-700 border-gray-200 focus:ring-[#79AC78] transition-all bg-white">
                 <SelectValue
                   placeholder={
                     currentTransaction?.payer.username || "Select a payer"
                   }
                 />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[9999] rounded-xl border-gray-100 shadow-lg">
                 <SelectGroup>
                   {books?.splitters.map((val, id) => (
-                    <SelectItem key={id} value={val.id.toString()}>
+                    <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
                       {val.username
                         ? val.username
                         : `${val.first_name} ${val.last_name}`}
@@ -265,12 +266,13 @@ export default function AddNewTransactionDialog({
             </Select>
           )}
         </div>
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="payee">Paid For</Label>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="payee" className="text-sm font-semibold text-gray-700">Paid For</Label>
           {currentTransaction?.payee && title === "View" ? (
-            <div className="rounded-md border border-input w-full p-2 h-full flex flex-wrap items-center gap-2 justify-normal">
+            <div className="rounded-xl border border-gray-200 bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
               {selected.map((e: User) => (
-                <Badge key={e.id} variant="secondary">
+                <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-white border-gray-200">
                   {e.username ? e.username : `${e.first_name} ${e.last_name}`}
                 </Badge>
               ))}
@@ -280,7 +282,7 @@ export default function AddNewTransactionDialog({
               options={books?.splitters}
               selected={selected}
               onChange={toggleSelected}
-              className="w-60 z-[999]"
+              className="w-full z-[9999] rounded-xl"
               name="payee_ids"
             />
           )}
@@ -291,24 +293,27 @@ export default function AddNewTransactionDialog({
             value={selected.map((e: User) => e.id.toString())}
           />
         </div>
-        <div>
+
+        <div className="pt-4 pb-8 flex flex-col gap-3">
           {currentTransaction?.id && title === "View" ? null : (
             <>
               <SheetClose asChild>
                 <Button
-                  className="mr-2"
+                  className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
                   type="submit"
                   name="_action"
                   value="AddNewTransaction"
                 >
-                  {title}
+                  {title === "Add" ? "Create Transaction" : `${title} Transaction`}
                 </Button>
               </SheetClose>
-              <AddNewPerson bookId={books.id.toString()} />
+              <div className="w-full flex justify-center">
+                <AddNewPerson bookId={books.id.toString()} />
+              </div>
             </>
           )}
         </div>
       </Form>
-    </>
+    </div>
   );
 }

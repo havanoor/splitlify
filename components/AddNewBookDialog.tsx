@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { TrashIcon, X } from "lucide-react";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useDebounce } from "~/customHooks/Debounce";
 import { Form } from "@remix-run/react";
@@ -324,105 +325,95 @@ export default function AddNewBookDialog({
   };
 
   return (
-    <div className="grid gap-2 bg-white ">
-      <Form method="POST" className="grid grid-cols-1 items-center gap-4">
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="name" className="text-left">
-            Name
+    <div className="px-1 pb-6">
+      <Form method="POST" className="flex flex-col gap-5">
+        <div className="space-y-1.5">
+          <Label htmlFor="name" className="text-sm font-semibold text-gray-700">
+            Book Name
           </Label>
           <Input
             id="name"
             defaultValue={editBook?.name ?? ""}
-            placeholder="Book Name"
-            className="col-span-2"
+            placeholder="e.g. Summer Trip 2026"
+            className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all w-full"
             name="name"
             onChange={handleNewBook}
             required
           />
+          {!available && (
+            <p className="text-xs text-red-500 mt-1">
+              {"The Book Name is not available"}
+            </p>
+          )}
         </div>
-        {!available ? (
-          <div className="grid text-destructive text-xs">
-            The Book Name is not available
-          </div>
-        ) : null}
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="name" className="text-left">
+
+        <div className="space-y-1.5">
+          <Label htmlFor="currency" className="text-sm font-semibold text-gray-700">
             Currency
           </Label>
-          <Popover open={open}>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                className="col-span-2 p-2 h-full justify-start"
-                onClick={() => setOpen(!open)}
+                className="w-full h-12 rounded-xl bg-white border-gray-200 hover:bg-gray-50 text-gray-700 font-normal justify-between transition-all focus-visible:ring-[#79AC78] focus-visible:border-transparent"
               >
-                <div className="text-muted-foreground">
+                <span className={!editBook?.book_currency && !newBook.book_currency ? "text-gray-400" : ""}>
                   {editBook?.book_currency ? (
                     editBook?.book_currency
                   ) : newBook.book_currency ? (
                     newBook.book_currency
                   ) : (
-                    <div className="flex justify-between items-center">
-                      <div>Select a currency</div> <IoIosArrowDown />
-                    </div>
+                    "Select a currency"
                   )}
-                </div>
+                </span>
+                <IoIosArrowDown className="text-gray-400" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="z-50"
+              className="z-[9999] w-[--radix-popover-trigger-width] p-0 rounded-xl shadow-lg border-gray-100"
               side="bottom"
               align="start"
-              style={{
-                maxHeight: "calc(var(--radix-popper-available-height) - 50px)",
-              }}
             >
-              <div className="bg-white  rounded-md">
-                <Command>
-                  <CommandInput
-                    name="currency"
-                    placeholder="Type a currency or search..."
-                    autoFocus={false}
-                  />
-                  <CommandEmpty>No results found.</CommandEmpty>
-                  <CommandGroup>
-                    <CommandList>
-                      {currencies.map((currency, id) => (
-                        <div
-                          onClick={() => {
-                            setNewBook({
-                              ...newBook,
-                              book_currency: currency,
-                            });
-                            setOpen(!open);
-                          }}
-                          key={id}
-                          className="cursor-pointer"
-                        >
-                          <CommandItem
-                            onSelect={() => {
-                              setNewBook({
-                                ...newBook,
-                                book_currency: currency,
-                              });
-                              setOpen(!open);
-                            }}
-                          >
-                            {currency}
-                          </CommandItem>
-                        </div>
-                      ))}
-                    </CommandList>
-                  </CommandGroup>
-                </Command>
-              </div>
+              <Command className="rounded-xl">
+                <CommandInput
+                  name="currency"
+                  placeholder="Search currency..."
+                  className="h-11"
+                />
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup className="max-h-60 overflow-y-auto">
+                  <CommandList>
+                    {currencies.map((currency, id) => (
+                      <CommandItem
+                        key={id}
+                        onSelect={() => {
+                          setNewBook({
+                            ...newBook,
+                            book_currency: currency,
+                          });
+                          setOpen(false);
+                        }}
+                        className="cursor-pointer font-medium"
+                      >
+                        {currency}
+                      </CommandItem>
+                    ))}
+                  </CommandList>
+                </CommandGroup>
+              </Command>
             </PopoverContent>
           </Popover>
+          <input
+            type="hidden"
+            name="book_currency"
+            value={newBook.book_currency}
+          />
         </div>
-        <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-3">
-          <Label htmlFor="btype" className="text-left">
-            Type
+
+        <div className="space-y-1.5">
+          <Label htmlFor="btype" className="text-sm font-semibold text-gray-700">
+            Book Type
           </Label>
           <Select
             name="type_of_book"
@@ -430,34 +421,30 @@ export default function AddNewBookDialog({
               setNewBook({ ...newBook, type_of_book: v });
             }}
           >
-            <SelectTrigger className="w-auto col-span-2 text-gray-500">
+            <SelectTrigger className="w-full h-12 rounded-xl text-gray-700 border-gray-200 focus:ring-[#79AC78] transition-all bg-white">
               <SelectValue
                 placeholder={editBook?.type_of_book ?? "Select Book Type"}
               />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-[9999] rounded-xl border-gray-100 shadow-lg">
               <SelectGroup>
-                <SelectItem value="PUBLIC">Public</SelectItem>
-                <SelectItem value="PRIVATE">Private</SelectItem>
+                <SelectItem value="PUBLIC" className="cursor-pointer">Public</SelectItem>
+                <SelectItem value="PRIVATE" className="cursor-pointer">Private</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
-          <input
-            type="hidden"
-            name="book_currency"
-            value={newBook.book_currency}
-          />
         </div>
-        <div>
+
+        <div className="pt-4 pb-8 flex flex-col gap-3">
           <SheetClose asChild>
             <Button
-              className="mr-2"
+              className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
               type="submit"
               disabled={!available}
               name="_action"
               value="AddNewBook"
             >
-              Add
+              {editBook ? "Update Book" : "Create Book"}
             </Button>
           </SheetClose>
         </div>

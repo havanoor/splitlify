@@ -56,9 +56,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "~/components/ui/sheet";
 import { toast } from "sonner";
-import { CircleX } from "lucide-react";
+import { X } from "lucide-react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -242,7 +243,7 @@ export default function Books() {
               </button>
             </SheetTrigger>
             <SheetContent
-              className="h-[450px] w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl"
+              className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
               side="right"
               onOpenAutoFocus={(e) => e.preventDefault()}
             >
@@ -337,7 +338,7 @@ export default function Books() {
                               </Button>
                             </SheetTrigger>
                             <SheetContent
-                              className="h-[450px] w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl"
+                              className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
                               side="right"
                               onOpenAutoFocus={(e) => e.preventDefault()}
                             >
@@ -442,7 +443,7 @@ export default function Books() {
                 </Button>
               </SheetTrigger>
               <SheetContent
-                className="h-[450px] w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl"
+                className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
                 side="right"
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
