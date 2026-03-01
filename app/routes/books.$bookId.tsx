@@ -178,20 +178,11 @@ export default function IndividualBook() {
   const updateOffset = (newOffset: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("transaction_offset", newOffset);
-    setSearchParams(params, { replace: true });
+    setSearchParams(params, { replace: true, preventScrollReset: true });
   };
 
   const [viewTransactions, setViewTransactions] = useState(false);
   const { bookId } = useParams();
-  // const matches = useMatches();
-
-  // const books = (
-  //   matches.find((match) => match.id === "routes/books")?.data as {
-  //     userBooks: Book[];
-  //   }
-  // )?.userBooks;
-
-  // const book: Book | undefined = books.find((b) => b.id === Number(bookId));
   const { bookTransactions, selectedBook } = useLoaderData<typeof loader>();
   const book = selectedBook;
   const actionData = useActionData<typeof action>();

@@ -212,6 +212,37 @@ export default function BookTransactions({
             </tbody>
           </table>
         )}
+
+        {/* Desktop Pagination Controls */}
+        {open && transactions?.length > 0 && (
+          <div className="flex items-center justify-center gap-4 bg-white p-3 border-t border-gray-100">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-100"
+              disabled={offset <= 0}
+              onClick={() => {
+                setOffset(offset <= 5 ? "0" : (offset - 5).toString());
+              }}
+            >
+              <MdKeyboardDoubleArrowLeft className="w-5 h-5 text-gray-600" />
+            </Button>
+            <span className="text-sm font-medium text-gray-600 px-4">
+              Page {Math.floor(offset / 5) + 1}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-100"
+              disabled={transactions?.length < 5}
+              onClick={() => {
+                setOffset((offset + 5).toString());
+              }}
+            >
+              <MdKeyboardDoubleArrowRight className="w-5 h-5 text-gray-600" />
+            </Button>
+          </div>
+        )}
       </div>
       <div className="md:hidden m-2">
         <Collapsible
