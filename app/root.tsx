@@ -30,7 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
   if (
     args.formAction &&
-    ["/login", "/signup", "logout"].includes(args.formAction)
+    ["/login", "/register", "logout"].includes(args.formAction)
   ) {
     return true;
   }

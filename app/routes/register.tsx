@@ -12,7 +12,7 @@ import { z } from "zod";
 import { generateAuthUrl } from "~/lib/googleLogin";
 import { SignUpSchema } from "~/schemas";
 import { register } from "./login/login";
-import { cookie } from "~/lib/cookies";
+import { cookie, refreshCookie } from "~/lib/cookies";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // Put "register" in the state so we know where the user is
@@ -45,14 +45,25 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const registerData = await register(userData);
 
+  const headers = new Headers();
+  headers.append(
+    "Set-Cookie",
+    await cookie.serialize({
+      username: registerData.user.username,
+      token: registerData.access_token,
+      user_id: registerData.user.id,
+    })
+  );
+
+  if (registerData.refresh_token) {
+    headers.append(
+      "Set-Cookie",
+      await refreshCookie.serialize(registerData.refresh_token)
+    );
+  }
+
   return redirect("/books", {
-    headers: {
-      "Set-Cookie": await cookie.serialize({
-        username: registerData.user.username,
-        token: registerData.access_token,
-        user_id: registerData.user.id,
-      }),
-    },
+    headers: headers,
   });
 }
 

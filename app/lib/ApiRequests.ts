@@ -61,11 +61,7 @@ async function callApi(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    console.log("Error data:", errorData);
     const isTokenExpired = (JSON.stringify(errorData?.error) || "").toLowerCase().includes("token expired");
-
-    console.log("Token expired:", isTokenExpired);
-
 
     if (response.status === 401 && isTokenExpired && refreshToken && headers && user) {
       try {

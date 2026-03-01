@@ -59,7 +59,7 @@ export default function AddNewTransactionDialog({
     setSelected(newSelected);
   };
 
-  const [transaction, setTransaction] = useState<NewTransaction>(null as unknown as NewTransaction);
+  const [transaction, setTransaction] = useState<NewTransaction>(null);
 
   const handleNewTransaction = (e: ChangeEvent<HTMLInputElement>) => {
     setTransaction({
@@ -142,7 +142,7 @@ export default function AddNewTransactionDialog({
               <div className="items-center">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-12 h-12 rounded-xl border-gray-200 text-gray-500 hover:text-[#79AC78] transition-colors focus-visible:ring-[#79AC78]">
+                    <Button type="button" variant="outline" className="w-12 h-12 rounded-xl border-gray-200 text-gray-500 hover:text-[#79AC78] transition-colors focus-visible:ring-[#79AC78]">
                       +
                     </Button>
                   </PopoverTrigger>
@@ -184,6 +184,7 @@ export default function AddNewTransactionDialog({
                 <Button
                   name="date"
                   id="date"
+                  type="button"
                   variant={"outline"}
                   value={date ? date.toDateString() : "Pick a date"}
                   className={cn(
