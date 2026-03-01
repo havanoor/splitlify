@@ -16,7 +16,6 @@ import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import { twMerge } from "tailwind-merge";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { getData } from "~/lib/ApiRequests";
 
@@ -64,7 +63,7 @@ export default function PublicBook() {
   const handleClick = () => {
     setViewTransactions(
       !viewTransactions && bookTransactions
-        ? bookTransactions.length > 0
+        ? bookTransactions.transactions?.length > 0
         : false
     );
   };
@@ -72,13 +71,11 @@ export default function PublicBook() {
   const updateOffset = (newOffset: string) => {
     const params = new URLSearchParams(searchParams);
     params.set("transaction_offset", newOffset);
-    setSearchParams(params);
+    setSearchParams(params, { replace: true, preventScrollReset: true });
   };
 
-  const totalAmount = bookTransactions?.reduce(
-    (total: number, transaction: Transaction) => total + transaction.amount,
-    0
-  );
+  const totalAmount = bookTransactions?.total_amount || 0;
+  const numTransactions = bookTransactions?.total_transactions || 0;
 
   useEffect(() => {
     spliTrans.load(`/split-fetcher/${bookId}`);
@@ -95,103 +92,86 @@ export default function PublicBook() {
     if (spliTrans.state === "loading") {
       setPayments([]);
     } else if (spliTrans.data) {
-      setPayments((spliTrans.data as unknown as any).splits as Payment[]);
+      setPayments((spliTrans.data as any).splits as Payment[]);
     }
   }, [spliTrans.data, spliTrans.state]);
   return (
-    <div>
+    <div className="bg-white rounded-3xl p-4 sm:p-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
       {book ? (
         <>
-          <div className="m-2 md:m-16">
+          {/* Mobile Transactions Header/Trigger */}
+          <div className="w-full md:hidden p-4 rounded-xl shadow-sm border border-gray-100 bg-gray-50 flex items-center justify-between mt-2 mb-6">
             <div
-              className="w-full p-4 bg-white  border-2  rounded-lg shadow"
-            // className={`${
-            //   isFlex ? "relative" : "absolute  top-4 group-hover:top-4 "
-            // }  w-full p-4 bg-white  border-2  rounded-lg shadow  ${twMerge(
-            //   "hover:bg-green-100 cursor-pointer",
-            //   selectedBook?.id == book.id && "bg-[#d3f2d5]"
-            // )}`}
+              className="text-lg font-bold flex items-center gap-2 cursor-pointer"
+              onClick={handleClick}
             >
-              <div className="flex justify-between items-center space-x-4">
-                <div className="w-48">
-                  Name: {book.name}
-                  <div className="text-xs text-gray-500">
-                    Book Type:{book.type_of_book.toLowerCase()}
-                  </div>
-                </div>
-
-                <div className="flex gap-8 justify-center align-middle">
-                  {/* Share Icon */}
-                  <ShareBookPanel
-                    typeOfBook={book.type_of_book}
-                    bookUrl={`${baseURL}/public-book/${book.id}`}
-                  />
-
-                  {/* Share Icon Content Ends */}
-                  {/* Update Book Icon */}
-                </div>
-              </div>
+              {viewTransactions &&
+                bookTransactions.transactions?.length > 0 ? (
+                <div className="bg-[#79AC78] text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
+              ) : (
+                <div className="bg-white border border-gray-200 text-gray-400 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+              )}
+              <span>Transactions</span>
             </div>
-            <div className="w-full md:hidden p-1.5 border-2 border-[#bdc7db] bg-[#79AC78] flex items-center justify-between mt-2">
-              <div
-                className="text-xl font-bold flex items-center"
-                onClick={handleClick}
-              >
-                {viewTransactions &&
-                  bookTransactions?.length &&
-                  bookTransactions.length > 0 ? (
-                  <MdKeyboardDoubleArrowUp className="w-6 h-6" />
-                ) : (
-                  <MdKeyboardDoubleArrowDown className="w-6 h-6" />
-                )}
-                Transactions
-              </div>
+          </div>
 
-              <div>
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <IoMdAdd
-                      color="white"
-                      fill="white"
-                      className="w-6 h-6 border-2 rounded"
-                    />
-                  </SheetTrigger>
-                  <SheetContent
-                    className="p-6 md:p-10 md:mt-10 mr-2 w-full md:w-80 bg-white rounded-t-lg md:rounded-lg"
-                    side="left"
-                    onOpenAutoFocus={(e) => e.preventDefault()}
-                  >
-                    <AddNewTransactionDialog books={book} title="View" />
-                  </SheetContent>
-                </Sheet>
-              </div>
-            </div>
-            {/* {bookTransactions.length > 0 ? ( */}
+          <div className="flex justify-between items-center mb-8">
             <div>
-              <BookStatsBox
-                amount={totalAmount}
-                currency={book?.book_currency}
-                numberFriends={book?.splitters.length}
-                numberTransactions={
-                  bookTransactions ? bookTransactions.length : 0
-                }
-                bookName={book?.name}
-              />
-              <BookTransactions
-                transactions={bookTransactions}
-                book={book}
-                offset={Number(searchParams.get("transaction_offset") || 0)}
-                setOffset={updateOffset}
-                open={viewTransactions}
-                setOpen={setViewTransactions}
-                title="View"
+              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{book.name}</h1>
+              <div className="mt-2 flex items-center gap-3">
+                <span className="inline-flex items-center rounded-full bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
+                  {book.type_of_book}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex gap-4 items-center">
+              <ShareBookPanel
+                typeOfBook={book.type_of_book}
+                bookUrl={`${baseURL}/public-book/${book.id}`}
               />
             </div>
-            <TransactionSplit split={payments} />
+          </div>
+
+
+          {/* Main Content Area */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8 flex flex-col gap-8">
+              {/* Stats Overview */}
+              <div className="bg-gradient-to-br from-[#79AC78]/5 to-transparent rounded-2xl p-1 border border-[#79AC78]/10">
+                <BookStatsBox
+                  amount={totalAmount}
+                  currency={book?.book_currency}
+                  numberFriends={book?.splitters?.length || 0}
+                  numberTransactions={numTransactions}
+                  bookName={book?.name}
+                />
+              </div>
+
+              {/* Transactions List */}
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <BookTransactions
+                  transactions={bookTransactions.transactions || []}
+                  book={book}
+                  offset={Number(searchParams.get("transaction_offset") || 0)}
+                  setOffset={updateOffset}
+                  open={viewTransactions}
+                  setOpen={setViewTransactions}
+                  title="View"
+                />
+              </div>
+            </div>
+
+            {/* Sidebar (Splits/Balances) */}
+            <div className="lg:col-span-4 flex flex-col gap-6">
+              <div className="bg-blue-50/50 rounded-2xl p-1 border border-blue-100 shadow-sm sticky top-6">
+                <TransactionSplit split={payments} />
+              </div>
+            </div>
           </div>
         </>
       ) : (
-        <>No book found</>
+        <div className="flex h-40 items-center justify-center text-gray-500 font-medium">Looking up book details...</div>
       )}
     </div>
   );
