@@ -269,8 +269,8 @@ export default function IndividualBook() {
         <div>
           <Sheet>
             <SheetTrigger asChild>
-              <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] px-4 py-2 rounded-full transition-all shadow-sm">
-                <IoMdAdd className="w-4 h-4" /> Add Transaction
+              <button className="flex items-center justify-center bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] p-2 rounded-full transition-all shadow-sm">
+                <IoMdAdd className="w-6 h-6" />
               </button>
             </SheetTrigger>
 
