@@ -307,24 +307,26 @@ export default function BookTransactions({
           <CollapsibleContent className="space-y-2">
             {transactions?.map((transaction, index) => (
               <Card className="w-full max-w-md" key={index}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1">
+                <CardContent className="p-2.5">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex-1 min-w-0 pr-2">
+                      <h3 className="text-sm font-semibold mb-1 truncate">
                         {transaction.desc}
                       </h3>
-                      <Badge
-                        variant="outline"
-                        className="mb-2 text-sm font-medium"
-                      >
-                        {transaction.category?.category}
-                      </Badge>
-                      <p className="text-sm text-gray-500">
-                        {transaction.date}
-                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge
+                          variant="outline"
+                          className="text-xs font-medium py-0 px-1.5"
+                        >
+                          {transaction.category?.category}
+                        </Badge>
+                        <span className="text-xs text-gray-400">
+                          {transaction.date}
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-xl font-bold text-gray-900">
-                      <span className="text-sm">{book.book_currency}. </span>
+                    <p className="text-base font-bold text-gray-900 whitespace-nowrap">
+                      <span className="text-xs text-gray-500">{book.book_currency} </span>
                       {transaction.amount}
                     </p>
                   </div>

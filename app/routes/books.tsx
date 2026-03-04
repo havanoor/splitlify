@@ -300,20 +300,20 @@ export default function Books() {
                         isSelected ? "bg-[#79AC78]" : "bg-gradient-to-br from-gray-100 to-transparent group-hover:from-blue-50 group-hover:to-transparent"
                       )} />
 
-                      <div className="p-6 flex-1 flex flex-col relative z-10">
+                      <div className="p-3 flex-1 flex flex-col relative z-10">
                         {/* Selected Indicator */}
                         {isSelected && (
-                          <div className="absolute top-0 right-0 bg-[#79AC78] text-white rounded-bl-2xl rounded-tr-xl p-2.5 shadow-md z-10 animate-in zoom-in duration-200">
-                            <GrCheckmark className="w-5 h-5" />
+                          <div className="absolute top-0 right-0 bg-[#79AC78] text-white rounded-bl-2xl rounded-tr-xl p-2 shadow-md z-10 animate-in zoom-in duration-200">
+                            <GrCheckmark className="w-4 h-4" />
                           </div>
                         )}
 
                         {/* Card Content */}
-                        <div className="flex-1 mb-6 mt-2">
-                          <div className="flex items-center gap-3 mb-4">
+                        <div className="flex-1 mb-3 mt-1">
+                          <div className="flex items-center gap-2 mb-2">
                             {/* Visual Icon Box */}
                             <div className={twMerge(
-                              "w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-sm",
+                              "w-9 h-9 rounded-xl flex items-center justify-center text-base shadow-sm",
                               book.type_of_book.toLowerCase().includes("business") ? "bg-blue-100 text-blue-600" :
                                 book.type_of_book.toLowerCase().includes("personal") ? "bg-green-100 text-[#79AC78]" :
                                   "bg-orange-100 text-orange-600"
@@ -321,18 +321,18 @@ export default function Books() {
                               {book.type_of_book.toLowerCase().includes("business") ? "💼" :
                                 book.type_of_book.toLowerCase().includes("personal") ? "👤" : "🏷️"}
                             </div>
-                            <span className="inline-flex items-center rounded-full bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
+                            <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
                               {book.type_of_book}
                             </span>
                           </div>
-                          <h3 className="text-2xl font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-[#79AC78] transition-colors pr-8">
+                          <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-[#79AC78] transition-colors pr-6">
                             {book.name}
                           </h3>
                         </div>
 
                         {/* Card Footer Actions */}
                         <div
-                          className="flex items-center gap-2 pt-5 border-t border-gray-100/80 mt-auto"
+                          className="flex items-center gap-2 pt-3 border-t border-gray-100/80 mt-auto"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div className="flex items-center hover:scale-105 transition-transform bg-gray-50 rounded-full px-2 py-1 flex-1">
@@ -345,8 +345,8 @@ export default function Books() {
                           <div className="flex items-center gap-2">
                             <Sheet>
                               <SheetTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors border border-transparent hover:border-blue-100 bg-white shadow-sm">
-                                  <MdOutlineModeEdit className="w-5 h-5" />
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors border border-blue-100 bg-white shadow-sm">
+                                  <MdOutlineModeEdit className="w-4 h-4" />
                                 </Button>
                               </SheetTrigger>
                               <SheetContent
@@ -368,8 +368,8 @@ export default function Books() {
 
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-transparent hover:border-red-100 bg-white shadow-sm">
-                                  <RiDeleteBinLine className="w-5 h-5" />
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-red-100 bg-white shadow-sm">
+                                  <RiDeleteBinLine className="w-4 h-4" />
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent className="rounded-xl">
