@@ -6,6 +6,7 @@ import { Label } from "components/ui/label";
 import { useFetcher } from "@remix-run/react";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { ChangeEvent, useState, useEffect } from "react";
+import { useDebounce } from "~/customHooks/Debounce";
 
 type userProps = {
   bookId: string;
@@ -29,6 +30,36 @@ export default function AddNewPerson({ bookId }: userProps) {
 
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher();
+
+  // Username validation (mirrors RegisterForm pattern)
+  const debounceUsername = useDebounce(newUser.username ?? "");
+  const validUsername = useFetcher();
+  const [usernameStatus, setUsernameStatus] = useState<string>("");
+
+  useEffect(() => {
+    if (debounceUsername && debounceUsername.trim() !== "") {
+      validUsername.load(`/valid-username/${debounceUsername}`);
+    } else {
+      setUsernameStatus("");
+    }
+  }, [debounceUsername]);
+
+  useEffect(() => {
+    if (!debounceUsername) return;
+    if (validUsername.state === "loading") {
+      setUsernameStatus("checking");
+    } else if (validUsername.data === false) {
+      // false = username is taken = user EXISTS in the system ✓
+      setUsernameStatus("found");
+    } else if (validUsername.data === true) {
+      // true = username is available = user NOT found ✗
+      setUsernameStatus("not_found");
+    }
+  }, [validUsername.data, validUsername.state]);
+
+  // Block submit if username was typed but user not found
+  const usernameTyped = !!newUser.username?.trim();
+  const usernameValid = !usernameTyped || usernameStatus === "found";
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data && (fetcher.data as any).ok) {
@@ -90,8 +121,25 @@ export default function AddNewPerson({ bookId }: userProps) {
                   name="username"
                   onChange={handleNewUser}
                   placeholder="e.g. username123"
-                  className="h-10 rounded-xl border-gray-200 focus-visible:ring-[#79AC78]"
+                  className={`h-10 rounded-xl focus-visible:ring-[#79AC78] transition-colors ${usernameStatus === "found"
+                    ? "border-[#79AC78]"
+                    : usernameStatus === "not_found"
+                      ? "border-red-400"
+                      : "border-gray-200"
+                    }`}
                 />
+                {usernameTyped && usernameStatus && (
+                  <p className={`text-xs font-medium ${usernameStatus === "found"
+                    ? "text-[#79AC78]"
+                    : usernameStatus === "checking"
+                      ? "text-blue-500"
+                      : "text-red-500"
+                    }`}>
+                    {usernameStatus === "checking" && `Checking "${debounceUsername}"...`}
+                    {usernameStatus === "found" && `✓ User "${debounceUsername}" found`}
+                    {usernameStatus === "not_found" && `✗ No user found with username "${debounceUsername}"`}
+                  </p>
+                )}
               </div>
             </div>
             <Button
@@ -99,7 +147,12 @@ export default function AddNewPerson({ bookId }: userProps) {
               className="mt-6 w-full h-10 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               name="_action"
               value="AddNewUser"
-              disabled={fetcher.state === "submitting" || (!newUser.first_name?.trim() && !newUser.username?.trim())}
+              disabled={
+                fetcher.state === "submitting" ||
+                (!newUser.first_name?.trim() && !newUser.username?.trim()) ||
+                !usernameValid ||
+                usernameStatus === "checking"
+              }
             >
               {fetcher.state === "submitting" ? "Adding..." : "Add Person"}
             </Button>
