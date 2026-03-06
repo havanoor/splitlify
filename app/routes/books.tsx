@@ -59,7 +59,7 @@ import {
   SheetClose,
 } from "~/components/ui/sheet";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import { X, Lock, LockOpen } from "lucide-react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -313,13 +313,12 @@ export default function Books() {
                           <div className="flex items-center gap-2 mb-2">
                             {/* Visual Icon Box */}
                             <div className={twMerge(
-                              "w-9 h-9 rounded-xl flex items-center justify-center text-base shadow-sm",
-                              book.type_of_book.toLowerCase().includes("business") ? "bg-blue-100 text-blue-600" :
-                                book.type_of_book.toLowerCase().includes("personal") ? "bg-green-100 text-[#79AC78]" :
-                                  "bg-orange-100 text-orange-600"
+                              "w-9 h-9 rounded-xl flex items-center justify-center shadow-sm",
+                              book.type_of_book.toLowerCase().includes("private") ? "bg-amber-100 text-amber-600" : "bg-green-100 text-[#79AC78]"
                             )}>
-                              {book.type_of_book.toLowerCase().includes("business") ? "💼" :
-                                book.type_of_book.toLowerCase().includes("personal") ? "👤" : "🏷️"}
+                              {book.type_of_book.toLowerCase().includes("private")
+                                ? <Lock className="w-4 h-4" />
+                                : <LockOpen className="w-4 h-4" />}
                             </div>
                             <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
                               {book.type_of_book}
