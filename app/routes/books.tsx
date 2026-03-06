@@ -475,9 +475,7 @@ export default function Books() {
         {/* Outlet section for rendering selected book content (like transactions) */}
         <div ref={outletRef} className={twMerge("mt-12 transition-all duration-500", selectedBook ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 hidden")}>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-12"></div>
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
-            <Outlet />
-          </div>
+          <Outlet />
         </div>
       </div>
     </div>

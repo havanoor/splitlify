@@ -1,4 +1,4 @@
-import { PencilIcon } from "lucide-react";
+import { MdOutlineModeEdit } from "react-icons/md";
 import {
   Sheet,
   SheetContent,
@@ -25,22 +25,20 @@ export default function EditTransactionView({
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          variant="shadow"
-          size="sm"
-          className="flex items-center rounded-full"
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors border border-blue-100 bg-white shadow-sm"
         >
-          <PencilIcon className="h-4 w-4" />
+          <MdOutlineModeEdit className="w-4 h-4" />
         </Button>
       </SheetTrigger>
       <SheetContent
-        className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
-        style={{
-          maxHeight: "calc(var(--radix-popper-available-height) - 20px)",
-        }}
-        side="left"
+        className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
+        side="right"
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SheetHeader className="text-left mb-7">
-          <SheetTitle>Edit Transaction</SheetTitle>
+          <SheetTitle className="text-2xl font-bold">Edit Transaction</SheetTitle>
           <SheetDescription>
             Edit details for "{transaction?.desc}"
           </SheetDescription>

@@ -152,7 +152,7 @@ export default function BookTransactions({
                     <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                       <Sheet>
                         <SheetTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors border border-blue-100 bg-white shadow-sm">
                             <MdOutlineModeEdit className="w-4 h-4" />
                           </Button>
                         </SheetTrigger>
@@ -175,7 +175,7 @@ export default function BookTransactions({
 
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-red-100 bg-white shadow-sm">
                             <RiDeleteBinLine className="w-4 h-4" />
                           </Button>
                         </AlertDialogTrigger>
@@ -341,11 +341,11 @@ export default function BookTransactions({
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
-                          variant="shadow"
-                          size="sm"
-                          className="flex items-center text-red-600 hover:text-red-700 rounded-full"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-red-100 bg-white shadow-sm"
                         >
-                          <TrashIcon className="h-4 w-4" />
+                          <RiDeleteBinLine className="w-4 h-4" />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>

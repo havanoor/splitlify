@@ -14,14 +14,16 @@ export default function TransactionSplit({ split }: TransSplit) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mt-4 lg:mt-0">
       <div
-        className="p-4 bg-gray-50 flex items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-100 transition-colors"
+        className="p-4 bg-gray-50 flex items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-100/50 transition-colors"
         onClick={() => setViewDues(!viewDues)}
       >
         <div className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          {viewDues ? (
+            <div className="bg-[#79AC78] text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
+          ) : (
+            <div className="bg-white border border-gray-200 text-gray-400 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+          )}
           Pending Dues
-        </div>
-        <div className="text-gray-400">
-          {viewDues ? <MdKeyboardDoubleArrowUp className="w-5 h-5" /> : <MdKeyboardDoubleArrowDown className="w-5 h-5" />}
         </div>
       </div>
 

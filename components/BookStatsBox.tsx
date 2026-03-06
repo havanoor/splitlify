@@ -2,7 +2,7 @@ type BookStatsBoxProps = {
   currency: string | undefined;
   amount: number;
   numberTransactions: number | undefined;
-  numberFriends: number | undefined;
+  numberFriends?: number | undefined;
   bookName: string | undefined;
 };
 
@@ -15,7 +15,7 @@ export default function BookStatsBox({
 }: BookStatsBoxProps) {
   return (
     <>
-      <div className="md:hidden mt-2 grid grid-cols-3 gap-2 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
+      <div className="mt-2 grid grid-cols-3 gap-2 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
         <div className="col-span-3 text-center mb-2 pb-2 border-b border-gray-100">
           <span className="font-bold text-gray-900">{bookName}</span>
           <span className="text-gray-500 ml-2 text-sm">Summary</span>
