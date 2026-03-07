@@ -109,11 +109,19 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (_action) {
     case "AddNewBook":
+      const { user_usernames, placeholder_names, ...bookData } = data;
+
       const response: Book = await postData(
         "books/new",
         {
-          ...data,
+          ...bookData,
           user_id: user.user_id,
+          user_usernames: user_usernames
+            ? (user_usernames as string).split(",").filter(Boolean)
+            : [],
+          placeholder_names: placeholder_names
+            ? (placeholder_names as string).split(",").filter(Boolean)
+            : [],
         },
         user.token,
         refreshToken,
@@ -126,7 +134,7 @@ export async function action({ request }: ActionFunctionArgs) {
           ok: true,
           type: "AddNewBook",
           id: response.id,
-          name: data.name,
+          name: bookData.name,
         },
         { headers }
       );
