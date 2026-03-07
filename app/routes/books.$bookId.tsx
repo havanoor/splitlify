@@ -249,7 +249,7 @@ export default function IndividualBook() {
     );
   };
   return (
-    <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-500">
+    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-8 duration-500">
       {/* Stats Summary */}
       {book && (
         <BookStatsBox
