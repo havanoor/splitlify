@@ -1,8 +1,11 @@
 import { Form, useFetcher } from "@remix-run/react";
-import { ChangeEvent, useState } from "react";
 import { Calendar } from "components/ui/calendar";
+import { ChangeEvent, useEffect, useState } from "react";
+import { SheetClose } from "~/components/ui/sheet";
 import { cn } from "~/lib/utils";
 import AddNewPerson from "./AddNewPerson";
+import { useDebounce } from "~/customHooks/Debounce";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -16,8 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { SheetClose } from "~/components/ui/sheet";
-import { Badge } from "./ui/badge";
 
 type AddNewTransactionProps = {
   books: Book;
@@ -33,6 +34,25 @@ export default function AddNewTransactionDialog({
   title,
 }: AddNewTransactionProps) {
   const categoryUpdater = useFetcher();
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const debouncedCategory = useDebounce(newCategoryName);
+  const [categoryError, setCategoryError] = useState("");
+
+  useEffect(() => {
+    if (debouncedCategory.trim() !== "") {
+      const exists = categories?.some(
+        (c) => c.category.toLowerCase() === debouncedCategory.trim().toLowerCase()
+      );
+      if (exists) {
+        setCategoryError(`Category "${debouncedCategory.trim()}" already exists`);
+      } else {
+        setCategoryError("");
+      }
+    } else {
+      setCategoryError("");
+    }
+  }, [debouncedCategory, categories]);
+
   const [selected, setSelected] = useState<User[]>(
     currentTransaction?.payee || []
   );
@@ -149,19 +169,31 @@ export default function AddNewTransactionDialog({
                   <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-white border border-gray-100 shadow-xl rounded-xl mr-4" side="top" align="end">
                     <categoryUpdater.Form method="POST" action="/new-category">
                       <div className="flex flex-col space-y-3">
-                        <Label htmlFor="newcategory" className="text-sm font-semibold text-gray-700">
+                        <Label htmlFor="category" className="text-sm font-semibold text-gray-700">
                           New Category Name
                         </Label>
                         <div className="flex gap-2">
-                          <Input name="category" placeholder="e.g. Groceries" className="h-10 rounded-lg border-gray-200 focus-visible:ring-[#79AC78]" disabled={categoryUpdater.state !== "idle"} required />
+                          <Input
+                            name="category"
+                            id="category"
+                            placeholder="e.g. Groceries"
+                            className={cn("h-10 rounded-lg border-gray-200 focus-visible:ring-[#79AC78]", categoryError && "border-red-500 focus-visible:ring-red-500")}
+                            disabled={categoryUpdater.state !== "idle"}
+                            value={newCategoryName}
+                            onChange={(e) => setNewCategoryName(e.target.value)}
+                            required
+                          />
                           <Button
                             type="submit"
-                            disabled={categoryUpdater.state !== "idle"}
+                            disabled={categoryUpdater.state !== "idle" || !!categoryError || !newCategoryName.trim()}
                             className="h-10 rounded-lg bg-[#79AC78] hover:bg-[#639362] text-white disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {categoryUpdater.state !== "idle" ? "Adding..." : "Add"}
                           </Button>
                         </div>
+                        {categoryError && (
+                          <p className="text-xs text-red-500">{categoryError}</p>
+                        )}
                       </div>
                     </categoryUpdater.Form>
                   </PopoverContent>
