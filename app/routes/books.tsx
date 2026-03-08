@@ -6,27 +6,14 @@ import {
 import {
   Form,
   json,
-  Link,
   Outlet,
   ShouldRevalidateFunction,
   useActionData,
   useLoaderData,
   useNavigate,
   useParams,
-  useSearchParams,
+  useSearchParams
 } from "@remix-run/react";
-import { useEffect, useState, useRef } from "react";
-import { GrCheckmark } from "react-icons/gr";
-import { IoMdAdd } from "react-icons/io";
-import {
-  MdKeyboardDoubleArrowDown,
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
-  MdKeyboardDoubleArrowUp,
-  MdOutlineModeEdit,
-} from "react-icons/md";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { twMerge } from "tailwind-merge";
 import AddNewBookDialog from "components/AddNewBookDialog";
 import ShareBookPanel from "components/ShareBookPanel";
 import {
@@ -41,25 +28,30 @@ import {
   AlertDialogTrigger,
 } from "components/ui/alert-dialog";
 import { Button } from "components/ui/button";
+import { Lock, LockOpen } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { GrCheckmark } from "react-icons/gr";
+import { IoMdAdd } from "react-icons/io";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "components/ui/collapsible";
-import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
-import { getData, deleteData, postData } from "~/lib/ApiRequests";
-import { getSession } from "~/lib/helperFunctions";
+  MdKeyboardDoubleArrowDown,
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+  MdKeyboardDoubleArrowUp,
+  MdOutlineModeEdit,
+} from "react-icons/md";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-  SheetClose,
+  SheetTrigger
 } from "~/components/ui/sheet";
-import { toast } from "sonner";
-import { X, Lock, LockOpen } from "lucide-react";
+import { deleteData, getData, postData } from "~/lib/ApiRequests";
+import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -168,6 +160,7 @@ export async function action({ request }: ActionFunctionArgs) {
         headers,
         user
       );
+
       return json(
         {
           ok: true,
@@ -177,6 +170,8 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         { headers }
       );
+    case "CheckCategoryExists":
+
   }
 }
 
@@ -349,6 +344,11 @@ export default function Books() {
                                 typeOfBook={book.type_of_book}
                                 bookUrl={`${baseURL}/public-book/${book.id}`}
                               />
+                              {(book.created_by?.username || book.created_by?.first_name) && (
+                                <span className="ml-2 text-xs text-gray-400 italic font-medium truncate">
+                                  by {book.created_by?.username || book.created_by?.first_name}
+                                </span>
+                              )}
                             </div>
 
                             <div className="flex items-center gap-2">

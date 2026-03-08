@@ -59,7 +59,7 @@ export default function AddNewTransactionDialog({
     setSelected(newSelected);
   };
 
-  const [transaction, setTransaction] = useState<NewTransaction>(null);
+  const [transaction, setTransaction] = useState<any>(null);
 
   const handleNewTransaction = (e: ChangeEvent<HTMLInputElement>) => {
     setTransaction({
@@ -153,9 +153,13 @@ export default function AddNewTransactionDialog({
                           New Category Name
                         </Label>
                         <div className="flex gap-2">
-                          <Input name="category" placeholder="e.g. Groceries" className="h-10 rounded-lg border-gray-200 focus-visible:ring-[#79AC78]" required />
-                          <Button type="submit" className="h-10 rounded-lg bg-[#79AC78] hover:bg-[#639362] text-white">
-                            Add
+                          <Input name="category" placeholder="e.g. Groceries" className="h-10 rounded-lg border-gray-200 focus-visible:ring-[#79AC78]" disabled={categoryUpdater.state !== "idle"} required />
+                          <Button
+                            type="submit"
+                            disabled={categoryUpdater.state !== "idle"}
+                            className="h-10 rounded-lg bg-[#79AC78] hover:bg-[#639362] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {categoryUpdater.state !== "idle" ? "Adding..." : "Add"}
                           </Button>
                         </div>
                       </div>
