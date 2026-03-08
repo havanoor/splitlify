@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   json,
   ShouldRevalidateFunction,
@@ -48,9 +48,14 @@ export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
   const headers = new Headers();
 
+  if (!user) {
+    throw redirect("/login");
+  }
   const { _action, ...data } = Object.fromEntries(formData);
 
   switch (_action) {
@@ -150,8 +155,14 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
   const offset = url.searchParams.get("transaction_offset");
 
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
   const headers = new Headers();
+
+  if (!user) {
+    throw redirect("/login");
+  }
   const [data, transactions] = await Promise.all([
     getData(`book/?book_id=${params.bookId}`, user.token, refreshToken, headers, user),
     getData(
@@ -164,7 +175,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   ]);
 
   return json(
-    { bookTransactions: transactions, selectedBook: data[0] as Book },
+    { bookTransactions: transactions || { transactions: [], total_amount: 0, total_transactions: 0 }, selectedBook: data && data.length > 0 ? data[0] as Book : null },
     { headers }
   );
 }
@@ -223,7 +234,7 @@ export default function IndividualBook() {
   }, []);
 
   useEffect(() => {
-    if (category.data) {
+    if (category.data && Array.isArray(category.data)) {
       setCategories(category.data);
     }
   }, [category.data]);
@@ -236,8 +247,8 @@ export default function IndividualBook() {
   useEffect(() => {
     if (spliTrans.state === "loading") {
       setPayments([]);
-    } else if (spliTrans.data) {
-      setPayments(spliTrans.data.splits);
+    } else if (spliTrans.data && (spliTrans.data as any).splits) {
+      setPayments((spliTrans.data as any).splits);
     }
   }, [spliTrans.data, spliTrans.state]);
 

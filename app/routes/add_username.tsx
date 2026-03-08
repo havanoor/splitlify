@@ -11,7 +11,16 @@ import { cookie } from "~/lib/cookies";
 const resolver = zodResolver(UsernameSchema);
 
 export async function action({ request }: ActionFunctionArgs) {
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
+
+  if (!user) {
+    // If there's no user in the session, redirect to login or handle as unauthorized
+    // For now, let's assume we redirect to login if the user is not found
+    return redirect("/login");
+  }
+
   const formData = await request.formData();
   const { receivedValues, errors, data } = await getValidatedFormData<
     z.infer<typeof UsernameSchema>

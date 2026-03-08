@@ -13,8 +13,15 @@ import { generateAuthUrl } from "~/lib/googleLogin";
 import { SignUpSchema } from "~/schemas";
 import { register } from "./login/login";
 import { cookie, refreshCookie } from "~/lib/cookies";
+import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request);
+  const user = session?.user;
+  if (user) {
+    throw redirect("/books");
+  }
+
   // Put "register" in the state so we know where the user is
   // coming from when they are sent back to us from Google.
   return json({ googleAuthUrl: generateAuthUrl("sign-in") });

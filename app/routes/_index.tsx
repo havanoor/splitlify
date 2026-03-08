@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { getSession } from "~/lib/helperFunctions";
 import { getData } from "~/lib/ApiRequests";
@@ -20,11 +20,14 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
   const headers = new Headers();
 
+
   if (!user) {
-    return json({ user: null, recentBooks: null }, { headers });
+    throw redirect("/login");
   }
 
   try {
@@ -35,7 +38,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       headers,
       user
     );
-    return json({ user, recentBooks: data || [] }, { headers });
+
+    return json({ user, recentBooks: data && Array.isArray(data) ? data : [] }, { headers });
   } catch (error) {
     return json({ user, recentBooks: [] }, { headers });
   }

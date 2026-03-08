@@ -1,4 +1,5 @@
 import { cookie, refreshCookie } from "./cookies";
+import { redirect } from "@remix-run/node";
 
 const refreshPromiseMap = new Map<string, Promise<any>>();
 
@@ -57,7 +58,13 @@ async function callApi(
     fetchOptions.body = JSON.stringify(data);
   }
 
-  const response = await fetch(process.env.BACKEND_URL + "/" + url, fetchOptions);
+  let response;
+  try {
+    response = await fetch(process.env.BACKEND_URL + "/" + url, fetchOptions);
+  } catch (error) {
+    console.error(`Network error when fetching ${url}:`, error);
+    throw { status: 503, error: "Service Unavailable", message: "Could not connect to the backend server." };
+  }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
@@ -87,7 +94,11 @@ async function callApi(
         }
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
-        // Fall through to throw the original error or a generic one
+        throw redirect("/login", {
+          headers: {
+            "Set-Cookie": await cookie.serialize("", { maxAge: 0 }),
+          }
+        });
       }
     }
 

@@ -1,17 +1,22 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { LoginForm } from "components/LoginForm";
-import { login } from "./login";
+import { getValidatedFormData } from "remix-hook-form";
+import { z } from "zod";
 import { cookie, refreshCookie } from "~/lib/cookies";
 import { generateAuthUrl } from "~/lib/googleLogin";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { getSession } from "~/lib/helperFunctions";
 import { LoginSchema } from "~/schemas";
-import { getValidatedFormData } from "remix-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { login } from "./login";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request);
+  const user = session?.user;
+  if (user) {
+    throw redirect("/books");
+  }
+
   // Put "register" in the state so we know where the user is
   // coming from when they are sent back to us from Google.
   return json({ googleAuthUrl: generateAuthUrl("sign-in") });

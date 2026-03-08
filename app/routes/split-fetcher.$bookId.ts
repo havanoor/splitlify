@@ -1,11 +1,17 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { json } from "@remix-run/react";
 import { getData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
   const headers = new Headers();
+
+  if (!user) {
+    throw redirect("/login");
+  }
   const data = await getData(
     `payments/${params.bookId}`,
     user?.token,

@@ -60,7 +60,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     url.searchParams.set("offset", "0");
   }
   const offset = url.searchParams.get("offset") || "0";
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
 
   if (!user) {
     throw redirect("/login");
@@ -95,7 +97,13 @@ export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
+
+  if (!user) {
+    throw redirect("/login");
+  }
   const { _action, ...data } = Object.fromEntries(formData);
   const headers = new Headers();
 

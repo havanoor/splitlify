@@ -1,22 +1,19 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   useFetcher,
   useLoaderData,
   useParams,
   useSearchParams,
 } from "@remix-run/react";
-import AddNewTransactionDialog from "components/AddNewTransactionDialog";
 import BookStatsBox from "components/BookStatsBox";
 import BookTransactions from "components/BookTransactions";
 import TransactionSplit from "components/BookTransSplit";
 import ShareBookPanel from "components/ShareBookPanel";
 import { useEffect, useState } from "react";
-import { IoMdAdd } from "react-icons/io";
 import {
   MdKeyboardDoubleArrowDown,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { getData } from "~/lib/ApiRequests";
 
 import { getSession } from "~/lib/helperFunctions";
@@ -28,8 +25,14 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   const offset = url.searchParams.get("transaction_offset");
-  const { user, refreshToken } = await getSession(request);
+  const session = await getSession(request);
+  const user = session?.user;
+  const refreshToken = session?.refreshToken;
   const headers = new Headers();
+
+  if (!user) {
+    throw redirect("/login");
+  }
 
   const transactions = await getData(
     `book/get_book_transactions/${params.bookId}/?offset=${offset}&limit=5`,
