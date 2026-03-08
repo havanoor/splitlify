@@ -51,12 +51,12 @@ function MultiSelect({
 
   return (
     <Popover open={open} onOpenChange={setOpen} {...props} modal={true}>
-      <PopoverTrigger className="col-span-2 h-8 text-black" asChild>
+      <PopoverTrigger className="col-span-2 text-gray-900 w-full" asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={` w-full p-2 h-full flex flex-wrap  items-center  gap-2 justify-normal`}
+          className="w-full min-h-[48px] h-auto p-2 flex flex-wrap items-center gap-2 justify-normal rounded-xl border-gray-200 text-gray-700 hover:bg-gray-50 focus-visible:ring-[#79AC78] focus-visible:ring-2 focus-visible:outline-none focus:border-transparent transition-all bg-white font-normal"
           onClick={() => setOpen(!open)}
         >
           {selected.length > 0 ? (
@@ -64,97 +64,104 @@ function MultiSelect({
               <div key={id}>
                 <Badge
                   variant="secondary"
-                  key={id}
-                  // className="w-24"
-                  onClick={() => onChange([option])}
+                  className="bg-[#79AC78]/10 text-[#79AC78] hover:bg-[#79AC78]/20 border-0 rounded-lg flex items-center gap-1.5 px-2.5 py-1 transition-colors group cursor-default"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
-                  {option.username
-                    ? option.username
-                    : option.first_name + option.last_name}
+                  <span className="text-sm font-medium">
+                    {option.username
+                      ? option.username
+                      : `${option.first_name} ${option.last_name}`}
+                  </span>
                   <button
-                    className="ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="rounded-full outline-none focus:ring-2 focus:ring-[#79AC78] focus:ring-offset-2 opacity-50 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-[#79AC78]/20"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
+                        e.stopPropagation();
                         onChange([option]);
                       }
                     }}
-                    onClick={() => onChange([option])}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChange([option]);
+                    }}
                   >
-                    <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                    <X className="h-3.5 w-3.5" />
+                    <span className="sr-only">Remove {option.username}</span>
                   </button>
                 </Badge>
               </div>
             ))
           ) : (
-            <div
-              // variant="ghost"
-              className="flex justify-between align-middle w-full font-medium text-muted-foreground text-left text-sm"
-            >
-              Click to add Payees <MousePointerClick className="h-4 w-4" />
+            <div className="flex justify-between items-center w-full font-normal text-gray-500 text-left px-2">
+              <span>Click to add Payees</span>
+              <MousePointerClick className="h-4 w-4 opacity-50" />
             </div>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-full p-0"
-        side="top"
-        avoidCollisions={false}
+        className="w-[--radix-popover-trigger-width] p-0 rounded-xl border-gray-100 shadow-xl z-[9999]"
+        side="bottom"
+        align="start"
+        avoidCollisions={true}
       >
         <Command
           className={cn(
             className,
-            "[&_[cmdk-input-wrapper]]:border-b-0 [&_[cmdk-input-wrapper]]:border-t"
+            "rounded-xl overflow-hidden"
           )}
         >
-          <Button
-            onClick={() => {
-              const unselectedOptions = options?.filter(
-                (option) => !selected.some((item) => item.id === option.id)
-              );
-              onChange(
-                unselectedOptions?.length ? unselectedOptions : options || []
-              );
-            }}
-            variant="outline"
-            className="m-2"
-          >
-            Select All
-          </Button>
-          <CommandEmpty>No item found.</CommandEmpty>
-          <CommandGroup className="max-h-64 overflow-scroll">
+          <div className="p-2 border-b border-gray-50 bg-gray-50/50">
+            <Button
+              onClick={() => {
+                const unselectedOptions = options?.filter(
+                  (option) => !selected.some((item) => item.id === option.id)
+                );
+                onChange(
+                  unselectedOptions?.length ? unselectedOptions : options || []
+                );
+                setOpen(false)
+              }}
+              variant="outline"
+              size="sm"
+              className="w-full h-8 text-xs font-semibold text-[#79AC78] border-[#79AC78]/20 bg-[#79AC78]/5 hover:bg-[#79AC78]/10 hover:text-[#639362] transition-colors rounded-lg"
+            >
+              Select All / Deselect All
+            </Button>
+          </div>
+
+          <CommandInput placeholder="Search people..." className="h-11 border-none focus:ring-0 text-sm" />
+          <CommandEmpty className="py-6 text-center text-sm text-gray-500">No people found.</CommandEmpty>
+          <CommandGroup className="max-h-60 overflow-y-auto p-1">
             <CommandList>
               {options?.map((option, id) => (
-                <div
-                  onClick={() => {
+                <CommandItem
+                  key={option.id.toString()}
+                  value={option.username ? option.username : option.first_name + option.last_name}
+                  onSelect={() => {
                     onChange([option]);
-                    setOpen(true);
                   }}
-                  key={id}
+                  className="rounded-lg cursor-pointer aria-selected:bg-gray-50 aria-selected:text-gray-900 my-0.5"
                 >
-                  <CommandItem
-                    onSelect={() => {
-                      onChange([option]);
-                      setOpen(true);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selected.filter((item) => item.id === option.id)
-                          .length == 1
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4 text-[#79AC78] transition-all",
+                      selected.some((item) => item.id === option.id)
+                        ? "opacity-100 scale-100"
+                        : "opacity-0 scale-50"
+                    )}
+                  />
+                  <span className="font-medium">
                     {option.username
                       ? option.username
-                      : option.first_name + option.last_name}
-                  </CommandItem>
-                </div>
+                      : `${option.first_name} ${option.last_name}`}
+                  </span>
+                </CommandItem>
               ))}
             </CommandList>
           </CommandGroup>
-          <CommandInput placeholder="Search ..." />
         </Command>
       </PopoverContent>
     </Popover>
