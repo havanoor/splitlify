@@ -42,14 +42,7 @@ import {
 import { RiDeleteBinLine } from "react-icons/ri";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from "~/components/ui/sheet";
+import { ResponsiveModal } from "~/components/ResponsiveModal";
 import { deleteData, getData, patchData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
@@ -300,30 +293,21 @@ export default function Books() {
               <span>{!viewBooks && selectedBook ? selectedBook.name : "Books"}</span>
             </div>
 
-            <Sheet>
-              <SheetTrigger asChild>
+            <ResponsiveModal
+              title="Add New Book"
+              description="Create a new book to start organizing your finances."
+              trigger={
                 <button className="flex items-center justify-center bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] p-2 rounded-full transition-all shadow-sm">
                   <IoMdAdd className="w-6 h-6" />
                 </button>
-              </SheetTrigger>
-              <SheetContent
-                className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
-                side="right"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-              >
-                <SheetHeader className="text-left mb-7">
-                  <SheetTitle className="text-2xl font-bold text-gray-800">Add New Book</SheetTitle>
-                  <SheetDescription>
-                    Create a new book to start organizing your finances.
-                  </SheetDescription>
-                </SheetHeader>
-                <AddNewBookDialog
-                  existing_books={
-                    userBooks ? userBooks.map((book: any) => book.name) : []
-                  }
-                />
-              </SheetContent>
-            </Sheet>
+              }
+            >
+              <AddNewBookDialog
+                existing_books={
+                  userBooks ? userBooks.map((book: any) => book.name) : []
+                }
+              />
+            </ResponsiveModal>
           </div>
 
           {/* Books Grid View */}
@@ -408,28 +392,21 @@ export default function Books() {
                             </div>
 
                             <div className="flex items-center gap-2">
-                              <Sheet>
-                                <SheetTrigger asChild>
+                              <ResponsiveModal
+                                title="Edit Book"
+                                trigger={
                                   <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors border border-blue-100 bg-white shadow-sm">
                                     <MdOutlineModeEdit className="w-4 h-4" />
                                   </Button>
-                                </SheetTrigger>
-                                <SheetContent
-                                  className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
-                                  side="right"
-                                  onOpenAutoFocus={(e) => e.preventDefault()}
-                                >
-                                  <SheetHeader className="text-left mb-7">
-                                    <SheetTitle className="text-2xl font-bold">Edit Book</SheetTitle>
-                                  </SheetHeader>
+                                }
+                              >
                                   <AddNewBookDialog
                                     existing_books={
                                       userBooks ? userBooks.map((b: any) => b.name) : []
                                     }
                                     editBook={book}
                                   />
-                                </SheetContent>
-                              </Sheet>
+                              </ResponsiveModal>
 
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
@@ -513,27 +490,18 @@ export default function Books() {
               <p className="text-gray-500 max-w-sm mx-auto mb-8">
                 You haven't created any books. Get started by adding a new book to track your finances.
               </p>
-              <Sheet>
-                <SheetTrigger asChild>
+              <ResponsiveModal
+                title="Add New Book"
+                description="Create a new book to start organizing your finances."
+                trigger={
                   <Button className="flex items-center gap-2 bg-[#79AC78] hover:bg-[#639362] text-white rounded-full px-8 py-6 text-lg transition-all shadow-md hover:shadow-xl">
                     <IoMdAdd className="w-6 h-6" />
                     Create Your First Book
                   </Button>
-                </SheetTrigger>
-                <SheetContent
-                  className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
-                  side="right"
-                  onOpenAutoFocus={(e) => e.preventDefault()}
-                >
-                  <SheetHeader className="text-left mb-7">
-                    <SheetTitle className="text-2xl font-bold">Add New Book</SheetTitle>
-                    <SheetDescription>
-                      Create a new book to start organizing your finances.
-                    </SheetDescription>
-                  </SheetHeader>
+                }
+              >
                   <AddNewBookDialog existing_books={[]} />
-                </SheetContent>
-              </Sheet>
+              </ResponsiveModal>
             </div>
           )}
         </div>

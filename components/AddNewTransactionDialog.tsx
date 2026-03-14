@@ -1,7 +1,7 @@
 import { Form, useFetcher } from "@remix-run/react";
 import { Calendar } from "components/ui/calendar";
 import { ChangeEvent, useEffect, useState } from "react";
-import { SheetClose } from "~/components/ui/sheet";
+import { ResponsiveModalClose } from "~/components/ResponsiveModal";
 import { cn } from "~/lib/utils";
 import AddNewPerson from "./AddNewPerson";
 import { useDebounce } from "~/customHooks/Debounce";
@@ -215,7 +215,7 @@ export default function AddNewTransactionDialog({
               )}
             />
           ) : (
-            <Popover>
+            <Popover modal={true}>
               <PopoverTrigger asChild>
                 <Button
                   name="date"
@@ -232,7 +232,7 @@ export default function AddNewTransactionDialog({
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="z-[9999] w-auto bg-white rounded-xl shadow-xl border-gray-100 p-0"
+                className="z-[999999] w-auto bg-white rounded-xl shadow-xl border-gray-100 p-0"
                 align="start"
               >
                 <Calendar
@@ -334,7 +334,7 @@ export default function AddNewTransactionDialog({
         <div className="pt-4 pb-8 flex flex-col gap-3">
           {currentTransaction?.id && title === "View" ? null : (
             <>
-              <SheetClose asChild>
+              <ResponsiveModalClose>
                 <Button
                   className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
                   type="submit"
@@ -343,7 +343,7 @@ export default function AddNewTransactionDialog({
                 >
                   {title === "Add" ? "Create Transaction" : `${title} Transaction`}
                 </Button>
-              </SheetClose>
+              </ResponsiveModalClose>
               <div className="w-full flex justify-center">
                 <AddNewPerson bookId={books.id.toString()} />
               </div>

@@ -20,14 +20,7 @@ import {
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
 import { toast } from "sonner";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/components/ui/sheet";
+import { ResponsiveModal } from "~/components/ResponsiveModal";
 import { deleteData, getData, patchData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
@@ -294,33 +287,23 @@ export default function IndividualBook() {
             </div>
 
             <div>
-              <Sheet>
-                <SheetTrigger asChild>
+              <ResponsiveModal
+                title="Add New Transaction"
+                description={`Record a new transaction for ${book?.name}.`}
+                trigger={
                   <button className="flex items-center justify-center bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] p-2 rounded-full transition-all shadow-sm">
                     <IoMdAdd className="w-6 h-6" />
                   </button>
-                </SheetTrigger>
-
-                <SheetContent
-                  className="w-full sm:w-[500px] border-l-0 sm:border-l rounded-l-2xl shadow-2xl overflow-y-auto"
-                  side="right"
-                  onOpenAutoFocus={(e) => e.preventDefault()}
-                >
-                  <SheetHeader className="text-left mb-7">
-                    <SheetTitle className="text-2xl font-bold">Add New Transaction</SheetTitle>
-                    <SheetDescription>
-                      Record a new transaction for {book?.name}.
-                    </SheetDescription>
-                  </SheetHeader>
-                  {book && (
-                    <AddNewTransactionDialog
-                      books={book}
-                      title="Add"
-                      categories={categories}
-                    />
-                  )}
-                </SheetContent>
-              </Sheet>
+                }
+              >
+                {book && (
+                  <AddNewTransactionDialog
+                    books={book}
+                    title="Add"
+                    categories={categories}
+                  />
+                )}
+              </ResponsiveModal>
             </div>
           </div>
 

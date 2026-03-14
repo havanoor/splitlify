@@ -25,7 +25,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { useDebounce } from "~/customHooks/Debounce";
 import { useFetcher } from "@remix-run/react";
 import { Form } from "@remix-run/react";
-import { SheetClose } from "~/components/ui/sheet";
+import { ResponsiveModalClose } from "~/components/ResponsiveModal";
 
 const currencies = [
   "AFN",
@@ -455,7 +455,7 @@ export default function AddNewBookDialog({
         </div>
         <div className="pt-4 pb-8 flex flex-col gap-3">
           {editBook && <input type="hidden" name="book_id" value={editBook.id} />}
-          <SheetClose asChild>
+          <ResponsiveModalClose>
             <Button
               className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
               type="submit"
@@ -465,7 +465,7 @@ export default function AddNewBookDialog({
             >
               {editBook ? "Update Book" : "Create Book"}
             </Button>
-          </SheetClose>
+          </ResponsiveModalClose>
         </div>
       </Form>
     </div>
