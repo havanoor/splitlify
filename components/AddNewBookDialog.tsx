@@ -33,21 +33,18 @@ const currencies = [
   "ALL",
   "DZD",
   "USD",
-  "EUR",
   "AOA",
   "XCD",
   "ARS",
   "AMD",
   "AWG",
   "AUD",
-  "EUR",
   "AZN",
   "BSD",
   "BHD",
   "BDT",
   "BBD",
   "BYN",
-  "EUR",
   "BZD",
   "XOF",
   "BMD",
@@ -60,72 +57,45 @@ const currencies = [
   "BRL",
   "BND",
   "BGN",
-  "XOF",
   "BIF",
   "CVE",
   "KHR",
   "XAF",
   "CAD",
   "KYD",
-  "XAF",
-  "XAF",
   "CLP",
   "CLF",
   "CNY",
-  "AUD",
-  "AUD",
   "COP",
   "COU",
   "KMF",
   "CDF",
-  "XAF",
   "NZD",
   "CRC",
-  "XOF",
-  "EUR",
   "CUP",
   "CUC",
   "ANG",
-  "EUR",
   "CZK",
   "DKK",
   "DJF",
-  "XCD",
   "DOP",
   "EGP",
   "SVC",
-  "XAF",
   "ERN",
-  "EUR",
   "SZL",
   "ETB",
-  "EUR",
   "FKP",
-  "DKK",
   "FJD",
-  "EUR",
-  "EUR",
-  "EUR",
   "XPF",
-  "EUR",
-  "XAF",
   "GMD",
   "GEL",
-  "EUR",
   "GHS",
   "GIP",
-  "EUR",
-  "DKK",
-  "XCD",
-  "EUR",
   "GTQ",
   "GBP",
   "GNF",
-  "XOF",
   "GYD",
   "HTG",
-  "AUD",
-  "EUR",
   "HNL",
   "HKD",
   "HUF",
@@ -135,67 +105,43 @@ const currencies = [
   "XDR",
   "IRR",
   "IQD",
-  "EUR",
-  "GBP",
   "ILS",
-  "EUR",
   "JMD",
   "JPY",
-  "GBP",
   "JOD",
   "KZT",
   "KES",
-  "AUD",
   "KPW",
   "KRW",
   "KWD",
   "KGS",
   "LAK",
-  "EUR",
   "LBP",
   "LSL",
   "ZAR",
   "LRD",
   "LYD",
   "CHF",
-  "EUR",
-  "EUR",
   "MOP",
   "MKD",
   "MGA",
   "MWK",
   "MYR",
   "MVR",
-  "XOF",
-  "EUR",
-  "EUR",
   "MRU",
   "MUR",
-  "EUR",
   "XUA",
   "MXN",
   "MXV",
   "MDL",
-  "EUR",
   "MNT",
-  "EUR",
-  "XCD",
   "MAD",
   "MZN",
   "MMK",
   "NAD",
-  "ZAR",
-  "AUD",
   "NPR",
-  "EUR",
-  "XPF",
-  "NZD",
   "NIO",
-  "XOF",
   "NGN",
-  "NZD",
-  "AUD",
-  "NOK",
   "OMR",
   "PKR",
   "PAB",
@@ -203,45 +149,27 @@ const currencies = [
   "PYG",
   "PEN",
   "PHP",
-  "NZD",
   "PLN",
-  "EUR",
   "QAR",
-  "EUR",
   "RON",
   "RUB",
   "RWF",
-  "EUR",
   "SHP",
-  "XCD",
-  "XCD",
-  "EUR",
-  "EUR",
-  "XCD",
   "WST",
-  "EUR",
   "STN",
   "SAR",
-  "XOF",
   "RSD",
   "SCR",
   "SLE",
   "SGD",
-  "ANG",
   "XSU",
-  "EUR",
-  "EUR",
   "SBD",
   "SOS",
-  "ZAR",
   "SSP",
-  "EUR",
   "LKR",
   "SDG",
   "SRD",
-  "NOK",
   "SEK",
-  "CHF",
   "CHE",
   "CHW",
   "SYP",
@@ -249,18 +177,14 @@ const currencies = [
   "TJS",
   "TZS",
   "THB",
-  "XOF",
-  "NZD",
   "TOP",
   "TTD",
   "TND",
   "TRY",
   "TMT",
-  "AUD",
   "UGX",
   "UAH",
   "AED",
-  "GBP",
   "USN",
   "UYU",
   "UYI",
@@ -270,8 +194,6 @@ const currencies = [
   "VES",
   "VED",
   "VND",
-  "XPF",
-  "MAD",
   "YER",
   "ZMW",
   "ZWG",
@@ -326,7 +248,16 @@ export default function AddNewBookDialog({
   };
 
   // Participants (new books only)
-  const [pendingUsers, setPendingUsers] = useState<{ value: string; isReal: boolean }[]>([]);
+  const [pendingUsers, setPendingUsers] = useState<{ value: string; isReal: boolean }[]>(() => {
+    if (!editBook) return [];
+
+    // Using splitters array to get actual users
+    return editBook.splitters?.map((u: any) => ({
+      value: u.username || u.first_name || u.id, // Fallback if username is null
+      isReal: true // All existing users coming through editBook are treated as real
+    })) || [];
+  });
+
   const [currentUsername, setCurrentUsername] = useState("");
   const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
   const debounceParticipant = useDebounce(currentUsername);
@@ -387,7 +318,7 @@ export default function AddNewBookDialog({
           <Label htmlFor="currency" className="text-sm font-semibold text-gray-700">
             Currency
           </Label>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
@@ -415,11 +346,11 @@ export default function AddNewBookDialog({
                 <CommandInput
                   name="currency"
                   placeholder="Search currency..."
-                  className="h-11"
+                  className="h-11 border-none focus:ring-0 text-sm"
                 />
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup className="max-h-60 overflow-y-auto">
-                  <CommandList>
+                <CommandEmpty className="py-6 text-center text-sm text-gray-500">No results found.</CommandEmpty>
+                <CommandGroup className="p-1">
+                  <CommandList className="max-h-60 overflow-y-auto overscroll-contain touch-pan-y">
                     {currencies.map((currency, id) => (
                       <CommandItem
                         key={id}
@@ -453,6 +384,7 @@ export default function AddNewBookDialog({
           </Label>
           <Select
             name="type_of_book"
+            defaultValue={editBook?.type_of_book ?? "PUBLIC"}
             onValueChange={(v) => {
               setNewBook({ ...newBook, type_of_book: v });
             }}
@@ -472,65 +404,64 @@ export default function AddNewBookDialog({
         </div>
 
         {/* Participants — only for new books */}
-        {!editBook && (
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-700">Participants <span className="text-gray-400 font-normal">(Optional)</span></Label>
-            <div className="flex gap-2">
-              <Input
-                value={currentUsername}
-                onChange={(e) => setCurrentUsername(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addParticipant())}
-                placeholder="Enter username"
-                className={`h-10 rounded-xl focus-visible:ring-[#79AC78] transition-colors ${usernameStatus === "found" ? "border-[#79AC78]" :
-                  usernameStatus === "not_found" ? "border-red-400" : "border-gray-200"
-                  }`}
-              />
-              <Button
-                type="button"
-                onClick={addParticipant}
-                disabled={!currentUsername.trim() || usernameStatus === "checking" || pendingUsers.some(p => p.value === currentUsername.trim())}
-                className="h-10 px-4 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold disabled:opacity-40"
-              >
-                Add
-              </Button>
-            </div>
-            {currentUsername && usernameStatus !== "idle" && (
-              <p className={`text-xs font-medium ${usernameStatus === "found" ? "text-[#79AC78]" :
-                usernameStatus === "checking" ? "text-blue-500" : "text-amber-500"
-                }`}>
-                {usernameStatus === "checking" && `Checking "${debounceParticipant}"...`}
-                {usernameStatus === "found" && `✓ User "${debounceParticipant}" found`}
-                {usernameStatus === "not_found" && `"${debounceParticipant}" will be added as a placeholder`}
-              </p>
-            )}
-            {pendingUsers.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-1">
-                {pendingUsers.map((u) => (
-                  <span key={u.value} className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border ${u.isReal
-                    ? "bg-[#79AC78]/10 text-[#79AC78] border-[#79AC78]/20"
-                    : "bg-amber-50 text-amber-600 border-amber-200"
-                    }`}>
-                    {u.value}
-                    {!u.isReal && <span className="font-normal opacity-60 ml-0.5">~</span>}
-                    <button type="button" onClick={() => setPendingUsers(pendingUsers.filter(x => x.value !== u.value))} className="ml-0.5 hover:text-red-500 transition-colors">
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-            <input type="hidden" name="user_usernames" value={pendingUsers.filter(p => p.isReal).map(p => p.value).join(",")} />
-            <input type="hidden" name="placeholder_names" value={pendingUsers.filter(p => !p.isReal).map(p => p.value).join(",")} />
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-gray-700">Participants <span className="text-gray-400 font-normal">(Optional)</span></Label>
+          <div className="flex gap-2">
+            <Input
+              value={currentUsername}
+              onChange={(e) => setCurrentUsername(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addParticipant())}
+              placeholder="Enter username"
+              className={`h-10 rounded-xl focus-visible:ring-[#79AC78] transition-colors ${usernameStatus === "found" ? "border-[#79AC78]" :
+                usernameStatus === "not_found" ? "border-red-400" : "border-gray-200"
+                }`}
+            />
+            <Button
+              type="button"
+              onClick={addParticipant}
+              disabled={!currentUsername.trim() || usernameStatus === "checking" || pendingUsers.some(p => p.value === currentUsername.trim())}
+              className="h-10 px-4 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold disabled:opacity-40"
+            >
+              Add
+            </Button>
           </div>
-        )}
+          {currentUsername && usernameStatus !== "idle" && (
+            <p className={`text-xs font-medium ${usernameStatus === "found" ? "text-[#79AC78]" :
+              usernameStatus === "checking" ? "text-blue-500" : "text-amber-500"
+              }`}>
+              {usernameStatus === "checking" && `Checking "${debounceParticipant}"...`}
+              {usernameStatus === "found" && `✓ User "${debounceParticipant}" found`}
+              {usernameStatus === "not_found" && `"${debounceParticipant}" will be added as a placeholder`}
+            </p>
+          )}
+          {pendingUsers.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {pendingUsers.map((u) => (
+                <span key={u.value} className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border ${u.isReal
+                  ? "bg-[#79AC78]/10 text-[#79AC78] border-[#79AC78]/20"
+                  : "bg-amber-50 text-amber-600 border-amber-200"
+                  }`}>
+                  {u.value}
+                  {!u.isReal && <span className="font-normal opacity-60 ml-0.5"> </span>}
+                  <button type="button" onClick={() => setPendingUsers(pendingUsers.filter(x => x.value !== u.value))} className="ml-0.5 hover:text-red-500 transition-colors">
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          <input type="hidden" name="user_usernames" value={pendingUsers.filter(p => p.isReal).map(p => p.value).join(",")} />
+          <input type="hidden" name="placeholder_names" value={pendingUsers.filter(p => !p.isReal).map(p => p.value).join(",")} />
+        </div>
         <div className="pt-4 pb-8 flex flex-col gap-3">
+          {editBook && <input type="hidden" name="book_id" value={editBook.id} />}
           <SheetClose asChild>
             <Button
               className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
               type="submit"
               disabled={!available}
               name="_action"
-              value="AddNewBook"
+              value={editBook ? "EditBook" : "AddNewBook"}
             >
               {editBook ? "Update Book" : "Create Book"}
             </Button>

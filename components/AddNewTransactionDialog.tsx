@@ -79,7 +79,7 @@ export default function AddNewTransactionDialog({
     setSelected(newSelected);
   };
 
-  const [transaction, setTransaction] = useState<any>(null);
+  const [transaction, setTransaction] = useState<NewTransaction>(null);
 
   const handleNewTransaction = (e: ChangeEvent<HTMLInputElement>) => {
     setTransaction({
@@ -271,7 +271,7 @@ export default function AddNewTransactionDialog({
               className="w-full h-12 rounded-xl border-gray-200 text-gray-900"
               defaultValue={
                 currentTransaction?.payer.username ||
-                `${currentTransaction?.payer.first_name} ${currentTransaction?.payer.last_name}`
+                `${currentTransaction?.payer.first_name || ""} ${currentTransaction?.payer.last_name || ""}`.trim()
               }
             />
           ) : (
@@ -295,7 +295,7 @@ export default function AddNewTransactionDialog({
                     <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
                       {val.username
                         ? val.username
-                        : `${val.first_name} ${val.last_name}`}
+                        : `${val.first_name || ""} ${val.last_name || ""}`.trim()}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -310,7 +310,7 @@ export default function AddNewTransactionDialog({
             <div className="rounded-xl border border-gray-200 bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
               {selected.map((e: User) => (
                 <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-white border-gray-200">
-                  {e.username ? e.username : `${e.first_name} ${e.last_name}`}
+                  {e.username ? e.username : `${e.first_name || ""} ${e.last_name || ""}`.trim()}
                 </Badge>
               ))}
             </div>

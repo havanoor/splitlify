@@ -72,7 +72,7 @@ function MultiSelect({
                   <span className="text-sm font-medium">
                     {option.username
                       ? option.username
-                      : `${option.first_name} ${option.last_name}`}
+                      : `${option.first_name || ""} ${option.last_name || ""}`.trim()}
                   </span>
                   <button
                     className="rounded-full outline-none focus:ring-2 focus:ring-[#79AC78] focus:ring-offset-2 opacity-50 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-[#79AC78]/20"
@@ -139,7 +139,7 @@ function MultiSelect({
               {options?.map((option, id) => (
                 <CommandItem
                   key={option.id.toString()}
-                  value={option.username ? option.username : option.first_name + option.last_name}
+                  value={option.username ? option.username : (option.first_name || "") + (option.last_name || "")}
                   onSelect={() => {
                     onChange([option]);
                   }}
@@ -156,7 +156,7 @@ function MultiSelect({
                   <span className="font-medium">
                     {option.username
                       ? option.username
-                      : `${option.first_name} ${option.last_name}`}
+                      : `${option.first_name || ""} ${option.last_name || ""}`.trim()}
                   </span>
                 </CommandItem>
               ))}

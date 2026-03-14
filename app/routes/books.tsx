@@ -50,7 +50,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from "~/components/ui/sheet";
-import { deleteData, getData, postData } from "~/lib/ApiRequests";
+import { deleteData, getData, patchData, postData } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -108,7 +108,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const headers = new Headers();
 
   switch (_action) {
-    case "AddNewBook":
+    case "AddNewBook": {
       const { user_usernames, placeholder_names, ...bookData } = data;
 
       const response: Book = await postData(
@@ -138,8 +138,9 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         { headers }
       );
+    }
 
-    case "DeleteBook":
+    case "DeleteBook": {
       await deleteData(
         `books/delete/${data.book_id}`,
         user.token,
@@ -156,7 +157,8 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         { headers }
       );
-    case "AddNewCategory":
+    }
+    case "AddNewCategory": {
       const categoryResponse = await postData(
         "category/add",
         {
@@ -178,7 +180,48 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         { headers }
       );
-    case "CheckCategoryExists":
+    }
+    case "EditBook": {
+      const { user_usernames, placeholder_names, book_id, ...bookData } = data;
+      console.log({
+        ...bookData,
+        user_id: user.user_id,
+        user_usernames: user_usernames
+          ? (user_usernames as string).split(",").filter(Boolean)
+          : [],
+        placeholder_names: placeholder_names
+          ? (placeholder_names as string).split(",").filter(Boolean)
+          : [],
+      })
+
+      const response: Book = await patchData(
+        `books/update/${book_id}`,
+        {
+          ...bookData,
+          user_id: user.user_id,
+          user_usernames: user_usernames
+            ? (user_usernames as string).split(",").filter(Boolean)
+            : [],
+          placeholder_names: placeholder_names
+            ? (placeholder_names as string).split(",").filter(Boolean)
+            : [],
+        },
+        user.token,
+        refreshToken,
+        headers,
+        user
+      );
+
+      return json(
+        {
+          ok: true,
+          type: "EditBook",
+          id: response.id,
+          name: bookData.name,
+        },
+        { headers }
+      );
+    }
 
   }
 }
@@ -323,19 +366,26 @@ export default function Books() {
 
                           {/* Card Content */}
                           <div className="flex-1 mb-3 mt-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              {/* Visual Icon Box */}
-                              <div className={twMerge(
-                                "w-9 h-9 rounded-xl flex items-center justify-center shadow-sm",
-                                book.type_of_book.toLowerCase().includes("private") ? "bg-amber-100 text-amber-600" : "bg-green-100 text-[#79AC78]"
-                              )}>
-                                {book.type_of_book.toLowerCase().includes("private")
-                                  ? <Lock className="w-4 h-4" />
-                                  : <LockOpen className="w-4 h-4" />}
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                {/* Visual Icon Box */}
+                                <div className={twMerge(
+                                  "w-9 h-9 rounded-xl flex items-center justify-center shadow-sm",
+                                  book.type_of_book.toLowerCase().includes("private") ? "bg-amber-100 text-amber-600" : "bg-green-100 text-[#79AC78]"
+                                )}>
+                                  {book.type_of_book.toLowerCase().includes("private")
+                                    ? <Lock className="w-4 h-4" />
+                                    : <LockOpen className="w-4 h-4" />}
+                                </div>
+                                <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
+                                  {book.type_of_book}
+                                </span>
                               </div>
-                              <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
-                                {book.type_of_book}
-                              </span>
+                              {(book.created_by?.username || book.created_by?.first_name) && (
+                                <span className={`inline-flex items-center rounded-full bg-green-50/50 px-2 py-0.5 text-[10px] sm:text-xs font-medium text-[#79AC78] ring-1 ring-inset ring-[#79AC78]/30 shadow-sm truncate max-w-[120px] ${isSelected ? 'mr-6' : ''}`} title={book.created_by?.username || book.created_by?.first_name}>
+                                  by {book.created_by?.username || book.created_by?.first_name}
+                                </span>
+                              )}
                             </div>
                             <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-[#79AC78] transition-colors pr-6">
                               {book.name}
@@ -352,11 +402,9 @@ export default function Books() {
                                 typeOfBook={book.type_of_book}
                                 bookUrl={`${baseURL}/public-book/${book.id}`}
                               />
-                              {(book.created_by?.username || book.created_by?.first_name) && (
-                                <span className="ml-2 text-xs text-gray-400 italic font-medium truncate">
-                                  by {book.created_by?.username || book.created_by?.first_name}
-                                </span>
-                              )}
+                              <span className="ml-2 text-xs text-gray-500 font-medium">
+                                Share
+                              </span>
                             </div>
 
                             <div className="flex items-center gap-2">
