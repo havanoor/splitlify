@@ -61,12 +61,12 @@ export default function BookTransactions({
     <>
       <div className="hidden md:block w-full">
         <div
-          className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50 cursor-pointer hover:bg-gray-100/50 transition-colors"
+          className="flex items-center justify-between p-6 border-b border-border bg-gray-50/50 cursor-pointer hover:bg-gray-100/50 transition-colors"
           onClick={() => setOpen(!open)}
         >
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-gray-900">Recent Transactions</h2>
-            <div className="text-gray-400">
+            <h2 className="text-xl font-bold text-foreground">Recent Transactions</h2>
+            <div className="text-muted-foreground/70">
               {open ? <MdKeyboardDoubleArrowUp className="w-5 h-5" /> : <MdKeyboardDoubleArrowDown className="w-5 h-5" />}
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function BookTransactions({
           <div onClick={(e) => e.stopPropagation()}>
             <Sheet>
               <SheetTrigger asChild>
-                <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] px-4 py-2 rounded-full transition-all shadow-sm">
+                <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-input text-foreground/80 hover:text-primary hover:border-primary px-4 py-2 rounded-full transition-all shadow-sm">
                   <IoMdAdd className="w-4 h-4" /> Add Transaction
                 </button>
               </SheetTrigger>
@@ -100,7 +100,7 @@ export default function BookTransactions({
         {open && (
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-gray-100 text-sm tracking-wider text-gray-500 uppercase">
+              <tr className="border-b border-border text-sm tracking-wider text-muted-foreground uppercase">
                 <th className="px-6 py-4 font-medium">Date</th>
                 <th className="px-6 py-4 font-medium">Name</th>
                 <th className="px-6 py-4 font-medium">Category</th>
@@ -113,11 +113,11 @@ export default function BookTransactions({
             <tbody className="divide-y divide-gray-50 bg-white">
               {transactions?.length > 0 ? transactions.map((transaction, index) => (
                 <tr key={index} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                  <td className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
                     {transaction.date}
                   </td>
                   <td className="px-6 py-4">
-                    <span className="font-semibold text-gray-900 group-hover:text-[#79AC78] transition-colors">{transaction.desc}</span>
+                    <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{transaction.desc}</span>
                   </td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
@@ -125,24 +125,24 @@ export default function BookTransactions({
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-bold text-gray-900">{book.book_currency} {transaction.amount}</span>
+                    <span className="font-bold text-foreground">{book.book_currency} {transaction.amount}</span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[#79AC78]/10 text-[#79AC78] flex items-center justify-center text-xs font-bold">
+                      <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
                         {(transaction.payer.username || transaction.payer.first_name).charAt(0).toUpperCase()}
                       </div>
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-foreground/80">
                         {transaction.payer.username
                           ? transaction.payer.username
                           : transaction.payer.first_name + " " + transaction.payer.last_name}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-muted-foreground">
                     <div className="flex -space-x-2 overflow-hidden">
                       {transaction.payee.map((user, i) => (
-                        <div key={i} className="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-blue-100 text-blue-700 flex flex-shrink-0 items-center justify-center text-xs font-bold" title={user.first_name + " " + user.last_name}>
+                        <div key={i} className="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-info/20 text-info flex flex-shrink-0 items-center justify-center text-xs font-bold" title={user.first_name + " " + user.last_name}>
                           {user.first_name.charAt(0).toUpperCase()}
                         </div>
                       ))}
@@ -152,7 +152,7 @@ export default function BookTransactions({
                     <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                       <Sheet>
                         <SheetTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors border border-blue-100 bg-white shadow-sm">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-white shadow-sm">
                             <MdOutlineModeEdit className="w-4 h-4" />
                           </Button>
                         </SheetTrigger>
@@ -175,14 +175,14 @@ export default function BookTransactions({
 
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-red-100 bg-white shadow-sm">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-white shadow-sm">
                             <RiDeleteBinLine className="w-4 h-4" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="rounded-xl">
                           <AlertDialogHeader>
                             <AlertDialogTitle className="text-xl">Delete this transaction?</AlertDialogTitle>
-                            <AlertDialogDescription className="text-base text-gray-500">
+                            <AlertDialogDescription className="text-base text-muted-foreground">
                               This action cannot be undone. This will permanently delete the transaction: <strong>{transaction.desc}</strong>
                             </AlertDialogDescription>
                           </AlertDialogHeader>
@@ -204,7 +204,7 @@ export default function BookTransactions({
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-muted-foreground">
                     No transactions yet. Click the "Add Transaction" button to get started.
                   </td>
                 </tr>
@@ -215,7 +215,7 @@ export default function BookTransactions({
 
         {/* Desktop Pagination Controls */}
         {open && transactions?.length > 0 && (
-          <div className="flex items-center justify-center gap-4 bg-white p-3 border-t border-gray-100">
+          <div className="flex items-center justify-center gap-4 bg-white p-3 border-t border-border">
             <Button
               variant="ghost"
               size="icon"
@@ -225,9 +225,9 @@ export default function BookTransactions({
                 setOffset(offset <= 5 ? "0" : (offset - 5).toString());
               }}
             >
-              <MdKeyboardDoubleArrowLeft className="w-5 h-5 text-gray-600" />
+              <MdKeyboardDoubleArrowLeft className="w-5 h-5 text-muted-foreground" />
             </Button>
-            <span className="text-sm font-medium text-gray-600 px-4">
+            <span className="text-sm font-medium text-muted-foreground px-4">
               Page {Math.floor(offset / 5) + 1}
             </span>
             <Button
@@ -239,7 +239,7 @@ export default function BookTransactions({
                 setOffset((offset + 5).toString());
               }}
             >
-              <MdKeyboardDoubleArrowRight className="w-5 h-5 text-gray-600" />
+              <MdKeyboardDoubleArrowRight className="w-5 h-5 text-muted-foreground" />
             </Button>
           </div>
         )}
@@ -320,13 +320,13 @@ export default function BookTransactions({
                         >
                           {transaction.category?.category}
                         </Badge>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-muted-foreground/70">
                           {transaction.date}
                         </span>
                       </div>
                     </div>
-                    <p className="text-base font-bold text-gray-900 whitespace-nowrap">
-                      <span className="text-xs text-gray-500">{book.book_currency} </span>
+                    <p className="text-base font-bold text-foreground whitespace-nowrap">
+                      <span className="text-xs text-muted-foreground">{book.book_currency} </span>
                       {transaction.amount}
                     </p>
                   </div>
@@ -343,7 +343,7 @@ export default function BookTransactions({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors border border-red-100 bg-white shadow-sm"
+                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-white shadow-sm"
                         >
                           <RiDeleteBinLine className="w-4 h-4" />
                         </Button>
@@ -395,7 +395,7 @@ export default function BookTransactions({
               //       </div>
 
               //       <div className="flex items-center space-x-3">
-              //         <div className="text-gray-500 text-xs">
+              //         <div className="text-muted-foreground text-xs">
               //           {transaction.date}
               //         </div>
               //         <div className="text-lg font-bold">
@@ -403,7 +403,7 @@ export default function BookTransactions({
               //         </div>
               //       </div>
               //       {/* <div className="flex items-center space-x-3"> */}
-              //       {/* <div className="text-gray-500 text-sm">
+              //       {/* <div className="text-muted-foreground text-sm">
               //             {transaction.date}
               //           </div> */}
               //       {/* </div> */}

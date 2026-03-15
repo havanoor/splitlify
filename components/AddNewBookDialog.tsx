@@ -295,27 +295,27 @@ export default function AddNewBookDialog({
     <div className="px-1 pb-6">
       <Form method="POST" className="flex flex-col gap-5">
         <div className="space-y-1.5">
-          <Label htmlFor="name" className="text-sm font-semibold text-gray-700">
+          <Label htmlFor="name" className="text-sm font-semibold text-foreground/80">
             Book Name
           </Label>
           <Input
             id="name"
             defaultValue={editBook?.name ?? ""}
             placeholder="e.g. Summer Trip 2026"
-            className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all w-full"
+            className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all w-full"
             name="name"
             onChange={handleNewBook}
             required
           />
           {!available && (
-            <p className="text-xs text-red-500 mt-1">
+            <p className="text-xs text-destructive mt-1">
               {"The Book Name is not available"}
             </p>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="currency" className="text-sm font-semibold text-gray-700">
+          <Label htmlFor="currency" className="text-sm font-semibold text-foreground/80">
             Currency
           </Label>
           <Popover open={open} onOpenChange={setOpen} modal={true}>
@@ -323,9 +323,9 @@ export default function AddNewBookDialog({
               <Button
                 variant="outline"
                 role="combobox"
-                className="w-full h-12 rounded-xl bg-white border-gray-200 hover:bg-gray-50 text-gray-700 font-normal justify-between transition-all focus-visible:ring-[#79AC78] focus-visible:border-transparent"
+                className="w-full h-12 rounded-xl bg-white border-input hover:bg-gray-50 text-foreground/80 font-normal justify-between transition-all focus-visible:ring-primary focus-visible:border-transparent"
               >
-                <span className={!editBook?.book_currency && !newBook.book_currency ? "text-gray-400" : ""}>
+                <span className={!editBook?.book_currency && !newBook.book_currency ? "text-muted-foreground/70" : ""}>
                   {editBook?.book_currency ? (
                     editBook?.book_currency
                   ) : newBook.book_currency ? (
@@ -334,11 +334,11 @@ export default function AddNewBookDialog({
                     "Select a currency"
                   )}
                 </span>
-                <IoIosArrowDown className="text-gray-400" />
+                <IoIosArrowDown className="text-muted-foreground/70" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="z-[9999] w-[--radix-popover-trigger-width] p-0 rounded-xl shadow-lg border-gray-100"
+              className="z-[9999] w-[--radix-popover-trigger-width] p-0 rounded-xl shadow-lg border-border"
               side="bottom"
               align="start"
             >
@@ -348,7 +348,7 @@ export default function AddNewBookDialog({
                   placeholder="Search currency..."
                   className="h-11 border-none focus:ring-0 text-sm"
                 />
-                <CommandEmpty className="py-6 text-center text-sm text-gray-500">No results found.</CommandEmpty>
+                <CommandEmpty className="py-6 text-center text-sm text-muted-foreground">No results found.</CommandEmpty>
                 <CommandGroup className="p-1">
                   <CommandList className="max-h-60 overflow-y-auto overscroll-contain touch-pan-y">
                     {currencies.map((currency, id) => (
@@ -379,7 +379,7 @@ export default function AddNewBookDialog({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="btype" className="text-sm font-semibold text-gray-700">
+          <Label htmlFor="btype" className="text-sm font-semibold text-foreground/80">
             Book Type
           </Label>
           <Select
@@ -389,12 +389,12 @@ export default function AddNewBookDialog({
               setNewBook({ ...newBook, type_of_book: v });
             }}
           >
-            <SelectTrigger className="w-full h-12 rounded-xl text-gray-700 border-gray-200 focus:ring-[#79AC78] transition-all bg-white">
+            <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-white">
               <SelectValue
                 placeholder={editBook?.type_of_book ?? "Select Book Type"}
               />
             </SelectTrigger>
-            <SelectContent className="z-[9999] rounded-xl border-gray-100 shadow-lg">
+            <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
               <SelectGroup>
                 <SelectItem value="PUBLIC" className="cursor-pointer">Public</SelectItem>
                 <SelectItem value="PRIVATE" className="cursor-pointer">Private</SelectItem>
@@ -405,29 +405,29 @@ export default function AddNewBookDialog({
 
         {/* Participants — only for new books */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-gray-700">Participants <span className="text-gray-400 font-normal">(Optional)</span></Label>
+          <Label className="text-sm font-semibold text-foreground/80">Participants <span className="text-muted-foreground/70 font-normal">(Optional)</span></Label>
           <div className="flex gap-2">
             <Input
               value={currentUsername}
               onChange={(e) => setCurrentUsername(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addParticipant())}
               placeholder="Enter username"
-              className={`h-10 rounded-xl focus-visible:ring-[#79AC78] transition-colors ${usernameStatus === "found" ? "border-[#79AC78]" :
-                usernameStatus === "not_found" ? "border-red-400" : "border-gray-200"
+              className={`h-10 rounded-xl focus-visible:ring-primary transition-colors ${usernameStatus === "found" ? "border-primary" :
+                usernameStatus === "not_found" ? "border-red-400" : "border-input"
                 }`}
             />
             <Button
               type="button"
               onClick={addParticipant}
               disabled={!currentUsername.trim() || usernameStatus === "checking" || pendingUsers.some(p => p.value === currentUsername.trim())}
-              className="h-10 px-4 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold disabled:opacity-40"
+              className="h-10 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold disabled:opacity-40"
             >
               Add
             </Button>
           </div>
           {currentUsername && usernameStatus !== "idle" && (
-            <p className={`text-xs font-medium ${usernameStatus === "found" ? "text-[#79AC78]" :
-              usernameStatus === "checking" ? "text-blue-500" : "text-amber-500"
+            <p className={`text-xs font-medium ${usernameStatus === "found" ? "text-primary" :
+              usernameStatus === "checking" ? "text-info" : "text-amber-500"
               }`}>
               {usernameStatus === "checking" && `Checking "${debounceParticipant}"...`}
               {usernameStatus === "found" && `✓ User "${debounceParticipant}" found`}
@@ -438,12 +438,12 @@ export default function AddNewBookDialog({
             <div className="flex flex-wrap gap-2 pt-1">
               {pendingUsers.map((u) => (
                 <span key={u.value} className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border ${u.isReal
-                  ? "bg-[#79AC78]/10 text-[#79AC78] border-[#79AC78]/20"
-                  : "bg-amber-50 text-amber-600 border-amber-200"
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "bg-amber-50 text-warning border-amber-200"
                   }`}>
                   {u.value}
                   {!u.isReal && <span className="font-normal opacity-60 ml-0.5"> </span>}
-                  <button type="button" onClick={() => setPendingUsers(pendingUsers.filter(x => x.value !== u.value))} className="ml-0.5 hover:text-red-500 transition-colors">
+                  <button type="button" onClick={() => setPendingUsers(pendingUsers.filter(x => x.value !== u.value))} className="ml-0.5 hover:text-destructive transition-colors">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -457,7 +457,7 @@ export default function AddNewBookDialog({
           {editBook && <input type="hidden" name="book_id" value={editBook.id} />}
           <ResponsiveModalClose>
             <Button
-              className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
+              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm"
               type="submit"
               disabled={!available}
               name="_action"

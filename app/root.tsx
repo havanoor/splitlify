@@ -85,14 +85,14 @@ export function ErrorBoundary() {
       <body>
         <div className="flex flex-col items-center justify-center min-h-screen  px-4">
           <div className="text-center max-w-md">
-            <h1 className="text-9xl font-bold text-gray-900 animate-pulse">
+            <h1 className="text-9xl font-bold text-foreground animate-pulse">
               404
             </h1>
 
             <h2 className="mt-8 text-2xl font-semibold text-gray-800">
               Page not found
             </h2>
-            <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-muted-foreground">
               Oops! The page you're looking for seems to have wandered off into
               the digital wilderness.
             </p>

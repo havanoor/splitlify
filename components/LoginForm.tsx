@@ -42,16 +42,16 @@ export const LoginForm = ({ url }: { url: string }) => {
             name="username"
             render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-sm font-semibold text-gray-700">Username</FormLabel>
+                <FormLabel className="text-sm font-semibold text-foreground/80">Username</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="Enter your username"
                     required
-                    className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                    className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                   />
                 </FormControl>
-                <FormMessage className="text-xs text-red-500" />
+                <FormMessage className="text-xs text-destructive" />
               </FormItem>
             )}
           />
@@ -60,24 +60,24 @@ export const LoginForm = ({ url }: { url: string }) => {
             name="password"
             render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-sm font-semibold text-gray-700">Password</FormLabel>
+                <FormLabel className="text-sm font-semibold text-foreground/80">Password</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="Enter your password"
                     type="password"
                     required
-                    className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                    className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                   />
                 </FormControl>
-                <FormMessage className="text-xs text-red-500" />
+                <FormMessage className="text-xs text-destructive" />
               </FormItem>
             )}
           />
 
           <Button
             type="submit"
-            className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm mt-4"
+            className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm mt-4"
           >
             {formState.isSubmitting ? (
               <div className="flex items-center gap-2">

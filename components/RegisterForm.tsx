@@ -85,15 +85,15 @@ export const RegisterForm = ({ url }: { url: string }) => {
             render={({ field }) => {
               return (
                 <FormItem className="space-y-1.5">
-                  <FormLabel className="text-sm font-semibold text-gray-700">First Name</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">First Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g. John"
                       {...field}
-                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                      className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs text-red-500" />
+                  <FormMessage className="text-xs text-destructive" />
                 </FormItem>
               );
             }}
@@ -105,15 +105,15 @@ export const RegisterForm = ({ url }: { url: string }) => {
             render={({ field }) => {
               return (
                 <FormItem className="space-y-1.5">
-                  <FormLabel className="text-sm font-semibold text-gray-700">Last Name</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Last Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g. Doe"
                       {...field}
-                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                      className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs text-red-500" />
+                  <FormMessage className="text-xs text-destructive" />
                 </FormItem>
               );
             }}
@@ -124,16 +124,16 @@ export const RegisterForm = ({ url }: { url: string }) => {
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2 space-y-1.5">
-                  <FormLabel className="text-sm font-semibold text-gray-700">Password *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Password *</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
                       placeholder="Create a strong password"
                       {...field}
-                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                      className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs text-red-500" />
+                  <FormMessage className="text-xs text-destructive" />
                 </FormItem>
               );
             }}
@@ -144,16 +144,16 @@ export const RegisterForm = ({ url }: { url: string }) => {
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2 space-y-1.5">
-                  <FormLabel className="text-sm font-semibold text-gray-700">Confirm Password *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Confirm Password *</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
                       placeholder="Repeat your password"
                       {...field}
-                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                      className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs text-red-500" />
+                  <FormMessage className="text-xs text-destructive" />
                 </FormItem>
               );
             }}
@@ -164,16 +164,16 @@ export const RegisterForm = ({ url }: { url: string }) => {
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2 space-y-1.5">
-                  <FormLabel className="text-sm font-semibold text-gray-700">Email</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
                       placeholder="name@example.com"
                       {...field}
-                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                      className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs text-red-500" />
+                  <FormMessage className="text-xs text-destructive" />
                 </FormItem>
               );
             }}
@@ -184,27 +184,27 @@ export const RegisterForm = ({ url }: { url: string }) => {
             render={({ field }) => {
               return (
                 <FormItem className="col-span-2 space-y-1.5">
-                  <FormLabel className="text-sm font-semibold text-gray-700">Username *</FormLabel>
+                  <FormLabel className="text-sm font-semibold text-foreground/80">Username *</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Choose a unique handle"
                       {...field}
-                      className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all"
+                      className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all"
                     />
                   </FormControl>
-                  {username && <p className={`text-xs ${validUsername.data === true ? 'text-[#79AC78]' : validUsername.state === 'loading' ? 'text-blue-500' : 'text-red-500'}`}>{username}</p>}
-                  <FormMessage className="text-xs text-red-500" />
+                  {username && <p className={`text-xs ${validUsername.data === true ? 'text-primary' : validUsername.state === 'loading' ? 'text-info' : 'text-destructive'}`}>{username}</p>}
+                  <FormMessage className="text-xs text-destructive" />
                 </FormItem>
               );
             }}
           />
           {formError && (
-            <div className="col-span-2 flex gap-2 w-full p-3 rounded-xl bg-red-50 border border-red-100 items-center justify-center text-red-600 text-sm font-medium mt-2">
+            <div className="col-span-2 flex gap-2 w-full p-3 rounded-xl bg-destructive/10 border border-destructive/20 items-center justify-center text-destructive text-sm font-medium mt-2">
               <IoWarningOutline className="w-5 h-5 flex-shrink-0" />
               <p>{formError}</p>
             </div>
           )}
-          <Button type="submit" className="col-span-2 w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm mt-4">
+          <Button type="submit" className="col-span-2 w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm mt-4">
             {loading ? (
               <div className="flex items-center gap-2">
                 <LoaderIcon />

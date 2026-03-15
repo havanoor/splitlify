@@ -12,16 +12,16 @@ type TransSplit = {
 export default function TransactionSplit({ split }: TransSplit) {
   const [viewDues, setViewDues] = useState(false);
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mt-4 lg:mt-0">
+    <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden mt-4 lg:mt-0">
       <div
-        className="p-4 bg-gray-50 flex items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-100/50 transition-colors"
+        className="p-4 bg-gray-50 flex items-center justify-between border-b border-border cursor-pointer hover:bg-gray-100/50 transition-colors"
         onClick={() => setViewDues(!viewDues)}
       >
-        <div className="text-lg font-bold text-gray-900 flex items-center gap-2">
+        <div className="text-lg font-bold text-foreground flex items-center gap-2">
           {viewDues ? (
-            <div className="bg-[#79AC78] text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
+            <div className="bg-primary text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
           ) : (
-            <div className="bg-white border border-gray-200 text-gray-400 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+            <div className="bg-white border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
           )}
           Pending Dues
         </div>
@@ -31,25 +31,25 @@ export default function TransactionSplit({ split }: TransSplit) {
         <div className="p-0">
           {split.length > 0 ? (
             <div className="divide-y divide-gray-50">
-              <div className="grid grid-cols-3 gap-2 px-4 py-3 bg-gray-50/50 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+              <div className="grid grid-cols-3 gap-2 px-4 py-3 bg-gray-50/50 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                 <div>From</div>
                 <div>To</div>
                 <div className="text-right">Amount</div>
               </div>
               {split.map((spl, index) => (
                 <div key={index} className="grid grid-cols-3 gap-2 px-4 py-3 text-sm items-center hover:bg-gray-50/50 transition-colors">
-                  <div className="font-medium text-gray-900">{spl.payer}</div>
-                  <div className="text-gray-600 flex items-center gap-1">
-                    <span className="text-gray-300">→</span> {spl.payee}
+                  <div className="font-medium text-foreground">{spl.payer}</div>
+                  <div className="text-muted-foreground flex items-center gap-1">
+                    <span className="text-muted-foreground/50">→</span> {spl.payee}
                   </div>
-                  <div className="text-right font-bold text-gray-900">
+                  <div className="text-right font-bold text-foreground">
                     {Number(spl.amount).toFixed(3)}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="p-6 text-center text-gray-500 text-sm">
+            <div className="p-6 text-center text-muted-foreground text-sm">
               All settled up! No pending dues.
             </div>
           )}

@@ -269,9 +269,9 @@ export default function IndividualBook() {
 
       {/* Transactions Section — toggle + list in one white card */}
       {book && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
           {/* Mobile Transactions Header/Trigger */}
-          <div className="w-full md:hidden p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+          <div className="w-full md:hidden p-4 bg-gray-50 border-b border-border flex items-center justify-between">
             <div
               className="text-lg font-bold flex items-center gap-2 cursor-pointer"
               onClick={handleClick}
@@ -279,9 +279,9 @@ export default function IndividualBook() {
               {viewTransactions &&
                 bookTransactions.transactions?.length &&
                 bookTransactions.transactions.length > 0 ? (
-                <div className="bg-[#79AC78] text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
+                <div className="bg-primary text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
               ) : (
-                <div className="bg-white border border-gray-200 text-gray-400 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+                <div className="bg-white border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
               )}
               <span>Transactions</span>
             </div>
@@ -291,7 +291,7 @@ export default function IndividualBook() {
                 title="Add New Transaction"
                 description={`Record a new transaction for ${book?.name}.`}
                 trigger={
-                  <button className="flex items-center justify-center bg-white border border-gray-200 text-gray-700 hover:text-[#79AC78] hover:border-[#79AC78] p-2 rounded-full transition-all shadow-sm">
+                  <button className="flex items-center justify-center bg-white border border-input text-foreground/80 hover:text-primary hover:border-primary p-2 rounded-full transition-all shadow-sm">
                     <IoMdAdd className="w-6 h-6" />
                   </button>
                 }

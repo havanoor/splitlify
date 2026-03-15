@@ -74,66 +74,66 @@ export default function AddNewPerson({ bookId }: userProps) {
           <Button
             type="button"
             variant="outline"
-            className="w-full text-[#79AC78] border-[#79AC78]/20 bg-[#79AC78]/5 hover:bg-[#79AC78]/10 hover:text-[#79AC78] border-dashed rounded-xl h-12"
+            className="w-full text-primary border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary border-dashed rounded-xl h-12"
           >
             + Add New Person.
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="bg-white p-6 shadow-xl w-80 rounded-2xl border-gray-100"
+          className="bg-white p-6 shadow-xl w-80 rounded-2xl border-border"
           side="top"
           align="center"
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <fetcher.Form method="POST">
             <div className="grid gap-5">
-              <div className="space-y-1.5 pb-2 border-b border-gray-100">
-                <h4 className="font-bold text-lg text-gray-900 leading-none">New Participant</h4>
-                <p className="text-sm text-gray-500">
+              <div className="space-y-1.5 pb-2 border-b border-border">
+                <h4 className="font-bold text-lg text-foreground leading-none">New Participant</h4>
+                <p className="text-sm text-muted-foreground">
                   Add someone to split expenses with. Enter the username for an existing user or enter the details for a new user.
                 </p>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="fname" className="text-sm font-semibold text-gray-700">First Name</Label>
+                <Label htmlFor="fname" className="text-sm font-semibold text-foreground/80">First Name</Label>
                 <Input
                   id="fname"
                   name="first_name"
                   onChange={handleNewUser}
-                  className="h-10 rounded-xl border-gray-200 focus-visible:ring-[#79AC78]"
+                  className="h-10 rounded-xl border-input focus-visible:ring-primary"
 
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="lname" className="text-sm font-semibold text-gray-700">Last Name <span className="text-gray-400 font-normal">(Optional)</span></Label>
+                <Label htmlFor="lname" className="text-sm font-semibold text-foreground/80">Last Name <span className="text-muted-foreground/70 font-normal">(Optional)</span></Label>
                 <Input
                   id="lname"
                   name="last_name"
                   onChange={handleNewUser}
-                  className="h-10 rounded-xl border-gray-200 focus-visible:ring-[#79AC78]"
+                  className="h-10 rounded-xl border-input focus-visible:ring-primary"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="username" className="text-sm font-semibold text-gray-700">Username</Label>
+                <Label htmlFor="username" className="text-sm font-semibold text-foreground/80">Username</Label>
                 <Input
                   id="username"
                   name="username"
                   onChange={handleNewUser}
                   placeholder="e.g. username123"
-                  className={`h-10 rounded-xl focus-visible:ring-[#79AC78] transition-colors ${usernameStatus === "found"
-                    ? "border-[#79AC78]"
+                  className={`h-10 rounded-xl focus-visible:ring-primary transition-colors ${usernameStatus === "found"
+                    ? "border-primary"
                     : usernameStatus === "not_found"
                       ? "border-red-400"
-                      : "border-gray-200"
+                      : "border-input"
                     }`}
                 />
                 {usernameTyped && usernameStatus && (
                   <p className={`text-xs font-medium ${usernameStatus === "found"
-                    ? "text-[#79AC78]"
+                    ? "text-primary"
                     : usernameStatus === "checking"
-                      ? "text-blue-500"
-                      : "text-red-500"
+                      ? "text-info"
+                      : "text-destructive"
                     }`}>
                     {usernameStatus === "checking" && `Checking "${debounceUsername}"...`}
                     {usernameStatus === "found" && `✓ User "${debounceUsername}" found`}
@@ -144,7 +144,7 @@ export default function AddNewPerson({ bookId }: userProps) {
             </div>
             <Button
               type="submit"
-              className="mt-6 w-full h-10 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-6 w-full h-10 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               name="_action"
               value="AddNewUser"
               disabled={

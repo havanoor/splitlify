@@ -103,16 +103,16 @@ export default function PublicBook() {
       {book ? (
         <>
           {/* Mobile Transactions Header/Trigger */}
-          <div className="w-full md:hidden p-4 rounded-xl shadow-sm border border-gray-100 bg-gray-50 flex items-center justify-between mt-2 mb-6">
+          <div className="w-full md:hidden p-4 rounded-xl shadow-sm border border-border bg-gray-50 flex items-center justify-between mt-2 mb-6">
             <div
               className="text-lg font-bold flex items-center gap-2 cursor-pointer"
               onClick={handleClick}
             >
               {viewTransactions &&
                 bookTransactions.transactions?.length > 0 ? (
-                <div className="bg-[#79AC78] text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
+                <div className="bg-primary text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
               ) : (
-                <div className="bg-white border border-gray-200 text-gray-400 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+                <div className="bg-white border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
               )}
               <span>Transactions</span>
             </div>
@@ -120,9 +120,9 @@ export default function PublicBook() {
 
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{book.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground tracking-tight">{book.name}</h1>
               <div className="mt-2 flex items-center gap-3">
-                <span className="inline-flex items-center rounded-full bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-600 ring-1 ring-inset ring-gray-500/10 uppercase tracking-widest">
+                <span className="inline-flex items-center rounded-full bg-gray-50 px-3 py-1.5 text-xs font-semibold text-muted-foreground ring-1 ring-inset ring-muted-foreground/10 uppercase tracking-widest">
                   {book.type_of_book}
                 </span>
               </div>
@@ -141,7 +141,7 @@ export default function PublicBook() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8 flex flex-col gap-8">
               {/* Stats Overview */}
-              <div className="bg-gradient-to-br from-[#79AC78]/5 to-transparent rounded-2xl p-1 border border-[#79AC78]/10">
+              <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-2xl p-1 border border-primary/10">
                 <BookStatsBox
                   amount={totalAmount}
                   currency={book?.book_currency}
@@ -152,7 +152,7 @@ export default function PublicBook() {
               </div>
 
               {/* Transactions List */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
                 <BookTransactions
                   transactions={bookTransactions.transactions || []}
                   book={book}
@@ -167,14 +167,14 @@ export default function PublicBook() {
 
             {/* Sidebar (Splits/Balances) */}
             <div className="lg:col-span-4 flex flex-col gap-6">
-              <div className="bg-blue-50/50 rounded-2xl p-1 border border-blue-100 shadow-sm sticky top-6">
+              <div className="bg-info/10 rounded-2xl p-1 border border-info/20 shadow-sm sticky top-6">
                 <TransactionSplit split={payments} />
               </div>
             </div>
           </div>
         </>
       ) : (
-        <div className="flex h-40 items-center justify-center text-gray-500 font-medium">Looking up book details...</div>
+        <div className="flex h-40 items-center justify-center text-muted-foreground font-medium">Looking up book details...</div>
       )}
     </div>
   );

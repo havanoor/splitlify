@@ -92,12 +92,12 @@ export default function AddNewTransactionDialog({
     <div className="bg-white px-1 pb-6">
       <Form className="flex flex-col gap-5" method="POST">
         <div className="space-y-1.5">
-          <Label htmlFor="name" className="text-sm font-semibold text-gray-700">Transaction Name</Label>
+          <Label htmlFor="name" className="text-sm font-semibold text-foreground/80">Transaction Name</Label>
           <Input
             defaultValue={currentTransaction?.desc || ""}
             id="name"
             placeholder="e.g. Dinner at Luigi's"
-            className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all w-full"
+            className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all w-full"
             name="desc"
             onChange={handleNewTransaction}
             readOnly={!!currentTransaction && title === "View"}
@@ -106,14 +106,14 @@ export default function AddNewTransactionDialog({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="amount" className="text-sm font-semibold text-gray-700">Amount</Label>
+          <Label htmlFor="amount" className="text-sm font-semibold text-foreground/80">Amount</Label>
           <Input
             defaultValue={currentTransaction?.amount}
             id="amount"
             type="number"
             placeholder="0.00"
             onChange={handleNewTransaction}
-            className="h-12 rounded-xl border-gray-200 focus-visible:ring-[#79AC78] focus-visible:border-transparent transition-all w-full text-gray-900"
+            className="h-12 rounded-xl border-input focus-visible:ring-primary focus-visible:border-transparent transition-all w-full text-foreground"
             name="amount"
             step="0.01"
             readOnly={!!currentTransaction && title === "View"}
@@ -122,12 +122,12 @@ export default function AddNewTransactionDialog({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="category_id" className="text-sm font-semibold text-gray-700">Category</Label>
+          <Label htmlFor="category_id" className="text-sm font-semibold text-foreground/80">Category</Label>
 
           {currentTransaction?.category && title === "View" ? (
             <Input
               readOnly
-              className="h-12 rounded-xl border-gray-200 w-full"
+              className="h-12 rounded-xl border-input w-full"
               defaultValue={currentTransaction?.category?.category.toString()}
             />
           ) : (
@@ -140,7 +140,7 @@ export default function AddNewTransactionDialog({
                     setTransaction({ ...transaction, category_id: v });
                   }}
                 >
-                  <SelectTrigger className="w-full h-12 rounded-xl text-gray-700 border-gray-200 focus:ring-[#79AC78] transition-all bg-white">
+                  <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-white">
                     <SelectValue
                       placeholder={
                         currentTransaction?.category?.category ||
@@ -148,7 +148,7 @@ export default function AddNewTransactionDialog({
                       }
                     />
                   </SelectTrigger>
-                  <SelectContent className="z-[9999] rounded-xl border-gray-100 shadow-lg">
+                  <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
                     <SelectGroup>
                       {categories?.map((val, id) => (
                         <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
@@ -162,14 +162,14 @@ export default function AddNewTransactionDialog({
               <div className="items-center">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button type="button" variant="outline" className="w-12 h-12 rounded-xl border-gray-200 text-gray-500 hover:text-[#79AC78] transition-colors focus-visible:ring-[#79AC78]">
+                    <Button type="button" variant="outline" className="w-12 h-12 rounded-xl border-input text-muted-foreground hover:text-primary transition-colors focus-visible:ring-primary">
                       +
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-white border border-gray-100 shadow-xl rounded-xl mr-4" side="top" align="end">
+                  <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-white border border-border shadow-xl rounded-xl mr-4" side="top" align="end">
                     <categoryUpdater.Form method="POST" action="/new-category">
                       <div className="flex flex-col space-y-3">
-                        <Label htmlFor="category" className="text-sm font-semibold text-gray-700">
+                        <Label htmlFor="category" className="text-sm font-semibold text-foreground/80">
                           New Category Name
                         </Label>
                         <div className="flex gap-2">
@@ -177,7 +177,7 @@ export default function AddNewTransactionDialog({
                             name="category"
                             id="category"
                             placeholder="e.g. Groceries"
-                            className={cn("h-10 rounded-lg border-gray-200 focus-visible:ring-[#79AC78]", categoryError && "border-red-500 focus-visible:ring-red-500")}
+                            className={cn("h-10 rounded-lg border-input focus-visible:ring-primary", categoryError && "border-red-500 focus-visible:ring-red-500")}
                             disabled={categoryUpdater.state !== "idle"}
                             value={newCategoryName}
                             onChange={(e) => setNewCategoryName(e.target.value)}
@@ -186,13 +186,13 @@ export default function AddNewTransactionDialog({
                           <Button
                             type="submit"
                             disabled={categoryUpdater.state !== "idle" || !!categoryError || !newCategoryName.trim()}
-                            className="h-10 rounded-lg bg-[#79AC78] hover:bg-[#639362] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-10 rounded-lg bg-primary hover:bg-primary/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {categoryUpdater.state !== "idle" ? "Adding..." : "Add"}
                           </Button>
                         </div>
                         {categoryError && (
-                          <p className="text-xs text-red-500">{categoryError}</p>
+                          <p className="text-xs text-destructive">{categoryError}</p>
                         )}
                       </div>
                     </categoryUpdater.Form>
@@ -204,14 +204,14 @@ export default function AddNewTransactionDialog({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="date" className="text-sm font-semibold text-gray-700">Date</Label>
+          <Label htmlFor="date" className="text-sm font-semibold text-foreground/80">Date</Label>
           {currentTransaction?.date && title === "View" ? (
             <Input
               value={date ? date.toDateString() : "Pick a date"}
               readOnly
               className={cn(
-                "w-full h-12 rounded-xl border-gray-200 text-gray-900 justify-start text-left font-normal",
-                !date && "text-gray-400"
+                "w-full h-12 rounded-xl border-input text-foreground justify-start text-left font-normal",
+                !date && "text-muted-foreground/70"
               )}
             />
           ) : (
@@ -224,15 +224,15 @@ export default function AddNewTransactionDialog({
                   variant={"outline"}
                   value={date ? date.toDateString() : "Pick a date"}
                   className={cn(
-                    "w-full h-12 rounded-xl bg-white border-gray-200 hover:bg-gray-50 text-gray-900 justify-start text-left font-normal transition-all focus-visible:ring-[#79AC78]",
-                    !date && "text-gray-400"
+                    "w-full h-12 rounded-xl bg-white border-input hover:bg-gray-50 text-foreground justify-start text-left font-normal transition-all focus-visible:ring-primary",
+                    !date && "text-muted-foreground/70"
                   )}
                 >
                   {date ? date.toDateString() : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="z-[999999] w-auto bg-white rounded-xl shadow-xl border-gray-100 p-0"
+                className="z-[999999] w-auto bg-white rounded-xl shadow-xl border-border p-0"
                 align="start"
               >
                 <Calendar
@@ -264,11 +264,11 @@ export default function AddNewTransactionDialog({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="payer_id" className="text-sm font-semibold text-gray-700">Paid By</Label>
+          <Label htmlFor="payer_id" className="text-sm font-semibold text-foreground/80">Paid By</Label>
           {currentTransaction && title === "View" ? (
             <Input
               readOnly
-              className="w-full h-12 rounded-xl border-gray-200 text-gray-900"
+              className="w-full h-12 rounded-xl border-input text-foreground"
               defaultValue={
                 currentTransaction?.payer.username ||
                 `${currentTransaction?.payer.first_name || ""} ${currentTransaction?.payer.last_name || ""}`.trim()
@@ -282,14 +282,14 @@ export default function AddNewTransactionDialog({
                 setTransaction({ ...transaction, payer_id: v });
               }}
             >
-              <SelectTrigger className="w-full h-12 rounded-xl text-gray-700 border-gray-200 focus:ring-[#79AC78] transition-all bg-white">
+              <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-white">
                 <SelectValue
                   placeholder={
                     currentTransaction?.payer.username || "Select a payer"
                   }
                 />
               </SelectTrigger>
-              <SelectContent className="z-[9999] rounded-xl border-gray-100 shadow-lg">
+              <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
                 <SelectGroup>
                   {books?.splitters.map((val, id) => (
                     <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
@@ -305,11 +305,11 @@ export default function AddNewTransactionDialog({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="payee" className="text-sm font-semibold text-gray-700">Paid For</Label>
+          <Label htmlFor="payee" className="text-sm font-semibold text-foreground/80">Paid For</Label>
           {currentTransaction?.payee && title === "View" ? (
-            <div className="rounded-xl border border-gray-200 bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
+            <div className="rounded-xl border border-input bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
               {selected.map((e: User) => (
-                <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-white border-gray-200">
+                <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-white border-input">
                   {e.username ? e.username : `${e.first_name || ""} ${e.last_name || ""}`.trim()}
                 </Badge>
               ))}
@@ -336,7 +336,7 @@ export default function AddNewTransactionDialog({
             <>
               <ResponsiveModalClose>
                 <Button
-                  className="w-full h-12 rounded-xl bg-[#79AC78] hover:bg-[#639362] text-white font-semibold transition-all shadow-sm"
+                  className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm"
                   type="submit"
                   name="_action"
                   value="AddNewTransaction"
