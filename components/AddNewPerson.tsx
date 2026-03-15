@@ -80,7 +80,7 @@ export default function AddNewPerson({ bookId }: userProps) {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="bg-white p-6 shadow-xl w-80 rounded-2xl border-border"
+          className="bg-card p-6 shadow-xl w-80 rounded-2xl border-border"
           side="top"
           align="center"
           onOpenAutoFocus={(e) => e.preventDefault()}

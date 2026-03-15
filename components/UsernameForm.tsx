@@ -58,7 +58,7 @@ export const UsernameForm = () => {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-gray-50/50">
       <FormProvider {...(form as any)}>
-        <Card className="w-full max-w-md bg-white/90 backdrop-blur-xl border border-border shadow-xl rounded-3xl overflow-hidden mt-8 md:mt-0 p-8">
+        <Card className="w-full max-w-md bg-card/90 backdrop-blur-xl border border-border shadow-xl rounded-3xl overflow-hidden mt-8 md:mt-0 p-8">
           <div className="flex flex-col w-full items-center justify-center pb-6">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
               <span className="text-primary font-bold text-2xl">s</span>

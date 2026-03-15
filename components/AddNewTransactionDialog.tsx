@@ -89,7 +89,7 @@ export default function AddNewTransactionDialog({
   };
 
   return (
-    <div className="bg-white px-1 pb-6">
+    <div className="bg-card px-1 pb-6">
       <Form className="flex flex-col gap-5" method="POST">
         <div className="space-y-1.5">
           <Label htmlFor="name" className="text-sm font-semibold text-foreground/80">Transaction Name</Label>
@@ -140,7 +140,7 @@ export default function AddNewTransactionDialog({
                     setTransaction({ ...transaction, category_id: v });
                   }}
                 >
-                  <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-white">
+                  <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
                     <SelectValue
                       placeholder={
                         currentTransaction?.category?.category ||
@@ -166,7 +166,7 @@ export default function AddNewTransactionDialog({
                       +
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-white border border-border shadow-xl rounded-xl mr-4" side="top" align="end">
+                  <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-card border border-border shadow-xl rounded-xl mr-4" side="top" align="end">
                     <categoryUpdater.Form method="POST" action="/new-category">
                       <div className="flex flex-col space-y-3">
                         <Label htmlFor="category" className="text-sm font-semibold text-foreground/80">
@@ -224,7 +224,7 @@ export default function AddNewTransactionDialog({
                   variant={"outline"}
                   value={date ? date.toDateString() : "Pick a date"}
                   className={cn(
-                    "w-full h-12 rounded-xl bg-white border-input hover:bg-gray-50 text-foreground justify-start text-left font-normal transition-all focus-visible:ring-primary",
+                    "w-full h-12 rounded-xl bg-card border-input hover:bg-muted text-foreground justify-start text-left font-normal transition-all focus-visible:ring-primary",
                     !date && "text-muted-foreground/70"
                   )}
                 >
@@ -232,7 +232,7 @@ export default function AddNewTransactionDialog({
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="z-[999999] w-auto bg-white rounded-xl shadow-xl border-border p-0"
+                className="z-[999999] w-auto bg-card rounded-xl shadow-xl border-border p-0"
                 align="start"
               >
                 <Calendar
@@ -282,7 +282,7 @@ export default function AddNewTransactionDialog({
                 setTransaction({ ...transaction, payer_id: v });
               }}
             >
-              <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-white">
+              <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
                 <SelectValue
                   placeholder={
                     currentTransaction?.payer.username || "Select a payer"
@@ -309,7 +309,7 @@ export default function AddNewTransactionDialog({
           {currentTransaction?.payee && title === "View" ? (
             <div className="rounded-xl border border-input bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
               {selected.map((e: User) => (
-                <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-white border-input">
+                <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-card border-input">
                   {e.username ? e.username : `${e.first_name || ""} ${e.last_name || ""}`.trim()}
                 </Badge>
               ))}

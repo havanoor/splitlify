@@ -15,7 +15,7 @@ export default function BookStatsBox({
 }: BookStatsBoxProps) {
   return (
     <>
-      <div className="mt-2 grid grid-cols-3 gap-2 p-3 bg-white border border-border rounded-xl shadow-sm">
+      <div className="mt-2 grid grid-cols-3 gap-2 p-3 bg-card border border-border rounded-xl shadow-sm">
         <div className="col-span-3 text-center mb-2 pb-2 border-b border-border">
           <span className="font-bold text-foreground">{bookName}</span>
           <span className="text-muted-foreground ml-2 text-sm">Summary</span>

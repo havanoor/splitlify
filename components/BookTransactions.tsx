@@ -61,7 +61,7 @@ export default function BookTransactions({
     <>
       <div className="hidden md:block w-full">
         <div
-          className="flex items-center justify-between p-6 border-b border-border bg-gray-50/50 cursor-pointer hover:bg-gray-100/50 transition-colors"
+          className="flex items-center justify-between p-6 border-b border-border bg-gray-50/50 cursor-pointer hover:bg-accent/50 transition-colors"
           onClick={() => setOpen(!open)}
         >
           <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export default function BookTransactions({
           <div onClick={(e) => e.stopPropagation()}>
             <Sheet>
               <SheetTrigger asChild>
-                <button className="flex items-center gap-2 text-sm font-semibold bg-white border border-input text-foreground/80 hover:text-primary hover:border-primary px-4 py-2 rounded-full transition-all shadow-sm">
+                <button className="flex items-center gap-2 text-sm font-semibold bg-card border border-input text-foreground/80 hover:text-primary hover:border-primary px-4 py-2 rounded-full transition-all shadow-sm">
                   <IoMdAdd className="w-4 h-4" /> Add Transaction
                 </button>
               </SheetTrigger>
@@ -110,9 +110,9 @@ export default function BookTransactions({
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50 bg-white">
+            <tbody className="divide-y divide-border/50 bg-card">
               {transactions?.length > 0 ? transactions.map((transaction, index) => (
-                <tr key={index} className="hover:bg-gray-50/50 transition-colors group">
+                <tr key={index} className="hover:bg-muted/50 transition-colors group">
                   <td className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
                     {transaction.date}
                   </td>
@@ -120,7 +120,7 @@ export default function BookTransactions({
                     <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{transaction.desc}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-foreground/90">
                       {transaction.category?.category}
                     </span>
                   </td>
@@ -152,7 +152,7 @@ export default function BookTransactions({
                     <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                       <Sheet>
                         <SheetTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-white shadow-sm">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-card shadow-sm">
                             <MdOutlineModeEdit className="w-4 h-4" />
                           </Button>
                         </SheetTrigger>
@@ -175,7 +175,7 @@ export default function BookTransactions({
 
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-white shadow-sm">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-card shadow-sm">
                             <RiDeleteBinLine className="w-4 h-4" />
                           </Button>
                         </AlertDialogTrigger>
@@ -215,11 +215,11 @@ export default function BookTransactions({
 
         {/* Desktop Pagination Controls */}
         {open && transactions?.length > 0 && (
-          <div className="flex items-center justify-center gap-4 bg-white p-3 border-t border-border">
+          <div className="flex items-center justify-center gap-4 bg-card p-3 border-t border-border">
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full hover:bg-gray-100"
+              className="rounded-full hover:bg-accent"
               disabled={offset <= 0}
               onClick={() => {
                 setOffset(offset <= 5 ? "0" : (offset - 5).toString());
@@ -233,7 +233,7 @@ export default function BookTransactions({
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full hover:bg-gray-100"
+              className="rounded-full hover:bg-accent"
               disabled={transactions?.length < 5}
               onClick={() => {
                 setOffset((offset + 5).toString());
@@ -343,7 +343,7 @@ export default function BookTransactions({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-white shadow-sm"
+                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-card shadow-sm"
                         >
                           <RiDeleteBinLine className="w-4 h-4" />
                         </Button>
@@ -386,7 +386,7 @@ export default function BookTransactions({
               //   key={index}
               //   className={`${
               //     open ? "relative" : "absolute  top-4 group-hover:top-4 "
-              //   }  w-full p-4 bg-white  border border-green-600 rounded-lg shadow `}
+              //   }  w-full p-4 bg-card  border border-green-600 rounded-lg shadow `}
               // >
               //   <div className="flex items-center justify-between">
               //     <div>
@@ -429,7 +429,7 @@ export default function BookTransactions({
               //               </span>
               //             </PopoverTrigger>
               //             <PopoverContent
-              //               className="z-50 grid gap-4 p-10 w-80 bg-white  rounded-md shadow-lg overflow-y-auto"
+              //               className="z-50 grid gap-4 p-10 w-80 bg-card  rounded-md shadow-lg overflow-y-auto"
               //               style={{
               //                 maxHeight:
               //                   "calc(var(--radix-popper-available-height) - 20px)",

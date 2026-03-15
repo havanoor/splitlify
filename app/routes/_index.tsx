@@ -70,7 +70,7 @@ function Dashboard({ user, recentBooks }: { user: any, recentBooks: any[] }) {
 
         {/* Quick Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
+          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 bg-info/20 text-info rounded-full flex items-center justify-center text-xl">
               <MdOutlineLibraryBooks />
             </div>
@@ -79,7 +79,7 @@ function Dashboard({ user, recentBooks }: { user: any, recentBooks: any[] }) {
               <h3 className="text-2xl font-bold text-foreground">{recentBooks?.length || 0}</h3>
             </div>
           </div>
-          <div className="bg-white rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
+          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 bg-success/20 text-success rounded-full flex items-center justify-center text-xl">
               <MdAttachMoney />
             </div>
@@ -88,7 +88,7 @@ function Dashboard({ user, recentBooks }: { user: any, recentBooks: any[] }) {
               <h3 className="text-2xl font-bold text-foreground">--</h3>
             </div>
           </div>
-          <div className="bg-white rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
+          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 bg-warning/20 text-warning rounded-full flex items-center justify-center text-xl">
               <MdGroup />
             </div>
@@ -115,7 +115,7 @@ function Dashboard({ user, recentBooks }: { user: any, recentBooks: any[] }) {
               <Link
                 key={book.id}
                 to={`/books/${book.id}`}
-                className="group relative flex flex-col bg-white rounded-2xl border border-border p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/50"
+                className="group relative flex flex-col bg-card rounded-2xl border border-border p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/50"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className={twMerge(
@@ -138,7 +138,7 @@ function Dashboard({ user, recentBooks }: { user: any, recentBooks: any[] }) {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border-2 border-dashed border-input p-12 text-center">
+          <div className="bg-card rounded-3xl border-2 border-dashed border-input p-12 text-center">
             <h3 className="text-xl font-semibold text-foreground mb-2">No books found</h3>
             <p className="text-muted-foreground mb-6">Create your first book to start tracking expenses.</p>
             <Button asChild className="bg-primary hover:bg-primary/90 rounded-full">
@@ -153,7 +153,7 @@ function Dashboard({ user, recentBooks }: { user: any, recentBooks: any[] }) {
 
 function LandingPage() {
   return (
-    <div className="min-h-screen bg-white selection:bg-primary/30">
+    <div className="min-h-screen bg-background selection:bg-primary/30">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         {/* Background Decorations */}
@@ -176,7 +176,7 @@ function LandingPage() {
             <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold bg-primary hover:bg-primary/90 text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 w-full sm:w-auto">
               <Link to="/register">Get Started for Free</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold rounded-full w-full sm:w-auto hover:bg-gray-50">
+            <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold rounded-full w-full sm:w-auto hover:bg-muted">
               <Link to="/login">Login</Link>
             </Button>
           </div>
@@ -193,7 +193,7 @@ function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-border hover:shadow-md transition-shadow">
+            <div className="bg-card p-8 rounded-3xl shadow-sm border border-border hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-info/20 text-info rounded-2xl flex items-center justify-center text-2xl mb-6">
                 📚
               </div>
@@ -204,7 +204,7 @@ function LandingPage() {
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-border hover:shadow-md transition-shadow">
+            <div className="bg-card p-8 rounded-3xl shadow-sm border border-border hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-success/20 text-primary rounded-2xl flex items-center justify-center text-2xl mb-6">
                 ✂️
               </div>
@@ -215,7 +215,7 @@ function LandingPage() {
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-border hover:shadow-md transition-shadow">
+            <div className="bg-card p-8 rounded-3xl shadow-sm border border-border hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-warning/20 text-warning rounded-2xl flex items-center justify-center text-2xl mb-6">
                 🤝
               </div>
@@ -229,7 +229,7 @@ function LandingPage() {
       </section>
 
       {/* Simple Footer */}
-      <footer className="bg-white border-t border-border py-12">
+      <footer className="bg-card border-t border-border py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground">
           <p>© {new Date().getFullYear()} Splitlify. All rights reserved.</p>
         </div>

@@ -39,7 +39,7 @@ export function ResponsiveModal({ open, onOpenChange, trigger, title, descriptio
             <DrawerTitle className="text-2xl font-bold">{title}</DrawerTitle>
             {description && <DrawerDescription>{description}</DrawerDescription>}
           </DrawerHeader>
-          <div className="overflow-y-auto px-4 pb-12 w-full touch-pan-y overscroll-contain bg-white">
+          <div className="overflow-y-auto px-4 pb-12 w-full touch-pan-y overscroll-contain bg-card">
             {children}
           </div>
         </div>

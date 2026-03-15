@@ -99,7 +99,7 @@ export default function PublicBook() {
     }
   }, [spliTrans.data, spliTrans.state]);
   return (
-    <div className="bg-white rounded-3xl p-4 sm:p-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
+    <div className="bg-card rounded-3xl p-4 sm:p-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
       {book ? (
         <>
           {/* Mobile Transactions Header/Trigger */}
@@ -112,7 +112,7 @@ export default function PublicBook() {
                 bookTransactions.transactions?.length > 0 ? (
                 <div className="bg-primary text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
               ) : (
-                <div className="bg-white border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+                <div className="bg-card border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
               )}
               <span>Transactions</span>
             </div>
@@ -152,7 +152,7 @@ export default function PublicBook() {
               </div>
 
               {/* Transactions List */}
-              <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+              <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
                 <BookTransactions
                   transactions={bookTransactions.transactions || []}
                   book={book}

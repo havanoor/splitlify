@@ -323,7 +323,7 @@ export default function AddNewBookDialog({
               <Button
                 variant="outline"
                 role="combobox"
-                className="w-full h-12 rounded-xl bg-white border-input hover:bg-gray-50 text-foreground/80 font-normal justify-between transition-all focus-visible:ring-primary focus-visible:border-transparent"
+                className="w-full h-12 rounded-xl bg-card border-input hover:bg-muted text-foreground/80 font-normal justify-between transition-all focus-visible:ring-primary focus-visible:border-transparent"
               >
                 <span className={!editBook?.book_currency && !newBook.book_currency ? "text-muted-foreground/70" : ""}>
                   {editBook?.book_currency ? (
@@ -389,7 +389,7 @@ export default function AddNewBookDialog({
               setNewBook({ ...newBook, type_of_book: v });
             }}
           >
-            <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-white">
+            <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
               <SelectValue
                 placeholder={editBook?.type_of_book ?? "Select Book Type"}
               />

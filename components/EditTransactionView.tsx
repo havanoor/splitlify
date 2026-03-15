@@ -27,7 +27,7 @@ export default function EditTransactionView({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-white shadow-sm"
+          className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-card shadow-sm"
         >
           <MdOutlineModeEdit className="w-4 h-4" />
         </Button>

@@ -12,16 +12,16 @@ type TransSplit = {
 export default function TransactionSplit({ split }: TransSplit) {
   const [viewDues, setViewDues] = useState(false);
   return (
-    <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden mt-4 lg:mt-0">
+    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden mt-4 lg:mt-0">
       <div
-        className="p-4 bg-gray-50 flex items-center justify-between border-b border-border cursor-pointer hover:bg-gray-100/50 transition-colors"
+        className="p-4 bg-gray-50 flex items-center justify-between border-b border-border cursor-pointer hover:bg-accent/50 transition-colors"
         onClick={() => setViewDues(!viewDues)}
       >
         <div className="text-lg font-bold text-foreground flex items-center gap-2">
           {viewDues ? (
             <div className="bg-primary text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
           ) : (
-            <div className="bg-white border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+            <div className="bg-card border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
           )}
           Pending Dues
         </div>
@@ -30,14 +30,14 @@ export default function TransactionSplit({ split }: TransSplit) {
       {viewDues && (
         <div className="p-0">
           {split.length > 0 ? (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-border/50">
               <div className="grid grid-cols-3 gap-2 px-4 py-3 bg-gray-50/50 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                 <div>From</div>
                 <div>To</div>
                 <div className="text-right">Amount</div>
               </div>
               {split.map((spl, index) => (
-                <div key={index} className="grid grid-cols-3 gap-2 px-4 py-3 text-sm items-center hover:bg-gray-50/50 transition-colors">
+                <div key={index} className="grid grid-cols-3 gap-2 px-4 py-3 text-sm items-center hover:bg-muted/50 transition-colors">
                   <div className="font-medium text-foreground">{spl.payer}</div>
                   <div className="text-muted-foreground flex items-center gap-1">
                     <span className="text-muted-foreground/50">→</span> {spl.payee}

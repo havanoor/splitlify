@@ -56,7 +56,7 @@ function MultiSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full min-h-[48px] h-auto p-2 flex flex-wrap items-center gap-2 justify-normal rounded-xl border-input text-foreground/80 hover:bg-gray-50 focus-visible:ring-primary focus-visible:ring-2 focus-visible:outline-none focus:border-transparent transition-all bg-white font-normal"
+          className="w-full min-h-[48px] h-auto p-2 flex flex-wrap items-center gap-2 justify-normal rounded-xl border-input text-foreground/80 hover:bg-muted focus-visible:ring-primary focus-visible:ring-2 focus-visible:outline-none focus:border-transparent transition-all bg-card font-normal"
           onClick={() => setOpen(!open)}
         >
           {selected.length > 0 ? (

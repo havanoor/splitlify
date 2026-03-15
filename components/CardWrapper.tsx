@@ -22,7 +22,7 @@ export default function CardWrapper({
 }: CardProps) {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-gray-50/50">
-      <Card className="w-full max-w-md bg-white/90 backdrop-blur-xl border border-border shadow-xl rounded-3xl overflow-hidden mt-8 md:mt-0">
+      <Card className="w-full max-w-md bg-card/90 backdrop-blur-xl border border-border shadow-xl rounded-3xl overflow-hidden mt-8 md:mt-0">
         <div className="flex flex-col w-full items-center justify-center pt-8 pb-4">
           <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
             <span className="text-primary font-bold text-2xl">s</span>
@@ -39,7 +39,7 @@ export default function CardWrapper({
                 <span className="w-full border-t border-input" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
               </div>
             </div>
 
@@ -47,7 +47,7 @@ export default function CardWrapper({
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full h-12 rounded-xl border-input bg-white text-foreground/80 hover:bg-gray-50 hover:text-foreground font-medium transition-all shadow-sm"
+                className="w-full h-12 rounded-xl border-input bg-card text-foreground/80 hover:bg-muted hover:text-foreground font-medium transition-all shadow-sm"
               >
                 <FcGoogle className="h-5 w-5 mr-3" />
                 Google

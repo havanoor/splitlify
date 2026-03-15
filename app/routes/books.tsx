@@ -229,12 +229,7 @@ export default function Books() {
       switch (actionData.type) {
         case "AddNewBook":
           if (actionData.ok) {
-            toast.success(`Added new book ${actionData.name}`, {
-              action: {
-                label: <div className="bg-inherit">X</div>,
-                onClick: () => toast.dismiss(),
-              },
-            });
+            toast.success(`Added new book ${actionData.name}`);
           } else {
             toast.error("Failed to add new Book");
           }
@@ -278,7 +273,7 @@ export default function Books() {
     <div className="min-h-screen bg-gray-50/50 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Books Section — toggle + grid in one white card */}
-        <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden mb-8">
+        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden mb-8">
           {/* Header Bar */}
           <div className="w-full p-4 bg-gray-50 border-b border-border flex items-center justify-between">
             <div
@@ -288,7 +283,7 @@ export default function Books() {
               {viewBooks ? (
                 <div className="bg-primary text-white rounded-full p-1"><MdKeyboardDoubleArrowUp className="w-5 h-5" /></div>
               ) : (
-                <div className="bg-white border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
+                <div className="bg-card border border-input text-muted-foreground/70 rounded-full p-1"><MdKeyboardDoubleArrowDown className="w-5 h-5" /></div>
               )}
               <span>{!viewBooks && selectedBook ? selectedBook.name : "Books"}</span>
             </div>
@@ -297,7 +292,7 @@ export default function Books() {
               title="Add New Book"
               description="Create a new book to start organizing your finances."
               trigger={
-                <button className="flex items-center justify-center bg-white border border-input text-foreground/80 hover:text-primary hover:border-primary p-2 rounded-full transition-all shadow-sm">
+                <button className="flex items-center justify-center bg-card border border-input text-foreground/80 hover:text-primary hover:border-primary p-2 rounded-full transition-all shadow-sm">
                   <IoMdAdd className="w-6 h-6" />
                 </button>
               }
@@ -321,7 +316,7 @@ export default function Books() {
                       <div
                         key={book.id}
                         className={twMerge(
-                          "group relative flex flex-col bg-white rounded-2xl border p-0 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1",
+                          "group relative flex flex-col bg-card rounded-2xl border p-0 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1",
                           isSelected
                             ? "border-primary ring-2 ring-primary/20 bg-primary/[0.02]"
                             : "border-border"
@@ -395,7 +390,7 @@ export default function Books() {
                               <ResponsiveModal
                                 title="Edit Book"
                                 trigger={
-                                  <Button variant="ghost" size="icon" className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-white shadow-sm">
+                                  <Button variant="ghost" size="icon" className="h-8 w-8 text-info hover:text-info hover:bg-info/10 rounded-full transition-colors border border-info/20 bg-card shadow-sm">
                                     <MdOutlineModeEdit className="w-4 h-4" />
                                   </Button>
                                 }
@@ -410,7 +405,7 @@ export default function Books() {
 
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-white shadow-sm">
+                                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors border border-destructive/20 bg-card shadow-sm">
                                     <RiDeleteBinLine className="w-4 h-4" />
                                   </Button>
                                 </AlertDialogTrigger>
@@ -449,11 +444,11 @@ export default function Books() {
                 </div>
 
                 {/* Pagination Controls */}
-                <div className="flex items-center justify-center gap-4 bg-white p-2 rounded-full border border-input shadow-sm w-max mx-auto mb-6">
+                <div className="flex items-center justify-center gap-4 bg-card p-2 rounded-full border border-input shadow-sm w-max mx-auto mb-6">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="rounded-full hover:bg-gray-100"
+                    className="rounded-full hover:bg-accent"
                     disabled={currentOffset === 0}
                     onClick={() => {
                       updateOffset(
@@ -469,7 +464,7 @@ export default function Books() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="rounded-full hover:bg-gray-100"
+                    className="rounded-full hover:bg-accent"
                     disabled={userBooks?.length < 5}
                     onClick={() => {
                       updateOffset((currentOffset + 5).toString());

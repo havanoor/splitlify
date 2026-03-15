@@ -20,7 +20,7 @@ export default function NavBarUserDropDown({
       {username && username !== "Guest" ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 border border-input text-foreground/80 font-medium px-4 py-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+            <button className="flex items-center gap-2 bg-gray-50 hover:bg-accent border border-input text-foreground/80 font-medium px-4 py-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
               <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
                 {username.charAt(0).toUpperCase()}
               </div>
@@ -37,11 +37,11 @@ export default function NavBarUserDropDown({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link to="/books">
-                <DropdownMenuItem className="cursor-pointer hover:bg-gray-50 hover:text-primary transition-colors rounded-md py-2.5">
+                <DropdownMenuItem className="cursor-pointer hover:bg-muted hover:text-primary transition-colors rounded-md py-2.5">
                   My Books
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem className="cursor-pointer hover:bg-gray-50 hover:text-primary transition-colors rounded-md py-2.5">
+              <DropdownMenuItem className="cursor-pointer hover:bg-muted hover:text-primary transition-colors rounded-md py-2.5">
                 Profile
               </DropdownMenuItem>
               <DropdownMenuSeparator />
