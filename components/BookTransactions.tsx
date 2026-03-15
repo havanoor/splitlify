@@ -370,7 +370,7 @@ export default function BookTransactions({
                               </Button>
                               <input
                                 type="hidden"
-                                name="transaction_id"
+                                name="id"
                                 value={transaction.id}
                               />
                             </Form>

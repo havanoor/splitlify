@@ -200,8 +200,9 @@ export default function IndividualBook() {
               `Deleted Transaction ${actionData.name} with id ${actionData.id}`,
             );
           } else {
-            toast.error("Failed to add the book. Please try again");
+            toast.error("Failed to delete the transaction. Please try again");
           }
+          break;
         case "AddNewTransaction":
           if (actionData.ok) {
             toast.success(`Added New transaction ${actionData.name} to Book`);

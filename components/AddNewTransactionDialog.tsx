@@ -79,13 +79,13 @@ export default function AddNewTransactionDialog({
     setSelected(newSelected);
   };
 
-  const [transaction, setTransaction] = useState<NewTransaction>(null);
+  const [transaction, setTransaction] = useState<NewTransaction | null>(null);
 
   const handleNewTransaction = (e: ChangeEvent<HTMLInputElement>) => {
     setTransaction({
-      ...transaction,
+      ...(transaction ?? {}),
       [e.target.name]: e.target.value,
-    });
+    } as NewTransaction);
   };
 
   return (
@@ -137,7 +137,7 @@ export default function AddNewTransactionDialog({
                   name="category_id"
                   defaultValue={currentTransaction?.category?.id.toString()}
                   onValueChange={(v) => {
-                    setTransaction({ ...transaction, category_id: v });
+                    setTransaction({ ...(transaction ?? {}), category_id: v } as NewTransaction);
                   }}
                 >
                   <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
@@ -279,7 +279,7 @@ export default function AddNewTransactionDialog({
               name="payer_id"
               defaultValue={currentTransaction?.payer.id.toString()}
               onValueChange={(v) => {
-                setTransaction({ ...transaction, payer_id: v });
+                setTransaction({ ...(transaction ?? {}), payer_id: v } as NewTransaction);
               }}
             >
               <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">

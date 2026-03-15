@@ -1,17 +1,18 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/react";
 import { getDataWithParams } from "~/lib/ApiRequests";
 import { getSession } from "~/lib/helperFunctions";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
+  // This endpoint is intentionally public — it is used on both the
+  // Register page (unauthenticated) and the Add Book dialog (authenticated).
+  // Do NOT add an auth guard here; that would redirect unauthenticated
+  // users away from the register form every time they type a username.
   const session = await getSession(request);
   const user = session?.user;
   const refreshToken = session?.refreshToken;
-
-  if (!user) {
-    throw redirect("/login");
-  }
   const headers = new Headers();
+
   const data = await getDataWithParams(
     "auth/validUsername",
     {
