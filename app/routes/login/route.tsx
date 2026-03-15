@@ -37,6 +37,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const { username, password } = data;
   const userData = await login({ username: username, password: password });
 
+  if (userData.error) {
+    return json({ error: userData.error }, { status: 401 });
+  }
+
   const headers = new Headers();
   headers.append(
     "Set-Cookie",

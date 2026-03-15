@@ -395,12 +395,12 @@ export default function Books() {
                                   </Button>
                                 }
                               >
-                                  <AddNewBookDialog
-                                    existing_books={
-                                      userBooks ? userBooks.map((b: any) => b.name) : []
-                                    }
-                                    editBook={book}
-                                  />
+                                <AddNewBookDialog
+                                  existing_books={
+                                    userBooks ? userBooks.map((b: any) => b.name) : []
+                                  }
+                                  editBook={book}
+                                />
                               </ResponsiveModal>
 
                               <AlertDialog>
@@ -495,7 +495,7 @@ export default function Books() {
                   </Button>
                 }
               >
-                  <AddNewBookDialog existing_books={[]} />
+                <AddNewBookDialog existing_books={[]} />
               </ResponsiveModal>
             </div>
           )}

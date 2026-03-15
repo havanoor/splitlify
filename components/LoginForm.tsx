@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { useState } from "react";
 import { IoWarningOutline } from "react-icons/io5";
 import { useRemixForm } from "remix-hook-form";
@@ -19,6 +19,7 @@ import {
 import { Input } from "./ui/input";
 
 export const LoginForm = ({ url }: { url: string }) => {
+  const actionData = useActionData<{ error?: string }>();
   const form = useRemixForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -74,6 +75,13 @@ export const LoginForm = ({ url }: { url: string }) => {
               </FormItem>
             )}
           />
+
+          {actionData?.error && (
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-destructive/10 text-destructive text-sm font-medium animate-in fade-in slide-in-from-top-1">
+              <IoWarningOutline className="w-4 h-4" />
+              <span>{actionData.error}</span>
+            </div>
+          )}
 
           <Button
             type="submit"
