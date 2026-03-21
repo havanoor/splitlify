@@ -20,10 +20,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground group-[.toast]:rounded-full px-3 py-1 text-xs font-medium hover:bg-muted/80 transition-colors",
           closeButton:
             "group-[.toast]:!bg-muted group-[.toast]:!text-muted-foreground group-[.toast]:border-muted-foreground/20 hover:!bg-muted/80 hover:!text-foreground transition-all",
-          success: "group-[.toaster]:!bg-success/10 group-[.toaster]:!text-success group-[.toaster]:!border-success/20 backdrop-blur-md",
-          error: "group-[.toaster]:!bg-destructive/10 group-[.toaster]:!text-destructive group-[.toaster]:!border-destructive/20 backdrop-blur-md",
-          warning: "group-[.toaster]:!bg-warning/10 group-[.toaster]:!text-warning group-[.toaster]:!border-warning/20 backdrop-blur-md",
-          info: "group-[.toaster]:!bg-info/10 group-[.toaster]:!text-info group-[.toaster]:!border-info/20 backdrop-blur-md",
+          success: "group-[.toaster]:!bg-success/95 group-[.toaster]:!text-white group-[.toaster]:!border-success backdrop-blur-md",
+          error: "group-[.toaster]:!bg-destructive/95 group-[.toaster]:!text-white group-[.toaster]:!border-destructive backdrop-blur-md",
+          warning: "group-[.toaster]:!bg-warning/95 group-[.toaster]:!text-white group-[.toaster]:!border-warning backdrop-blur-md",
+          info: "group-[.toaster]:!bg-info/95 group-[.toaster]:!text-white group-[.toaster]:!border-info backdrop-blur-md",
         },
       }}
       {...props}

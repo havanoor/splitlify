@@ -14,6 +14,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = Object.fromEntries(formData);
   const headers = new Headers();
 
+  if (typeof data.type_of_category === "string") {
+    data.type_of_category = data.type_of_category.toUpperCase();
+  }
+
   const response = await postData(
     "category/add",
     { ...data, user_id: user.user_id },

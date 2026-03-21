@@ -20,6 +20,9 @@ import {
   SelectValue,
 } from "./ui/select";
 
+import { toast } from "sonner";
+
+
 type AddNewTransactionProps = {
   books: Book;
   currentTransaction?: Transaction | null;
@@ -35,6 +38,8 @@ export default function AddNewTransactionDialog({
 }: AddNewTransactionProps) {
   const categoryUpdater = useFetcher();
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryType, setNewCategoryType] = useState("");
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
   const debouncedCategory = useDebounce(newCategoryName);
   const [categoryError, setCategoryError] = useState("");
 
@@ -60,11 +65,18 @@ export default function AddNewTransactionDialog({
     currentTransaction?.date ? new Date(currentTransaction?.date) : new Date()
   );
 
-  // useEffect(() => {
-  //   if (categoryUpdater.state === "idle" && categoryUpdater.data) {
-  //     category.load(`/query-category`);
-  //   }
-  // }, [categoryUpdater.data, categoryUpdater.state]);
+  useEffect(() => {
+    if (categoryUpdater.state === "idle" && categoryUpdater.data) {
+      if ((categoryUpdater.data as any).ok) {
+        toast.success("Category added successfully!");
+        setShowCategoryForm(false);
+        setNewCategoryName("");
+        setNewCategoryType("");
+      } else {
+        toast.error((categoryUpdater.data as any).error || "Failed to add category");
+      }
+    }
+  }, [categoryUpdater.data, categoryUpdater.state]);
 
   const toggleSelected = (users: User[]) => {
     const newSelected = [...selected];
@@ -131,75 +143,108 @@ export default function AddNewTransactionDialog({
               defaultValue={currentTransaction?.category?.category.toString()}
             />
           ) : (
-            <div className="flex items-center gap-2">
-              <div className="flex-grow">
-                <Select
-                  name="category_id"
-                  defaultValue={currentTransaction?.category?.id.toString()}
-                  onValueChange={(v) => {
-                    setTransaction({ ...(transaction ?? {}), category_id: v } as NewTransaction);
-                  }}
-                >
-                  <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
-                    <SelectValue
-                      placeholder={
-                        currentTransaction?.category?.category ||
-                        "Select a Category"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
-                    <SelectGroup>
-                      {categories?.map((val, id) => (
-                        <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
-                          {val.category}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+            <>
+              <div className="flex items-center gap-2">
+                <div className="flex-grow">
+                  <Select
+                    name="category_id"
+                    defaultValue={currentTransaction?.category?.id.toString()}
+                    onValueChange={(v) => {
+                      setTransaction({ ...(transaction ?? {}), category_id: v } as NewTransaction);
+                    }}
+                  >
+                    <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
+                      <SelectValue
+                        placeholder={
+                          currentTransaction?.category?.category ||
+                          "Select a Category"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
+                      <SelectGroup>
+                        {categories?.map((val, id) => (
+                          <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
+                            {val.category}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-shrink-0">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCategoryForm((v) => !v)}
+                    className="w-12 h-12 rounded-xl border-input text-muted-foreground hover:text-primary transition-colors focus-visible:ring-primary"
+                  >
+                    {showCategoryForm ? "×" : "+"}
+                  </Button>
+                </div>
               </div>
-              <div className="items-center">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button type="button" variant="outline" className="w-12 h-12 rounded-xl border-input text-muted-foreground hover:text-primary transition-colors focus-visible:ring-primary">
-                      +
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="z-[9999] px-4 py-4 w-72 bg-card border border-border shadow-xl rounded-xl mr-4" side="top" align="end">
-                    <categoryUpdater.Form method="POST" action="/new-category">
-                      <div className="flex flex-col space-y-3">
-                        <Label htmlFor="category" className="text-sm font-semibold text-foreground/80">
-                          New Category Name
-                        </Label>
-                        <div className="flex gap-2">
-                          <Input
-                            name="category"
-                            id="category"
-                            placeholder="e.g. Groceries"
-                            className={cn("h-10 rounded-lg border-input focus-visible:ring-primary", categoryError && "border-red-500 focus-visible:ring-red-500")}
-                            disabled={categoryUpdater.state !== "idle"}
-                            value={newCategoryName}
-                            onChange={(e) => setNewCategoryName(e.target.value)}
-                            required
-                          />
-                          <Button
-                            type="submit"
-                            disabled={categoryUpdater.state !== "idle" || !!categoryError || !newCategoryName.trim()}
-                            className="h-10 rounded-lg bg-primary hover:bg-primary/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            {categoryUpdater.state !== "idle" ? "Adding..." : "Add"}
-                          </Button>
-                        </div>
-                        {categoryError && (
-                          <p className="text-xs text-destructive">{categoryError}</p>
-                        )}
-                      </div>
-                    </categoryUpdater.Form>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
+
+              {showCategoryForm && (
+                <div className="mt-3 p-4 rounded-xl border border-border bg-muted/30 flex flex-col space-y-3">
+                  <div>
+                    <Label htmlFor="type_of_category" className="text-sm font-semibold text-foreground/80">
+                      Type
+                    </Label>
+                    <Select
+                      name="type_of_category"
+                      value={newCategoryType}
+                      onValueChange={setNewCategoryType}
+                      required
+                    >
+                      <SelectTrigger
+                        id="type_of_category"
+                        className="mt-1.5 w-full h-10 rounded-lg text-foreground/80 border-input focus:ring-primary bg-card"
+                      >
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
+                        <SelectItem value="income" className="cursor-pointer">Income</SelectItem>
+                        <SelectItem value="expense" className="cursor-pointer">Expense</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="category" className="text-sm font-semibold text-foreground/80">
+                      New Category Name
+                    </Label>
+                    <div className="flex gap-2 mt-1.5">
+                      <Input
+                        name="category"
+                        id="category"
+                        placeholder="e.g. Groceries"
+                        className={cn("h-10 rounded-lg border-input focus-visible:ring-primary", categoryError && "border-red-500 focus-visible:ring-red-500")}
+                        disabled={categoryUpdater.state !== "idle"}
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (!newCategoryName.trim() || !newCategoryType) return;
+                          categoryUpdater.submit(
+                            { category: newCategoryName, type_of_category: newCategoryType },
+                            { method: "POST", action: "/new-category" }
+                          );
+                        }}
+                        disabled={categoryUpdater.state !== "idle" || !!categoryError || !newCategoryName.trim() || !newCategoryType}
+                        className="h-10 rounded-lg bg-primary hover:bg-primary/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {categoryUpdater.state !== "idle" ? "Adding..." : "Add"}
+                      </Button>
+                    </div>
+                    {categoryError && (
+                      <p className="text-xs text-destructive mt-1">{categoryError}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
 
