@@ -250,60 +250,63 @@ export default function BookTransactions({
           onOpenChange={handleClick}
           className="space-y-2 mt-4"
         >
-          <div className="flex items-center justify-between space-x-4 px-4">
-            <h4 className="text-sm font-semibold">Page {offset / 5 + 1}</h4>
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={
-                  !open ||
-                  transactions?.length == 0 ||
-                  // transactions.length < 5 ||
-                  offset <= 0
-                }
-                onClick={() =>
-                  setOffset(offset <= 5 ? "0" : (offset - 5).toString())
-                }
-              >
-                <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
-              </Button>
-              <CollapsibleTrigger asChild>
+          {open && (
+            <div className="flex items-center justify-between space-x-4 px-4 pb-2 border-b border-border">
+              <h4 className="text-sm font-semibold">Page {Math.floor(offset / 5) + 1}</h4>
+              <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"
                   size="sm"
-                  disabled={transactions?.length == 0}
+                  className="rounded-full hover:bg-accent h-8 w-8 p-0"
+                  disabled={transactions?.length === 0 || offset <= 0}
+                  onClick={() =>
+                    setOffset(offset <= 5 ? "0" : (offset - 5).toString())
+                  }
                 >
-                  {open ? (
-                    <MdKeyboardDoubleArrowUp className="w-5 h-5" />
-                  ) : (
-                    <MdKeyboardDoubleArrowDown className="w-5 h-5" />
-                  )}
+                  <MdKeyboardDoubleArrowLeft className="w-5 h-5" />
                 </Button>
-              </CollapsibleTrigger>
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={
-                  !open || transactions?.length == 0 || transactions.length < 5
-                }
-                onClick={() => {
-                  setOffset((offset + 5).toString());
-                }}
-              >
-                <MdKeyboardDoubleArrowRight className="w-5 h-5" />
-              </Button>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full hover:bg-accent h-8 w-8 p-0"
+                  >
+                    <MdKeyboardDoubleArrowUp className="w-5 h-5" />
+                  </Button>
+                </CollapsibleTrigger>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full hover:bg-accent h-8 w-8 p-0"
+                  disabled={transactions?.length === 0 || transactions.length < 5}
+                  onClick={() => {
+                    setOffset((offset + 5).toString());
+                  }}
+                >
+                  <MdKeyboardDoubleArrowRight className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
-          </div>
-          <div
-            className={`rounded-md border px-4 py-2  text-sm shadow-sm block ${open && transactions?.length > 0 ? "hidden" : "block"
-              }`}
-            onClick={handleClick}
-          >
-            {transactions?.length > 0
-              ? "Click to expand transactions"
-              : "No transactions for selected book"}
-          </div>
+          )}
+
+          {!open ? (
+            transactions?.length > 0 ? (
+              <Button
+                className="w-full h-12 rounded-xl bg-primary text-white font-semibold shadow-sm transition-all"
+                onClick={handleClick}
+              >
+                Click to expand transactions
+              </Button>
+            ) : (
+              <div className="text-center text-sm text-muted-foreground p-4 border border-dashed border-border rounded-xl">
+                No transactions for selected book
+              </div>
+            )
+          ) : (
+            <div className="px-2 pt-2 text-sm font-bold text-foreground">
+              Recent Transactions
+            </div>
+          )}
           <CollapsibleContent className="space-y-2">
             {transactions?.map((transaction, index) => (
               <Card className="w-full max-w-md" key={index}>
