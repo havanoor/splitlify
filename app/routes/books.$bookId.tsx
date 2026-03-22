@@ -57,7 +57,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
         ...data,
         user_id: user.user_id,
         book_id: params.bookId,
-        payee_ids: (data.payee_ids as string).split(","),
+        payer_id: data.payer_id || user.user_id,
+        payee_ids: data.payee_ids ? (data.payee_ids as string).split(",") : [],
       };
 
       if ("id" in data) {
@@ -101,6 +102,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
       }
 
     case "AddNewUser":
+      console.log({
+        ...data,
+        book_id: params.bookId,
+      },);
       const responseUser = await postData(
         "books/add_new_user/",
         {
@@ -321,7 +326,9 @@ export default function IndividualBook() {
       )}
 
       {/* Pending Dues Section */}
-      <TransactionSplit split={payments} />
+      {book && !book.type_of_book.toLowerCase().includes("private") && (
+        <TransactionSplit split={payments} />
+      )}
     </div>
   );
 }

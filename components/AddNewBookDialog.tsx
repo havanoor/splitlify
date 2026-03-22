@@ -254,7 +254,7 @@ export default function AddNewBookDialog({
     // Using splitters array to get actual users
     return editBook.splitters?.map((u: any) => ({
       value: u.username || u.first_name || u.id, // Fallback if username is null
-      isReal: true // All existing users coming through editBook are treated as real
+      isReal: !!u.username // Real users have a username, placeholders only have first_name
     })) || [];
   });
 
@@ -403,56 +403,58 @@ export default function AddNewBookDialog({
           </Select>
         </div>
 
-        {/* Participants — only for new books */}
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-foreground/80">Participants <span className="text-muted-foreground/70 font-normal">(Optional)</span></Label>
-          <div className="flex gap-2">
-            <Input
-              value={currentUsername}
-              onChange={(e) => setCurrentUsername(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addParticipant())}
-              placeholder="Enter username"
-              className={`h-10 rounded-xl focus-visible:ring-primary transition-colors ${usernameStatus === "found" ? "border-primary" :
-                usernameStatus === "not_found" ? "border-red-400" : "border-input"
-                }`}
-            />
-            <Button
-              type="button"
-              onClick={addParticipant}
-              disabled={!currentUsername.trim() || usernameStatus === "checking" || pendingUsers.some(p => p.value === currentUsername.trim())}
-              className="h-10 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold disabled:opacity-40"
-            >
-              Add
-            </Button>
-          </div>
-          {currentUsername && usernameStatus !== "idle" && (
-            <p className={`text-xs font-medium ${usernameStatus === "found" ? "text-primary" :
-              usernameStatus === "checking" ? "text-info" : "text-amber-500"
-              }`}>
-              {usernameStatus === "checking" && `Checking "${debounceParticipant}"...`}
-              {usernameStatus === "found" && `✓ User "${debounceParticipant}" found`}
-              {usernameStatus === "not_found" && `"${debounceParticipant}" will be added as a placeholder`}
-            </p>
-          )}
-          {pendingUsers.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {pendingUsers.map((u) => (
-                <span key={u.value} className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border ${u.isReal
-                  ? "bg-primary/10 text-primary border-primary/20"
-                  : "bg-amber-50 text-warning border-amber-200"
-                  }`}>
-                  {u.value}
-                  {!u.isReal && <span className="font-normal opacity-60 ml-0.5"> </span>}
-                  <button type="button" onClick={() => setPendingUsers(pendingUsers.filter(x => x.value !== u.value))} className="ml-0.5 hover:text-destructive transition-colors">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
+        {/* Participants */}
+        {!(editBook && newBook.type_of_book === "PRIVATE") && (
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-foreground/80">Participants <span className="text-muted-foreground/70 font-normal">(Optional)</span></Label>
+            <div className="flex gap-2">
+              <Input
+                value={currentUsername}
+                onChange={(e) => setCurrentUsername(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addParticipant())}
+                placeholder="Enter username"
+                className={`h-10 rounded-xl focus-visible:ring-primary transition-colors ${usernameStatus === "found" ? "border-primary" :
+                  usernameStatus === "not_found" ? "border-red-400" : "border-input"
+                  }`}
+              />
+              <Button
+                type="button"
+                onClick={addParticipant}
+                disabled={!currentUsername.trim() || usernameStatus === "checking" || pendingUsers.some(p => p.value === currentUsername.trim())}
+                className="h-10 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold disabled:opacity-40"
+              >
+                Add
+              </Button>
             </div>
-          )}
-          <input type="hidden" name="user_usernames" value={pendingUsers.filter(p => p.isReal).map(p => p.value).join(",")} />
-          <input type="hidden" name="placeholder_names" value={pendingUsers.filter(p => !p.isReal).map(p => p.value).join(",")} />
-        </div>
+            {currentUsername && usernameStatus !== "idle" && (
+              <p className={`text-xs font-medium ${usernameStatus === "found" ? "text-primary" :
+                usernameStatus === "checking" ? "text-info" : "text-amber-500"
+                }`}>
+                {usernameStatus === "checking" && `Checking "${debounceParticipant}"...`}
+                {usernameStatus === "found" && `✓ User "${debounceParticipant}" found`}
+                {usernameStatus === "not_found" && `"${debounceParticipant}" will be added as a placeholder`}
+              </p>
+            )}
+            {pendingUsers.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {pendingUsers.map((u) => (
+                  <span key={u.value} className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border ${u.isReal
+                    ? "bg-primary/10 text-primary border-primary/20"
+                    : "bg-amber-50 text-warning border-amber-200"
+                    }`}>
+                    {u.value}
+                    {!u.isReal && <span className="font-normal opacity-60 ml-0.5"> </span>}
+                    <button type="button" onClick={() => setPendingUsers(pendingUsers.filter(x => x.value !== u.value))} className="ml-0.5 hover:text-destructive transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            <input type="hidden" name="user_usernames" value={pendingUsers.filter(p => p.isReal).map(p => p.value).join(",")} />
+            <input type="hidden" name="placeholder_names" value={pendingUsers.filter(p => !p.isReal).map(p => p.value).join(",")} />
+          </div>
+        )}
         <div className="pt-4 pb-8 flex flex-col gap-3">
           {editBook && <input type="hidden" name="book_id" value={editBook.id} />}
           <ResponsiveModalClose>

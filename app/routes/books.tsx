@@ -376,15 +376,19 @@ export default function Books() {
                             className="flex items-center gap-2 pt-3 border-t border-border/80 mt-auto"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className="flex items-center hover:scale-105 transition-transform bg-gray-50 rounded-full px-2 py-1 flex-1">
-                              <ShareBookPanel
-                                typeOfBook={book.type_of_book}
-                                bookUrl={`${baseURL}/public-book/${book.id}`}
-                              />
-                              <span className="ml-2 text-xs text-muted-foreground font-medium">
-                                Share
-                              </span>
-                            </div>
+                            {book.type_of_book.toLowerCase().includes("private") ? (
+                              <div className="flex-1" />
+                            ) : (
+                              <div className="flex items-center hover:scale-105 transition-transform bg-gray-50 rounded-full px-2 py-1 flex-1">
+                                <ShareBookPanel
+                                  typeOfBook={book.type_of_book}
+                                  bookUrl={`${baseURL}/public-book/${book.id}`}
+                                />
+                                <span className="ml-2 text-xs text-muted-foreground font-medium">
+                                  Share
+                                </span>
+                              </div>
+                            )}
 
                             <div className="flex items-center gap-2">
                               <ResponsiveModal
