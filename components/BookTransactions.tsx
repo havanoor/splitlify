@@ -295,7 +295,7 @@ export default function BookTransactions({
                 className="w-full h-12 rounded-xl bg-primary text-white font-semibold shadow-sm transition-all"
                 onClick={handleClick}
               >
-                Click to expand transactions
+                Expand transactions
               </Button>
             ) : (
               <div className="text-center text-sm text-muted-foreground p-4 border border-dashed border-border rounded-xl">

@@ -4,48 +4,35 @@ import { Input } from "components/ui/input";
 import { Label } from "components/ui/label";
 
 import { useFetcher } from "@remix-run/react";
-import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { ChangeEvent, useState, useEffect } from "react";
 import { useDebounce } from "~/customHooks/Debounce";
+import { X } from "lucide-react";
 
 type userProps = {
   bookId: string;
+  splitters?: User[];
 };
 
-export default function AddNewPerson({ bookId }: userProps) {
-  const user: NewUser = {
-    first_name: "",
-    last_name: null,
-    username: null,
-    book_id: bookId,
-  };
-
-  const [newUser, setNewUser] = useState<NewUser>(user);
-  const handleNewUser = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewUser({
-      ...newUser,
-      [e.target.name]: e.target.value,
-    });
-  };
-
+export default function AddNewPerson({ bookId, splitters }: userProps) {
+  const [currentUsername, setCurrentUsername] = useState("");
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher();
 
-  // Username validation (mirrors RegisterForm pattern)
-  const debounceUsername = useDebounce(newUser.username ?? "");
+  const debounceUsername = useDebounce(currentUsername);
   const validUsername = useFetcher();
-  const [usernameStatus, setUsernameStatus] = useState<string>("");
+  const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
 
   useEffect(() => {
-    if (debounceUsername && debounceUsername.trim() !== "") {
+    if (debounceUsername.trim() !== "") {
       validUsername.load(`/valid-username/${debounceUsername}`);
+      setUsernameStatus("checking");
     } else {
-      setUsernameStatus("");
+      setUsernameStatus("idle");
     }
   }, [debounceUsername]);
 
   useEffect(() => {
-    if (!debounceUsername) return;
+    if (!debounceUsername.trim()) return;
     if (validUsername.state === "loading") {
       setUsernameStatus("checking");
     } else if (validUsername.data === false) {
@@ -57,108 +44,131 @@ export default function AddNewPerson({ bookId }: userProps) {
     }
   }, [validUsername.data, validUsername.state]);
 
-  // Block submit if username was typed but user not found
-  const usernameTyped = !!newUser.username?.trim();
-  const usernameValid = !usernameTyped || usernameStatus === "found";
-
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data && (fetcher.data as any).ok) {
       setOpen(false);
+      setCurrentUsername("");
+      setUsernameStatus("idle");
     }
   }, [fetcher.state, fetcher.data]);
 
   return (
-    <>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+    <div className="w-full">
+      {!open ? (
+        <Button
+          type="button"
+          onClick={() => setOpen(true)}
+          variant="outline"
+          className="w-full text-primary border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary border-dashed rounded-xl h-12 transition-all mt-2"
+        >
+          + Add New Person
+        </Button>
+      ) : (
+        <div className="bg-muted/30 p-4 rounded-xl border border-border mt-2 relative">
           <Button
             type="button"
-            variant="outline"
-            className="w-full text-primary border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary border-dashed rounded-xl h-12"
+            variant="ghost"
+            size="icon"
+            className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              setOpen(false);
+              setCurrentUsername("");
+              setUsernameStatus("idle");
+            }}
           >
-            + Add New Person.
+            <X className="h-4 w-4" />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          className="bg-card p-6 shadow-xl w-80 rounded-2xl border-border"
-          side="top"
-          align="center"
-          onOpenAutoFocus={(e) => e.preventDefault()}
-        >
-          <fetcher.Form method="POST">
-            <div className="grid gap-5">
-              <div className="space-y-1.5 pb-2 border-b border-border">
-                <h4 className="font-bold text-lg text-foreground leading-none">New Participant</h4>
-                <p className="text-sm text-muted-foreground">
-                  Add someone to split expenses with. Enter the username for an existing user or enter the details for a new user.
-                </p>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="fname" className="text-sm font-semibold text-foreground/80">First Name</Label>
-                <Input
-                  id="fname"
-                  name="first_name"
-                  onChange={handleNewUser}
-                  className="h-10 rounded-xl border-input focus-visible:ring-primary"
+          
+          <div className="grid gap-4 mt-1">
+            <div className="space-y-1 pb-2 border-b border-border/50">
+              <h4 className="font-bold text-base text-foreground">New Participant</h4>
+              <p className="text-xs text-muted-foreground">
+                Add someone to split expenses with.
+              </p>
+            </div>
 
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="lname" className="text-sm font-semibold text-foreground/80">Last Name <span className="text-muted-foreground/70 font-normal">(Optional)</span></Label>
-                <Input
-                  id="lname"
-                  name="last_name"
-                  onChange={handleNewUser}
-                  className="h-10 rounded-xl border-input focus-visible:ring-primary"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="username" className="text-sm font-semibold text-foreground/80">Username</Label>
-                <Input
-                  id="username"
-                  name="username"
-                  onChange={handleNewUser}
-                  placeholder="e.g. username123"
-                  className={`h-10 rounded-xl focus-visible:ring-primary transition-colors ${usernameStatus === "found"
+            <div className="space-y-1.5">
+              <Label htmlFor="participant" className="text-sm font-semibold text-foreground/80">Participant Name or Username</Label>
+              <Input
+                id="participant"
+                value={currentUsername}
+                onChange={(e) => setCurrentUsername(e.target.value)}
+                placeholder="Enter username"
+                className={`h-10 rounded-xl focus-visible:ring-primary transition-colors ${
+                  usernameStatus === "found"
                     ? "border-primary"
                     : usernameStatus === "not_found"
-                      ? "border-red-400"
-                      : "border-input"
-                    }`}
-                />
-                {usernameTyped && usernameStatus && (
-                  <p className={`text-xs font-medium ${usernameStatus === "found"
+                    ? "border-amber-400"
+                    : "border-input"
+                }`}
+              />
+              
+              {currentUsername.trim() && usernameStatus !== "idle" && (
+                <p className={`text-xs font-medium ${
+                  usernameStatus === "found"
                     ? "text-primary"
                     : usernameStatus === "checking"
-                      ? "text-info"
-                      : "text-destructive"
-                    }`}>
-                    {usernameStatus === "checking" && `Checking "${debounceUsername}"...`}
-                    {usernameStatus === "found" && `✓ User "${debounceUsername}" found`}
-                    {usernameStatus === "not_found" && `✗ No user found with username "${debounceUsername}"`}
-                  </p>
-                )}
-              </div>
+                    ? "text-info"
+                    : "text-amber-500"
+                }`}>
+                  {usernameStatus === "checking" && `Checking "${debounceUsername}"...`}
+                  {usernameStatus === "found" && `✓ User "${debounceUsername}" found`}
+                  {usernameStatus === "not_found" && `"${debounceUsername}" will be added as a placeholder`}
+                </p>
+              )}
             </div>
-            <Button
-              type="submit"
-              className="mt-6 w-full h-10 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              name="_action"
-              value="AddNewUser"
-              disabled={
-                fetcher.state === "submitting" ||
-                (!newUser.first_name?.trim() && !newUser.username?.trim()) ||
-                !usernameValid ||
-                usernameStatus === "checking"
-              }
-            >
-              {fetcher.state === "submitting" ? "Adding..." : "Add Person"}
-            </Button>
-          </fetcher.Form>
-        </PopoverContent>
-      </Popover>
-    </>
+
+            {splitters && splitters.length > 0 && (
+              <div className="space-y-2 mt-2">
+                <Label className="text-xs font-semibold text-foreground/80">Current Participants</Label>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {splitters.map((u) => {
+                    const name = u.username || u.first_name || u.id;
+                    const isReal = !!u.username; // simplistic check, matching editbook
+                    return (
+                      <span key={u.id} className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border ${
+                        isReal
+                          ? "bg-primary/10 text-primary border-primary/20"
+                          : "bg-amber-50 text-warning border-amber-200"
+                      }`}>
+                        {name}
+                        {!isReal && <span className="font-normal opacity-60 ml-0.5"> </span>}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
+            <div className="flex gap-2 mt-5">
+              <Button
+                type="button"
+                onClick={() => {
+                  const formData = new FormData();
+                  formData.append("_action", "AddNewUser");
+                  formData.append("book_id", bookId);
+                  
+                  if (usernameStatus === "found") {
+                    formData.append("username", currentUsername.trim());
+                  } else {
+                    formData.append("first_name", currentUsername.trim());
+                  }
+                  
+                  fetcher.submit(formData, { method: "POST" });
+                }}
+                className="flex-1 h-10 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-all shadow-sm"
+                disabled={
+                  fetcher.state === "submitting" ||
+                  !currentUsername.trim() ||
+                  usernameStatus === "checking"
+                }
+              >
+                {fetcher.state === "submitting" ? "Adding..." : "Add Person"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

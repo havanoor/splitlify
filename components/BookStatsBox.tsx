@@ -18,7 +18,7 @@ export default function BookStatsBox({
       <div className="mt-2 grid grid-cols-3 gap-2 p-3 bg-card border border-border rounded-xl shadow-sm">
         <div className="col-span-3 text-center mb-2 pb-2 border-b border-border">
           <span className="font-bold text-foreground">{bookName}</span>
-          <span className="text-muted-foreground ml-2 text-sm">Summary</span>
+          <span className="ml-2 text-sm">Summary</span>
         </div>
 
         <div className="flex flex-col items-center justify-center p-2 bg-info/10 rounded-lg">

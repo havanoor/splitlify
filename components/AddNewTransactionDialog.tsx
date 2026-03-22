@@ -227,8 +227,9 @@ export default function AddNewTransactionDialog({
                         type="button"
                         onClick={() => {
                           if (!newCategoryName.trim() || !newCategoryType) return;
+                          const formattedCategory = newCategoryName.trim().charAt(0).toUpperCase() + newCategoryName.trim().slice(1).toLowerCase();
                           categoryUpdater.submit(
-                            { category: newCategoryName, type_of_category: newCategoryType },
+                            { category: formattedCategory, type_of_category: newCategoryType },
                             { method: "POST", action: "/new-category" }
                           );
                         }}
@@ -308,73 +309,81 @@ export default function AddNewTransactionDialog({
           ) : null}
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="payer_id" className="text-sm font-semibold text-foreground/80">Paid By</Label>
-          {currentTransaction && title === "View" ? (
-            <Input
-              readOnly
-              className="w-full h-12 rounded-xl border-input text-foreground"
-              defaultValue={
-                currentTransaction?.payer.username ||
-                `${currentTransaction?.payer.first_name || ""} ${currentTransaction?.payer.last_name || ""}`.trim()
-              }
-            />
-          ) : (
-            <Select
-              name="payer_id"
-              defaultValue={currentTransaction?.payer.id.toString()}
-              onValueChange={(v) => {
-                setTransaction({ ...(transaction ?? {}), payer_id: v } as NewTransaction);
-              }}
-            >
-              <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
-                <SelectValue
-                  placeholder={
-                    currentTransaction?.payer.username || "Select a payer"
+        {!books.type_of_book.toLowerCase().includes("private") && (
+          <>
+            <div className="w-full flex justify-center mb-3">
+              <AddNewPerson bookId={books.id.toString()} splitters={books.splitters} />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="payer_id" className="text-sm font-semibold text-foreground/80">Paid By</Label>
+              {currentTransaction && title === "View" ? (
+                <Input
+                  readOnly
+                  className="w-full h-12 rounded-xl border-input text-foreground"
+                  defaultValue={
+                    currentTransaction?.payer.username ||
+                    `${currentTransaction?.payer.first_name || ""} ${currentTransaction?.payer.last_name || ""}`.trim()
                   }
                 />
-              </SelectTrigger>
-              <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
-                <SelectGroup>
-                  {books?.splitters.map((val, id) => (
-                    <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
-                      {val.username
-                        ? val.username
-                        : `${val.first_name || ""} ${val.last_name || ""}`.trim()}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          )}
-        </div>
-
-        <div className="space-y-1.5">
-          <Label htmlFor="payee" className="text-sm font-semibold text-foreground/80">Paid For</Label>
-          {currentTransaction?.payee && title === "View" ? (
-            <div className="rounded-xl border border-input bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
-              {selected.map((e: User) => (
-                <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-card border-input">
-                  {e.username ? e.username : `${e.first_name || ""} ${e.last_name || ""}`.trim()}
-                </Badge>
-              ))}
+              ) : (
+                <Select
+                  name="payer_id"
+                  defaultValue={currentTransaction?.payer.id.toString()}
+                  onValueChange={(v) => {
+                    setTransaction({ ...(transaction ?? {}), payer_id: v } as NewTransaction);
+                  }}
+                >
+                  <SelectTrigger className="w-full h-12 rounded-xl text-foreground/80 border-input focus:ring-primary transition-all bg-card">
+                    <SelectValue
+                      placeholder={
+                        currentTransaction?.payer.username || "Select a payer"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="z-[9999] rounded-xl border-border shadow-lg">
+                    <SelectGroup>
+                      {books?.splitters.map((val, id) => (
+                        <SelectItem key={id} value={val.id.toString()} className="cursor-pointer">
+                          {val.username
+                            ? val.username
+                            : `${val.first_name || ""} ${val.last_name || ""}`.trim()}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
-          ) : (
-            <MultiSelect
-              options={books?.splitters}
-              selected={selected}
-              onChange={toggleSelected}
-              className="w-full z-[9999] rounded-xl"
-              name="payee_ids"
-            />
-          )}
 
-          <input
-            type="hidden"
-            name="payee_ids"
-            value={selected.map((e: User) => e.id.toString())}
-          />
-        </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="payee" className="text-sm font-semibold text-foreground/80">Paid For</Label>
+              {currentTransaction?.payee && title === "View" ? (
+                <div className="rounded-xl border border-input bg-gray-50/50 w-full min-h-[3rem] p-2 flex flex-wrap items-center gap-2">
+                  {selected.map((e: User) => (
+                    <Badge key={e.id} variant="secondary" className="rounded-md px-2 py-1 font-medium bg-card border-input">
+                      {e.username ? e.username : `${e.first_name || ""} ${e.last_name || ""}`.trim()}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <MultiSelect
+                  options={books?.splitters}
+                  selected={selected}
+                  onChange={toggleSelected}
+                  className="w-full z-[9999] rounded-xl"
+                  name="payee_ids"
+                />
+              )}
+
+              <input
+                type="hidden"
+                name="payee_ids"
+                value={selected.map((e: User) => e.id.toString())}
+              />
+            </div>
+          </>
+        )}
 
         <div className="pt-4 pb-8 flex flex-col gap-3">
           {currentTransaction?.id && title === "View" ? null : (
@@ -389,9 +398,6 @@ export default function AddNewTransactionDialog({
                   {title === "Add" ? "Create Transaction" : `${title} Transaction`}
                 </Button>
               </ResponsiveModalClose>
-              <div className="w-full flex justify-center">
-                <AddNewPerson bookId={books.id.toString()} />
-              </div>
             </>
           )}
         </div>

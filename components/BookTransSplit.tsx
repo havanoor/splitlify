@@ -32,18 +32,21 @@ export default function TransactionSplit({ split }: TransSplit) {
           {split.length > 0 ? (
             <div className="divide-y divide-border/50">
               <div className="grid grid-cols-3 gap-2 px-4 py-3 bg-gray-50/50 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                <div>From</div>
-                <div>To</div>
-                <div className="text-right">Amount</div>
+                <div className="text-center">From</div>
+                <div className="text-center">To</div>
+                <div className="text-center">Amount</div>
               </div>
               {split.map((spl, index) => (
                 <div key={index} className="grid grid-cols-3 gap-2 px-4 py-3 text-sm items-center hover:bg-muted/50 transition-colors">
-                  <div className="font-medium text-foreground">{spl.payer}</div>
-                  <div className="text-muted-foreground flex items-center gap-1">
-                    <span className="text-muted-foreground/50">→</span> {spl.payee}
+                  <div className="font-medium text-foreground text-center">{spl.payer}</div>
+                  <div className="text-muted-foreground flex items-center justify-center">
+                    <div className="relative">
+                      <span className="text-muted-foreground/40 absolute right-full mr-2 top-1/2 -translate-y-1/2 text-xs">→</span>
+                      {spl.payee}
+                    </div>
                   </div>
-                  <div className="text-right font-bold text-foreground">
-                    {Number(spl.amount).toFixed(3)}
+                  <div className="text-center font-bold text-foreground">
+                    {Number(spl.amount).toFixed(2)}
                   </div>
                 </div>
               ))}
